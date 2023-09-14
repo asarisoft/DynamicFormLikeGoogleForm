@@ -8,13 +8,12 @@ export const SectionContainer = styled.div`
     padding: 8px;
     margin-top: 8px;
     position: relative;
+    display: flex;
+    justify-content: space-between;
     h3 {
-        position: absolute;
-        top: -16px;
-        left: 0px;
         color: blue;
         font-size: 14px;
-        padding: 4px 8px;
+        margin: 0;
     }
     .button-wrapper {
         text-align: right

@@ -12,7 +12,9 @@ class Form extends Component {
       sections: [
         {
           label: 'Section 1',
-          fields: [], // Pertanyaan awal di Section 1
+          fields: [
+            { title: 'Question 1', isActive: true },
+          ],
         },
       ],
     };
@@ -31,24 +33,43 @@ class Form extends Component {
 
   // Fungsi untuk menambah pertanyaan baru ke dalam section
   addQuestionToSection = (sectionIndex) => {
-    const newQuestion = `Question ${this.state.sections[sectionIndex].fields.length + 1}`;
+    const newQuestion = `Question ${
+      this.state.sections[sectionIndex].fields.length + 1
+    }`;
+    // Set semua pertanyaan dalam section sebagai non-aktif saat pertanyaan baru ditambahkan
     const updatedSections = [...this.state.sections];
-    updatedSections[sectionIndex].fields.push(newQuestion);
+    updatedSections[sectionIndex].fields.forEach((field) => {
+      field.isActive = false;
+    });
+    updatedSections[sectionIndex].fields.push({ question: newQuestion, isActive: true });
+    this.setState({ sections: updatedSections });
+  }
+
+  // Fungsi untuk mengatur pertanyaan sebagai aktif saat diklik
+  setActiveQuestion = (sectionIndex, questionIndex) => {
+    const updatedSections = [...this.state.sections];
+    updatedSections[sectionIndex].fields.forEach((field, index) => {
+      field.isActive = index === questionIndex;
+    });
     this.setState({ sections: updatedSections });
   }
 
   render() {
     const { sections } = this.state;
-    console.log("sss", sections)
+
     return (
       <FormContainer>
         <Header />
         {sections.map((section, sectionIndex) => (
           <div key={sectionIndex}>
             <Section label={section.label} 
-              onAddField={()=>this.addQuestionToSection(sectionIndex)} />
-            {section.fields.map((question, questionIndex) => (
-                <Field key={question} label={question} />
+              onAddField={() => this.addQuestionToSection(sectionIndex)} />
+            {section.fields.map((field, questionIndex) => (
+              <Field
+                key={field.question}
+                field={field}
+                onClick={() => this.setActiveQuestion(sectionIndex, questionIndex)}
+              />
             ))}
           </div>
         ))}

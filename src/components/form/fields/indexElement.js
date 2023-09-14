@@ -9,4 +9,5 @@ export const FieldsContainer = styled.div`
     margin: 4px 0;
     border: 1px solid #ccc;
     padding: 8px;
+    background-color: #ccc;
 `;

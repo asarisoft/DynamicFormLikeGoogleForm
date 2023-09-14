@@ -1,23 +1,19 @@
-// components/form/field.js
 import React, { Component } from 'react';
 import Options from './option';
 import Checkbox from './checkbox';
 import Scale from './scale';
 import Paragraph from './paragraph';
 import { FieldsContainer } from './indexElement';
-import {
-  Input,
-  TextArea
-} from '../../general';
+import { Input, TextArea } from '../../general';
 
 class Field extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      question: '', // Pertanyaan
       answerType: 'options', // Jenis jawaban awal
     };
   }
+  
 
   handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -45,28 +41,32 @@ class Field extends Component {
   }
 
   render() {
-    const { question } = this.state;
-
+    const { field } = this.props;
     return (
-      <FieldsContainer>
+      <FieldsContainer onClick={this.props.onClick}>
         <Input
           type="text"
           name="question"
           placeholder='question'
-          value={question}
+          value={field?.title}
           onChange={this.handleInputChange}
         />
-        <select
-          name="answerType"
-          value={this.state.answerType}
-          onChange={this.handleAnswerTypeChange}
-        >
-          <option value="options">Opsi</option>
-          <option value="checkbox">Checkbox</option>
-          <option value="scale">Skala</option>
-          <option value="paragraph">Paragraf</option>
-        </select>
-        {this.renderAnswerTypeComponent()}
+
+        {field?.isActive && (
+          <>
+            <select
+              name="answerType"
+              value={this.state.answerType}
+              onChange={this.handleAnswerTypeChange}
+            >
+              <option value="options">Opsi</option>
+              <option value="checkbox">Checkbox</option>
+              <option value="scale">Skala</option>
+              <option value="paragraph">Paragraf</option>
+            </select>
+            {this.renderAnswerTypeComponent()}
+          </>
+        )}
       </FieldsContainer>
     );
   }
