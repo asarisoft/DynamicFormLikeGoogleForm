@@ -10,4 +10,31 @@ export const FieldsContainer = styled.div`
     border: 1px solid #ccc;
     padding: 8px;
     background-color: #ccc;
+    position: relative;
+
+    .question {
+        text-align: center;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        span {
+            width: 40px;
+        }
+        input {
+            width: 100%;
+        }
+    }
+    .body {
+        margin-left: 39px;
+        margin-top: 4px;
+        positon: relative;
+        select {
+            position: absolute;
+            right: 10px;
+            padding: 4px;
+            background-color: blue;
+            color: white;
+            border-radius: 4px;
+        }
+    }
 `;

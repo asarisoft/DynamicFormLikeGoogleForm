@@ -10,6 +10,7 @@ export const SectionContainer = styled.div`
     position: relative;
     display: flex;
     justify-content: space-between;
+    margin-top: 24px;
     h3 {
         color: blue;
         font-size: 14px;

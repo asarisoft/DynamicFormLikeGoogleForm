@@ -13,7 +13,7 @@ class Field extends Component {
       answerType: 'options', // Jenis jawaban awal
     };
   }
-  
+
 
   handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -41,19 +41,22 @@ class Field extends Component {
   }
 
   render() {
-    const { field } = this.props;
+    const { field, questionIndex } = this.props;
     return (
       <FieldsContainer onClick={this.props.onClick}>
-        <Input
-          type="text"
-          name="question"
-          placeholder='question'
-          value={field?.title}
-          onChange={this.handleInputChange}
-        />
-
+        <div className='question'>
+          <span>{questionIndex + 1}</span>
+          <Input
+            type="text"
+            name="question"
+            placeholder='question'
+            value={field?.title}
+            onChange={this.handleInputChange}
+          />
+        </div>
+        
         {field?.isActive && (
-          <>
+          <div className='body'>
             <select
               name="answerType"
               value={this.state.answerType}
@@ -65,7 +68,7 @@ class Field extends Component {
               <option value="paragraph">Paragraf</option>
             </select>
             {this.renderAnswerTypeComponent()}
-          </>
+          </div>
         )}
       </FieldsContainer>
     );

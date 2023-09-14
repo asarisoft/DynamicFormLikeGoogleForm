@@ -68,6 +68,7 @@ class Form extends Component {
               <Field
                 key={field.question}
                 field={field}
+                questionIndex={questionIndex}
                 onClick={() => this.setActiveQuestion(sectionIndex, questionIndex)}
               />
             ))}
