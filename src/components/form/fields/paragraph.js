@@ -15,17 +15,15 @@ class Paragraph extends Component {
 
   render() {
     const { answer } = this.state;
-
     return (
       <div>
-        <h4>Jawaban Berbentuk Paragraf:</h4>
-        <textarea
+        {/* <textarea
           rows="4"
           cols="50"
           value={answer}
           onChange={this.handleAnswerChange}
           placeholder="Tulis jawaban Anda di sini"
-        />
+        /> */}
       </div>
     );
   }

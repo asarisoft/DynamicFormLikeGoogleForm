@@ -20,7 +20,6 @@ class Scale extends Component {
 
     return (
       <div>
-        <h4>Masukkan Rentang Nilai:</h4>
         <div>
           <label>Nilai Awal:</label>
           <input

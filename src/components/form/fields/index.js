@@ -4,6 +4,11 @@ import Options from './option';
 import Checkbox from './checkbox';
 import Scale from './scale';
 import Paragraph from './paragraph';
+import { FieldsContainer } from './indexElement';
+import {
+  Input,
+  TextArea
+} from '../../general';
 
 class Field extends Component {
   constructor(props) {
@@ -25,7 +30,6 @@ class Field extends Component {
 
   renderAnswerTypeComponent() {
     const { answerType } = this.state;
-
     switch (answerType) {
       case 'options':
         return <Options />;
@@ -44,15 +48,14 @@ class Field extends Component {
     const { question } = this.state;
 
     return (
-      <div>
-        <label>Pertanyaan:</label>
-        <input
+      <FieldsContainer>
+        <Input
           type="text"
           name="question"
+          placeholder='question'
           value={question}
           onChange={this.handleInputChange}
         />
-        <label>Jenis Jawaban:</label>
         <select
           name="answerType"
           value={this.state.answerType}
@@ -64,7 +67,7 @@ class Field extends Component {
           <option value="paragraph">Paragraf</option>
         </select>
         {this.renderAnswerTypeComponent()}
-      </div>
+      </FieldsContainer>
     );
   }
 }

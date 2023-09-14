@@ -37,7 +37,6 @@ class Options extends Component {
 
     return (
       <div>
-        <h4>Opsi Jawaban:</h4>
         {options.map((option, index) => (
           <div key={index}>
             <input

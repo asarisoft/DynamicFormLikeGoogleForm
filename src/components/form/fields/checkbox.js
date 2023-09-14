@@ -45,7 +45,6 @@ class Checkbox extends Component {
 
     return (
       <div>
-        <h4>Pilihan Jawaban:</h4>
         {options.map((option, index) => (
           <div key={index}>
             <label>

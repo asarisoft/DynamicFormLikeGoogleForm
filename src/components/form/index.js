@@ -1,11 +1,9 @@
-// form/index.js
 import React, { Component } from 'react';
-import Field from './fields/index';
-import FormButton from './formButton';
-import SectionButton from './sectionButton';
-import SectionForm from './sectionForm';
-import HeaderForm from './headerForm';
-
+import Section from './section';
+import Header from './header';
+import { FormContainer } from './indexElement';
+import { StyledButton } from '../general';
+import Field from './fields';
 
 class Form extends Component {
   constructor(props) {
@@ -14,9 +12,9 @@ class Form extends Component {
       sections: [
         {
           label: 'Section 1',
-          fields: ['Field1'] // Field awal di Section 1
-        }
-      ]
+          fields: [], // Pertanyaan awal di Section 1
+        },
+      ],
     };
   }
 
@@ -24,43 +22,40 @@ class Form extends Component {
   addSection = () => {
     const newSection = {
       label: `Section ${this.state.sections.length + 1}`,
-      fields: []
+      fields: [],
     };
     this.setState((prevState) => ({
-      sections: [...prevState.sections, newSection]
+      sections: [...prevState.sections, newSection],
     }));
   }
 
-  // Fungsi untuk menambah field baru ke dalam section
-  addFieldToSection = (sectionIndex) => {
-    const newField = `Field${this.state.sections[sectionIndex].fields.length + 1}`;
-    this.setState((prevState) => {
-      const updatedSections = [...prevState.sections];
-      updatedSections[sectionIndex].fields.push(newField);
-      return { sections: updatedSections };
-    });
+  // Fungsi untuk menambah pertanyaan baru ke dalam section
+  addQuestionToSection = (sectionIndex) => {
+    const newQuestion = `Question ${this.state.sections[sectionIndex].fields.length + 1}`;
+    const updatedSections = [...this.state.sections];
+    updatedSections[sectionIndex].fields.push(newQuestion);
+    this.setState({ sections: updatedSections });
   }
 
   render() {
     const { sections } = this.state;
-
+    console.log("sss", sections)
     return (
-      <div>
-        <HeaderForm />
+      <FormContainer>
+        <Header />
         {sections.map((section, sectionIndex) => (
-          <SectionForm key={sectionIndex} label={section.label}>
-            {section.fields.map((fieldName, fieldIndex) => (
-              <Field key={fieldName} label={fieldName} />
+          <div key={sectionIndex}>
+            <Section label={section.label} 
+              onAddField={()=>this.addQuestionToSection(sectionIndex)} />
+            {section.fields.map((question, questionIndex) => (
+                <Field key={question} label={question} />
             ))}
-            <SectionButton
-              onAddField={() => this.addFieldToSection(sectionIndex)}
-            />
-          </SectionForm>
+          </div>
         ))}
-        <FormButton
-          onAddSection={this.addSection}
-        />
-      </div>
+        <div className='form-footer'>
+          <StyledButton onClick={this.addSection}>Add Section</StyledButton>
+        </div>
+      </FormContainer>
     );
   }
 }

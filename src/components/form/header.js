@@ -1,5 +1,11 @@
 // header.js
 import React, { Component } from 'react';
+import {
+  Input,
+  TextArea
+} from '../general';
+import { HeaderFormContainer} from './headerElement';
+
 
 class HeaderForm extends Component {
   constructor(props) {
@@ -22,20 +28,19 @@ class HeaderForm extends Component {
     const { title, description } = this.state;
 
     return (
-      <div>
-        <label>Judul Form</label>
-        <input
+      <HeaderFormContainer>
+        <Input
           type="text"
           value={title}
+          placeholder='form title'
           onChange={this.handleTitleChange}
         />
-
-        <label>Deskripsi Form</label>
-        <textarea
+        {/* <TextArea
           value={description}
+          placeholder='form description'
           onChange={this.handleDescriptionChange}
-        />
-      </div>
+        /> */}
+      </HeaderFormContainer>
     );
   }
 }
