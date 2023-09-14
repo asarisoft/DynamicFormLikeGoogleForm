@@ -1,0 +1,68 @@
+
+
+## GETTING STARTED
+- npm install
+- npm start
+
+
+## FILE STRUCTURE
+src 
+    components
+        form
+            button.js
+            field.js
+            header.js
+            index.js
+            section.js
+    app.js
+    index.js
+
+## SAMPLE FORM RESULT
+type =  ['options', 'checkbox', 'paragrafh', 'scale']
+
+field_with_type_options = {
+    "question": "Apa yang kana anda lakukan berikutnya"
+    "type": type[0],
+    "options": ["1","2","3","4","5"],
+    "values":[
+        "1", "2", "go_to_secion_2", "4","5"
+    ]
+}
+field_with_type_checkboks = {
+    "question": "Pilih Beberapa Jawaban Berikut yang benar?"
+    "type": type[1],
+    "checkboks": ["1","2","3","4","5"],
+    "values":[
+        "1","2","3","4","5"
+    ]
+}
+field_with_type_paragrafh = {
+    "question": "Berikan penjelasan mengenai perusahaan kami"
+    "type": type[2],
+    "text": "",
+    "values": ""
+}
+field_with_type_scale = {
+    "question": "Berikan kami rating value antara 1 sampe 5"
+    "type": type[3],
+    "start": 1,
+    "finish": 5
+}
+section = {
+    "title": "section 1",
+    fields: [
+        field_with_type_options,
+        field_with_type_checkboks,
+        field_with_type_paragrafh,
+        field_with_type_scale1
+    ]
+}
+form = [
+    {
+        "title": 1,
+        "description": "",
+        "sections": [
+            section,
+        ]
+    }
+]
