@@ -3,7 +3,7 @@ import Options from './option';
 import Scale from './scale';
 import Paragraph from './paragraph';
 import { FieldsContainer } from './indexElement';
-import { Input, TextArea } from '../../general';
+import { Input, StyledButton } from '../../general';
 
 class Field extends Component {
   constructor(props) {
@@ -27,9 +27,9 @@ class Field extends Component {
     const { answerType } = this.state;
     switch (answerType) {
       case 'single':
-        return <Options type="single"/>;
+        return <Options type="single" />;
       case 'multiple':
-          return <Options type="multiple" />;
+        return <Options type="multiple" />;
       case 'scale':
         return <Scale />;
       case 'paragraph':
@@ -40,21 +40,25 @@ class Field extends Component {
   }
 
   render() {
-    const { field, questionIndex } = this.props;
+    const { field, questionIndex, onAddQuestion, onRemoveQuestion } = this.props;
     return (
-      <FieldsContainer onClick={this.props.onClick} 
-        className={field?.isActive&&'active'}>
+      <FieldsContainer onClick={this.props.onClick}
+        className={field?.isActive && 'active'}>
         <div className='question'>
-          <span>{questionIndex + 1}</span>
-          <Input
-            type="text"
-            name="question"
-            placeholder='question'
-            value={field?.title}
-            onChange={this.handleInputChange}
-          />
+          <div>
+            <span>{questionIndex + 1}</span>
+            <Input
+              type="text"
+              name="question"
+              placeholder='question'
+              value={field?.title}
+              onChange={this.handleInputChange}
+            />
+          </div>
+          <StyledButton onClick={() => onRemoveQuestion(questionIndex)}>x</StyledButton>
+          {/* <StyledButton onClick={() => onAddQuestion(questionIndex)}>+</StyledButton> */}
         </div>
-        
+
         {field?.isActive && (
           <div className='body'>
             <select

@@ -7,27 +7,33 @@ export const FieldsContainer = styled.div`
     flex-direction: column;
     border-radius: 4px;
     margin: 4px 0 16px;;
-    border: 1px solid ${colors.blue4};
+    border: 1px solid #ccc;
     padding: 8px;
     position: relative;
     &.active {
-        background-color: ${colors.blue2}
+        background-color: ${colors.blue1}
     }
 
     .question {
-        text-align: center;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        span {
-            width: 40px;
-        }
-        input {
-            width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 40px;
+        column-gap: 8px;
+        div {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            span {
+                width: 40px;
+                display: block;
+                text-align: center;
+                font-weight: bold;
+            }
+            input {
+                flex: 1
+            } 
         }
     }
     .body {
-        margin-left: 39px;
         margin-top: 4px;
         positon: relative;
         select {

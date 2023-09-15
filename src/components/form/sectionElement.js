@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 import { screensize, colors } from '../../utils'; // Gantilah 'path-to-your-utils' dengan path yang benar ke utils Anda
 
 export const SectionContainer = styled.div`
-    border: 1px solid ${colors.blue4};
+    border: 1px solid #ccc;
     border-left: 4px solid  ${colors.blue4};;
     border-radius: 4px;
     padding: 8px;
