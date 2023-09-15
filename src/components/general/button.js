@@ -1,8 +1,9 @@
 import styled from 'styled-components';
+import { colors  } from '../../utils';
 
 // Membuat sebuah komponen styled untuk tombol
 export const StyledButton = styled.button`
-  background-color: #007bff; /* Warna latar belakang */
+  background-color: ${colors.blue4}; /* Warna latar belakang */
   color: #fff; /* Warna teks */
   padding: 8px 16px; /* Padding atas dan bawah 8px, padding kiri dan kanan 16px */
   border: none; /* Tidak ada border */

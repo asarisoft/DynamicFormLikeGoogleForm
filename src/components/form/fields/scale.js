@@ -1,5 +1,7 @@
 // components/form/scale.js
 import React, { Component } from 'react';
+import { Container } from './scaleElement'
+import { Input, StyledButton } from '../../general'
 
 class Scale extends Component {
   constructor(props) {
@@ -19,28 +21,24 @@ class Scale extends Component {
     const { start, finish } = this.state;
 
     return (
-      <div>
-        <div>
-          <label>Nilai Awal:</label>
-          <input
+      <Container>
+        <div className='input-wrapper'>
+          <Input
             type="number"
             name="start"
-            value={start}
+            value={start || 1}
             onChange={this.handleInputChange}
-            placeholder="Nilai Awal"
+            placeholder="Start"
           />
-        </div>
-        <div>
-          <label>Nilai Akhir:</label>
-          <input
+          <Input
             type="number"
             name="finish"
-            value={finish}
+            value={finish || 5}
             onChange={this.handleInputChange}
-            placeholder="Nilai Akhir"
+            placeholder="Finish"
           />
         </div>
-      </div>
+      </Container>
     );
   }
 }

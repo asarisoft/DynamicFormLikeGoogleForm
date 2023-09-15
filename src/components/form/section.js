@@ -9,7 +9,7 @@ const SectionForm = ({ label, onAddField }) => {
       <div className='button-wrapper'>
         <StyledButton
           className='add-button'
-          onClick={onAddField}>Add Field</StyledButton>
+          onClick={onAddField}>+ Question</StyledButton>
       </div>
     </SectionContainer>
   );

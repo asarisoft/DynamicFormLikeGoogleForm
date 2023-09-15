@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Section from './section';
+import Field from './fields';
 import Header from './header';
 import { FormContainer } from './indexElement';
 import { StyledButton } from '../general';
-import Field from './fields';
 
 class Form extends Component {
   constructor(props) {

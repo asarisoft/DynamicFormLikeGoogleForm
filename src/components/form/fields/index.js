@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Options from './option';
-import Checkbox from './checkbox';
 import Scale from './scale';
 import Paragraph from './paragraph';
 import { FieldsContainer } from './indexElement';
@@ -10,7 +9,7 @@ class Field extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      answerType: 'options', // Jenis jawaban awal
+      answerType: 'single', // Jenis jawaban awal
     };
   }
 
@@ -27,10 +26,10 @@ class Field extends Component {
   renderAnswerTypeComponent() {
     const { answerType } = this.state;
     switch (answerType) {
-      case 'options':
-        return <Options />;
-      case 'checkbox':
-        return <Checkbox />;
+      case 'single':
+        return <Options type="single"/>;
+      case 'multiple':
+          return <Options type="multiple" />;
       case 'scale':
         return <Scale />;
       case 'paragraph':
@@ -43,7 +42,8 @@ class Field extends Component {
   render() {
     const { field, questionIndex } = this.props;
     return (
-      <FieldsContainer onClick={this.props.onClick}>
+      <FieldsContainer onClick={this.props.onClick} 
+        className={field?.isActive&&'active'}>
         <div className='question'>
           <span>{questionIndex + 1}</span>
           <Input
@@ -62,10 +62,10 @@ class Field extends Component {
               value={this.state.answerType}
               onChange={this.handleAnswerTypeChange}
             >
-              <option value="options">Opsi</option>
-              <option value="checkbox">Checkbox</option>
-              <option value="scale">Skala</option>
-              <option value="paragraph">Paragraf</option>
+              <option value="single">Single</option>
+              <option value="multiple">Multiple</option>
+              <option value="scale">Scale</option>
+              <option value="paragraph">Paragraph</option>
             </select>
             {this.renderAnswerTypeComponent()}
           </div>

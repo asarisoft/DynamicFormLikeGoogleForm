@@ -1,9 +1,9 @@
 import styled, { css } from 'styled-components';
-import { screensize } from '../../utils'; // Gantilah 'path-to-your-utils' dengan path yang benar ke utils Anda
+import { screensize, colors } from '../../utils'; // Gantilah 'path-to-your-utils' dengan path yang benar ke utils Anda
 
 export const SectionContainer = styled.div`
-    border: 1px solid #ccc;
-    border-left: 4px solid blue;
+    border: 1px solid ${colors.blue4};
+    border-left: 4px solid  ${colors.blue4};;
     border-radius: 4px;
     padding: 8px;
     margin-top: 8px;
@@ -12,7 +12,7 @@ export const SectionContainer = styled.div`
     justify-content: space-between;
     margin-top: 24px;
     h3 {
-        color: blue;
+        color: ${colors.blue4};
         font-size: 14px;
         margin: 0;
     }

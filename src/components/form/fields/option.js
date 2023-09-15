@@ -1,5 +1,7 @@
 // components/form/option.js
 import React, { Component } from 'react';
+import { Container } from './optionElement'
+import { Input, StyledButton } from '../../general'
 
 class Options extends Component {
   constructor(props) {
@@ -34,30 +36,33 @@ class Options extends Component {
 
   render() {
     const { options } = this.state;
+    const { type } = this.props;
 
     return (
-      <div>
+      <Container>
         {options.map((option, index) => (
-          <div key={index}>
-            <input
+          <div key={index} className='input-wrapper'>
+            <Input
               type="text"
               name="label"
-              placeholder="Jawaban"
+              placeholder="Option Text"
               value={option.label}
               onChange={(e) => this.handleOptionChange(index, e)}
             />
-            <input
-              type="text"
-              name="action"
-              placeholder="Action (opsional)"
-              value={option.action}
-              onChange={(e) => this.handleOptionChange(index, e)}
-            />
-            <button onClick={() => this.removeOption(index)}>Hapus</button>
+            {type == 'single' &&
+              <Input
+                type="number"
+                name="action"
+                placeholder="Go To Section"
+                value={option.action}
+                onChange={(e) => this.handleOptionChange(index, e)}
+              />
+            }
+            <StyledButton onClick={() => this.removeOption(index)}>x</StyledButton>
+            <StyledButton onClick={this.addOption}>+</StyledButton>
           </div>
         ))}
-        <button onClick={this.addOption}>Tambah Opsi</button>
-      </div>
+      </Container>
     );
   }
 }

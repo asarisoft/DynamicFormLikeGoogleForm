@@ -1,16 +1,18 @@
 import styled, { css } from 'styled-components';
-import { screensize } from '../../../utils'; // Gantilah 'path-to-your-utils' dengan path yang benar ke utils Anda
+import { screensize, colors } from '../../../utils'; // Gantilah 'path-to-your-utils' dengan path yang benar ke utils Anda
 
 export const FieldsContainer = styled.div`
     text-align: left;
     display: flex;
     flex-direction: column;
     border-radius: 4px;
-    margin: 4px 0;
-    border: 1px solid #ccc;
+    margin: 4px 0 16px;;
+    border: 1px solid ${colors.blue4};
     padding: 8px;
-    background-color: #ccc;
     position: relative;
+    &.active {
+        background-color: ${colors.blue2}
+    }
 
     .question {
         text-align: center;
@@ -32,7 +34,7 @@ export const FieldsContainer = styled.div`
             position: absolute;
             right: 10px;
             padding: 4px;
-            background-color: blue;
+            background-color: ${colors.blue4};
             color: white;
             border-radius: 4px;
         }
