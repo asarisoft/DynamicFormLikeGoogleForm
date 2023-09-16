@@ -9,29 +9,44 @@ class Field extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      answerType: 'single', // Jenis jawaban awal
-    };
+      type: 'paragraph',
+      question: '',
+    }
   }
 
+  componentDidMount() {
+  }
 
-  handleInputChange = (e) => {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
+  // update data ke props utama
+  handleInputQuestion = (e) => {
+    this.setState({ question: e.target.value });
   };
 
+  // digunakan untuk mengubah children type
+  // saat dirubah maka harus dirubah juga yang sebelumnya ke default
   handleAnswerTypeChange = (e) => {
-    this.setState({ answerType: e.target.value });
+    this.setState({ type: e.target.value });
   };
 
+  // digunakan untuk render setalah type dirubah
   renderAnswerTypeComponent() {
-    const { answerType } = this.state;
-    switch (answerType) {
+    const { type } = this.state;
+    switch (type) {
       case 'single':
-        return <Options type="single" />;
+        return <Options type="single"
+          onUpdateState={(data) => {
+            this.setState({ options: data })
+          }} />;
       case 'multiple':
-        return <Options type="multiple" />;
+        return <Options type="multiple"
+          onUpdateState={(data) => {
+            this.setState({ options: data })
+          }} />;
       case 'scale':
-        return <Scale />;
+        return <Scale
+          onUpdateState={(data) => {
+            this.setState({ scale: data })
+          }} />;
       case 'paragraph':
         return <Paragraph />;
       default:
@@ -39,31 +54,33 @@ class Field extends Component {
     }
   }
 
-  render() {
-    const { field, questionIndex, onAddQuestion, onRemoveQuestion } = this.props;
-    return (
-      <FieldsContainer onClick={this.props.onClick}
-        className={field?.isActive && 'active'}>
-        <div className='question'>
-          <div>
-            <span>{questionIndex + 1}</span>
-            <Input
-              type="text"
-              name="question"
-              placeholder='question'
-              value={field?.title}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <StyledButton onClick={() => onRemoveQuestion(questionIndex)}>x</StyledButton>
-          {/* <StyledButton onClick={() => onAddQuestion(questionIndex)}>+</StyledButton> */}
-        </div>
 
-        {field?.isActive && (
-          <div className='body'>
+  render() {
+    const { field, questionIndex, onRemoveQuestion } = this.props;
+    return (
+      <FieldsContainer
+        className={field?.isActive && 'active'}>
+        <div>
+          <span>{questionIndex + 1}</span>
+        </div>
+        <div>
+          <div className='question' >
+            <div onClick={this.props.onClick}>
+              <Input
+                type="text"
+                name="question"
+                placeholder='Input Question'
+                value={this.state.question}
+                onChange={this.handleInputQuestion}
+              />
+            </div>
+            <StyledButton
+              onClick={() => onRemoveQuestion(questionIndex)}>x</StyledButton>
+          </div>
+          <div className='body' style={{ display: field?.isActive ? 'block' : 'none' }}>
             <select
               name="answerType"
-              value={this.state.answerType}
+              value={this.state.type}
               onChange={this.handleAnswerTypeChange}
             >
               <option value="single">Single</option>
@@ -73,7 +90,7 @@ class Field extends Component {
             </select>
             {this.renderAnswerTypeComponent()}
           </div>
-        )}
+        </div>
       </FieldsContainer>
     );
   }

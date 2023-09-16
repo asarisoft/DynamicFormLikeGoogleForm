@@ -15,6 +15,7 @@ class Scale extends Component {
   handleInputChange = (e) => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
+    this.props.onUpdateState(this.state)
   };
 
   render() {

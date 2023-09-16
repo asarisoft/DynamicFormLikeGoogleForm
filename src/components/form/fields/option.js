@@ -15,6 +15,7 @@ class Options extends Component {
     this.setState((prevState) => ({
       options: [...prevState.options, { label: '', action: '' }],
     }));
+    this.props.onUpdateState(this.state.options)
   };
 
   removeOption = (index) => {
@@ -23,6 +24,7 @@ class Options extends Component {
       updatedOptions.splice(index, 1);
       return { options: updatedOptions };
     });
+    this.props.onUpdateState(this.state.options)
   };
 
   handleOptionChange = (index, e) => {
@@ -32,6 +34,7 @@ class Options extends Component {
       updatedOptions[index][name] = value;
       return { options: updatedOptions };
     });
+    this.props.onUpdateState(this.state.options)
   };
 
   render() {
@@ -58,8 +61,9 @@ class Options extends Component {
                 onChange={(e) => this.handleOptionChange(index, e)}
               />
             }
-            <StyledButton onClick={() => this.removeOption(index)}>x</StyledButton>
             <StyledButton onClick={this.addOption}>+</StyledButton>
+            <StyledButton onClick={() => this.removeOption(index)} 
+              className='remove-button'>x</StyledButton>
           </div>
         ))}
       </Container>

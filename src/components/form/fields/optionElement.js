@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { screensize } from '../../../utils'; // Gantilah 'path-to-your-utils' dengan path yang benar ke utils Anda
+import { colors, screensize } from '../../../utils'; // Gantilah 'path-to-your-utils' dengan path yang benar ke utils Anda
 
 export const Container = styled.div`
     width: 80%;
@@ -10,6 +10,9 @@ export const Container = styled.div`
         column-gap: 4px;
         input {
             width: 43%
+        }
+        .remove-button {
+            background-color: ${colors.red}
         }
     }
 `;

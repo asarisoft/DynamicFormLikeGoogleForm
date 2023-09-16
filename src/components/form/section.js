@@ -2,7 +2,7 @@ import React from 'react';
 import { SectionContainer } from './sectionElement';
 import { StyledButton } from '../general'
 
-const SectionForm = ({ label, onAddField }) => {
+const SectionForm = ({ section, label, onAddField, onToggleQustion }) => {
   return (
     <SectionContainer>
       <h3>{label}</h3>
@@ -10,6 +10,11 @@ const SectionForm = ({ label, onAddField }) => {
         <StyledButton
           className='add-button'
           onClick={onAddField}>+ Question</StyledButton>
+        {section.fields.length > 0 &&
+          <StyledButton
+            className='add-button'
+            onClick={onToggleQustion}>{section.isQuestionsVisible ? "Hide" : "Show"}</StyledButton>
+        }
       </div>
     </SectionContainer>
   );

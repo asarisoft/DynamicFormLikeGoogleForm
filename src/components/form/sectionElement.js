@@ -17,6 +17,9 @@ export const SectionContainer = styled.div`
         margin: 0;
     }
     .button-wrapper {
-        text-align: right
+        text-align: right;
+        button {
+            margin-left: 8px;
+        }
     }
 `;

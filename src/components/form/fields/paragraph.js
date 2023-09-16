@@ -16,7 +16,7 @@ class Paragraph extends Component {
   render() {
     const { answer } = this.state;
     return (
-      <div style={{height: '30px'}}>
+      <div >
         {/* <textarea
           rows="4"
           cols="50"
