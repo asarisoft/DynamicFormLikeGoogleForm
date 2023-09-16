@@ -23,6 +23,7 @@ class Form extends Component {
       ],
     };
     this.fieldRefs = [];
+    this.headerRef = null;
   }
 
   // Fungsi untuk menambah section baru
@@ -94,7 +95,8 @@ class Form extends Component {
         updatedSections[sectionIndex].questions[questionIndex] = fieldData;
       });
     });
-    this.setState({ sections: updatedSections });
+    const title = this.headerRef.state
+    this.setState({ sections: updatedSections, title: this.headerRef.state.title });
   }
 
 
@@ -103,7 +105,8 @@ class Form extends Component {
     console.log(this.state)
     return (
       <FormContainer>
-        <Header />
+        <Header ref={(ref) => { this.headerRef = ref }}
+        />
         {sections.map((section, sectionIndex) => (
           <div key={sectionIndex}>
             <Section label={section.label}
@@ -111,22 +114,24 @@ class Form extends Component {
               onAddField={() => this.addQuestionToSection(sectionIndex)}
               onToggleQustion={() => this.toggleQuestionsVisibility(sectionIndex)}
             />
-            {section.isQuestionsVisible && section.questions.map((question, questionIndex) => (
-              <Question
-                key={`${sectionIndex}${questionIndex}`}
-                question={question}
-                questionIndex={questionIndex}
-                onClick={() => this.setActiveQuestion(sectionIndex, questionIndex)}
-                onRemoveQuestion={() => this.removeQuestionFromSection(sectionIndex, questionIndex)}
-                ref={(ref) => {
-                  if (!this.fieldRefs[sectionIndex]) {
-                    this.fieldRefs[sectionIndex] = [];
-                  }
-                  this.fieldRefs[sectionIndex][questionIndex] = ref; // Simpan referensi ke komponen Question
-                }}
-                onAddQuestion={() => this.addQuestionToSection(sectionIndex)}
-              />
-            ))}
+            <div style={{ display: section.isQuestionsVisible ? 'block' : 'none' }}>
+              {section.questions.map((question, questionIndex) => (
+                <Question
+                  key={`${sectionIndex}${questionIndex}`}
+                  question={question}
+                  questionIndex={questionIndex}
+                  onClick={() => this.setActiveQuestion(sectionIndex, questionIndex)}
+                  onRemoveQuestion={() => this.removeQuestionFromSection(sectionIndex, questionIndex)}
+                  ref={(ref) => {
+                    if (!this.fieldRefs[sectionIndex]) {
+                      this.fieldRefs[sectionIndex] = [];
+                    }
+                    this.fieldRefs[sectionIndex][questionIndex] = ref; // Simpan referensi ke komponen Question
+                  }}
+                  onAddQuestion={() => this.addQuestionToSection(sectionIndex)}
+                />
+              ))}
+            </div>
           </div>
         ))}
         <div className='form-footer'>
