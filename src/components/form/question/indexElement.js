@@ -46,6 +46,11 @@ export const FieldsContainer = styled.div`
                 border-radius: 4px;
                 margin: 4px 0px 10px;
             }
+            .btn-add-question {
+                position: absolute;
+                bottom: 8px;
+                right: 8px;
+            }
         }
     }
 `;

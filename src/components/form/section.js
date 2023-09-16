@@ -7,10 +7,12 @@ const SectionForm = ({ section, label, onAddField, onToggleQustion }) => {
     <SectionContainer>
       <h3>{label}</h3>
       <div className='button-wrapper'>
-        <StyledButton
-          className='add-button'
-          onClick={onAddField}>+ Question</StyledButton>
-        {section.fields.length > 0 &&
+        {section.questions.length == 0 &&
+          <StyledButton
+            className='add-button'
+            onClick={onAddField}>+ Question</StyledButton>
+        }
+        {section.questions.length > 0 &&
           <StyledButton
             className='add-button'
             onClick={onToggleQustion}>{section.isQuestionsVisible ? "Hide" : "Show"}</StyledButton>

@@ -7,6 +7,9 @@ export const FormContainer = styled.div`
         text-align: center;
         margin-top: 8px;
         width: 100%;
+        button {
+            margin: 0 8px;
+        }
     }
     @media ${screensize.desktopUp} {
         width: 65%;

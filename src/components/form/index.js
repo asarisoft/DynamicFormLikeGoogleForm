@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Section from './section';
-import Field from './fields';
+import Question from './question';
 import Header from './header';
 import { FormContainer } from './indexElement';
 import { StyledButton } from '../general';
@@ -12,7 +12,7 @@ class Form extends Component {
       sections: [
         {
           label: 'Section 1',
-          fields: [
+          questions: [
             {
               isActive: true,
               // res data will be populated by populate button
@@ -29,7 +29,7 @@ class Form extends Component {
   addSection = () => {
     const newSection = {
       label: `Section ${this.state.sections.length + 1}`,
-      fields: [],
+      questions: [],
       isQuestionsVisible: true, // Tambahkan ini
     };
     this.setState((prevState) => ({
@@ -41,12 +41,12 @@ class Form extends Component {
   addQuestionToSection = (sectionIndex) => {
     // Set semua pertanyaan dalam section sebagai non-aktif saat pertanyaan baru ditambahkan
     const updatedSections = [...this.state.sections];
-    updatedSections[sectionIndex].fields.forEach((field) => {
-      field.isActive = false;
+    updatedSections[sectionIndex].questions.forEach((question) => {
+      question.isActive = false;
     });
 
     // update data question
-    updatedSections[sectionIndex].fields.push({
+    updatedSections[sectionIndex].questions.push({
       isActive: true,
     });
     updatedSections[sectionIndex].isQuestionsVisible = true
@@ -59,8 +59,8 @@ class Form extends Component {
     const section = updatedSections[sectionIndex];
 
     if (section) {
-      const updatedFields = section.fields.filter((field, index) => index !== questionIndex);
-      section.fields = updatedFields;
+      const updatedquestions = section.questions.filter((question, index) => index !== questionIndex);
+      section.questions = updatedquestions;
       this.setState({ sections: updatedSections });
     }
   }
@@ -68,8 +68,8 @@ class Form extends Component {
   // Fungsi untuk mengatur pertanyaan sebagai aktif saat diklik
   setActiveQuestion = (sectionIndex, questionIndex) => {
     const updatedSections = [...this.state.sections];
-    updatedSections[sectionIndex].fields.forEach((field, index) => {
-      field.isActive = index === questionIndex;
+    updatedSections[sectionIndex].questions.forEach((question, index) => {
+      question.isActive = index === questionIndex;
     });
     this.setState({ sections: updatedSections });
   }
@@ -86,12 +86,12 @@ class Form extends Component {
     const updatedSections = [...sections];
     // Loop melalui setiap section
     updatedSections.forEach((section, sectionIndex) => {
-      // Loop melalui setiap field dalam section
-      section.fields.forEach((field, questionIndex) => {
-        // Di sini Anda bisa mengambil data dari komponen Field dan menggantinya
+      // Loop melalui setiap question dalam section
+      section.questions.forEach((question, questionIndex) => {
+        // Di sini Anda bisa mengambil data dari komponen Question dan menggantinya
         // Berdasarkan indeks pertanyaan (question index)
         const fieldData = this.fieldRefs[sectionIndex][questionIndex].state;
-        updatedSections[sectionIndex].fields[questionIndex] = fieldData;
+        updatedSections[sectionIndex].questions[questionIndex] = fieldData;
       });
     });
     this.setState({ sections: updatedSections });
@@ -100,7 +100,7 @@ class Form extends Component {
 
   render() {
     const { sections } = this.state;
-    console.log(sections)
+    console.log(this.state)
     return (
       <FormContainer>
         <Header />
@@ -111,10 +111,10 @@ class Form extends Component {
               onAddField={() => this.addQuestionToSection(sectionIndex)}
               onToggleQustion={() => this.toggleQuestionsVisibility(sectionIndex)}
             />
-            {section.isQuestionsVisible && section.fields.map((field, questionIndex) => (
-              <Field
+            {section.isQuestionsVisible && section.questions.map((question, questionIndex) => (
+              <Question
                 key={`${sectionIndex}${questionIndex}`}
-                field={field}
+                question={question}
                 questionIndex={questionIndex}
                 onClick={() => this.setActiveQuestion(sectionIndex, questionIndex)}
                 onRemoveQuestion={() => this.removeQuestionFromSection(sectionIndex, questionIndex)}
@@ -122,8 +122,9 @@ class Form extends Component {
                   if (!this.fieldRefs[sectionIndex]) {
                     this.fieldRefs[sectionIndex] = [];
                   }
-                  this.fieldRefs[sectionIndex][questionIndex] = ref; // Simpan referensi ke komponen Field
+                  this.fieldRefs[sectionIndex][questionIndex] = ref; // Simpan referensi ke komponen Question
                 }}
+                onAddQuestion={() => this.addQuestionToSection(sectionIndex)}
               />
             ))}
           </div>

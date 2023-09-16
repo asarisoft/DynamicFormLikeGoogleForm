@@ -5,7 +5,8 @@ import Paragraph from './paragraph';
 import { FieldsContainer } from './indexElement';
 import { Input, StyledButton } from '../../general';
 
-class Field extends Component {
+
+class Question extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -56,10 +57,10 @@ class Field extends Component {
 
 
   render() {
-    const { field, questionIndex, onRemoveQuestion } = this.props;
+    const { question, questionIndex, onAddQuestion, onRemoveQuestion } = this.props;
     return (
       <FieldsContainer
-        className={field?.isActive && 'active'}>
+        className={question?.isActive && 'active'}>
         <div>
           <span>{questionIndex + 1}</span>
         </div>
@@ -77,7 +78,10 @@ class Field extends Component {
             <StyledButton
               onClick={() => onRemoveQuestion(questionIndex)}>x</StyledButton>
           </div>
-          <div className='body' style={{ display: field?.isActive ? 'block' : 'none' }}>
+          <div className='body' style={{ display: question?.isActive ? 'block' : 'none' }}>
+            <StyledButton
+              className='btn-add-question'
+              onClick={() => onAddQuestion()}>+ Question</StyledButton>
             <select
               name="answerType"
               value={this.state.type}
@@ -96,4 +100,4 @@ class Field extends Component {
   }
 }
 
-export default Field;
+export default Question;
