@@ -1,7 +1,9 @@
 {
-  "name": "dynamic-form-like-google",
-  "version": "0.1.0",
-  "private": true,
+  "name": "react-google-form-clone",
+  "version": "1.0.12",
+  "description": "React form generator",
+  "private": false,
+  "main": "src/components/form/index.js",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -16,8 +18,20 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "publish": "npm publish --access public"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/asarisoft/DynamicFormLikeGoogleForm"
+  },
+  "keywords": [
+    "library",
+    "npm",
+    "reactjs",
+    "google form",
+    "form generator"
+  ],
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -35,5 +49,17 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "author": "Asari Software",
+  "license": "",
+  "files": [
+    "src/components",
+    "src/components/form/index.js"
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.22.15",
+    "@babel/core": "^7.22.19",
+    "@babel/plugin-syntax-jsx": "^7.22.5",
+    "@babel/preset-react": "^7.22.15"
   }
 }
