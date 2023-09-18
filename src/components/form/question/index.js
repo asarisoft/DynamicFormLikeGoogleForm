@@ -16,6 +16,10 @@ class Question extends Component {
   }
 
   componentDidMount() {
+    const question = this.props.question;
+    this.setState({
+      type: question.type,
+    })
   }
 
   // update data ke props utama
@@ -35,16 +39,22 @@ class Question extends Component {
     switch (type) {
       case 'single':
         return <Options type="single"
+           // digunakan untuk update state pas edit
+          question={this.props.question}
           onUpdateState={(data) => {
             this.setState({ options: data })
           }} />;
       case 'multiple':
         return <Options type="multiple"
+          // digunakan untuk update state pas edit
+          question={this.props.question}
           onUpdateState={(data) => {
             this.setState({ options: data })
           }} />;
       case 'scale':
         return <Scale
+           // digunakan untuk update state pas edit
+           question={this.props.question}
           onUpdateState={(data) => {
             this.setState({ scale: data })
           }} />;
@@ -71,7 +81,7 @@ class Question extends Component {
                 type="text"
                 name="question"
                 placeholder='Input Question'
-                value={this.state.question}
+                value={this.state.question || this.props.question.question}
                 onChange={this.handleInputQuestion}
               />
             </div>

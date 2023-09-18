@@ -111,7 +111,6 @@ class Form extends Component {
     const {
       sections
     } = this.state;
-    console.log(this.state);
     return <FormContainer>
         <Header ref={ref => {
         this.headerRef = ref;

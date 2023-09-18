@@ -11,6 +11,13 @@ class Options extends Component {
     };
   }
 
+  componentDidMount () {
+    if (this.props.question.options)
+      this.setState({
+        options: this.props.question.options
+      })
+  }
+
   addOption = () => {
     this.setState((prevState) => ({
       options: [...prevState.options, { label: '', action: '' }],

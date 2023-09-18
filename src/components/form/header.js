@@ -16,6 +16,10 @@ class HeaderForm extends Component {
     };
   }
 
+  componentDidMount () {
+    this.setState({title: this.props.title})
+  }
+
   handleTitleChange = (e) => {
     this.setState({ title: e.target.value });
   }
@@ -25,13 +29,11 @@ class HeaderForm extends Component {
   }
 
   render() {
-    const { title, description } = this.state;
-
     return (
       <HeaderFormContainer>
         <Input
           type="text"
-          value={title}
+          value={this.state.title || this.props.title}
           placeholder='form title'
           onChange={this.handleTitleChange}
         />

@@ -5,25 +5,70 @@ import Header from './header';
 import { FormContainer } from './indexElement';
 import { StyledButton } from '../general';
 
+
+const dummyData = [{
+  "sections": [
+      {
+          "label": "Section 1",
+          "questions": [
+              {
+                  "type": "paragraph",
+                  "question": "asfsdfdsfsd"
+              },
+              {
+                "type": "paragraph",
+                "question": "asfsdfdsfsd"
+            },
+              {
+                  "type": "multiple",
+                  "question": "asdfadsfdsa",
+                  "options": [
+                      {
+                          "label": "a",
+                          "action": ""
+                      },
+                      {
+                          "label": "b",
+                          "action": ""
+                      },
+                      {
+                          "label": "c",
+                          "action": ""
+                      },
+                      {
+                          "label": "d",
+                          "action": ""
+                      }
+                  ]
+              },
+              {
+                  "type": "scale",
+                  "question": "aaaaaa",
+                  "scale": {
+                      "start": 1,
+                      "finish": 3
+                  }
+              }
+          ],
+          "isQuestionsVisible": true
+      }
+  ],
+  "title": "Survey Oke"
+}]
+
 class Form extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sections: [
-        {
-          label: 'Section 1',
-          questions: [
-            {
-              isActive: true,
-              // res data will be populated by populate button
-            }
-          ],
-          isQuestionsVisible: true, // Tambahkan ini
-        },
-      ],
+      sections: [],
+      title: ""
     };
     this.fieldRefs = [];
     this.headerRef = null;
+  }
+
+  componentDidMount () {
+    // this.setState({sections: dummyData[0]['sections'], title: dummyData[0]['title'] })
   }
 
   // Fungsi untuk menambah section baru
@@ -95,19 +140,19 @@ class Form extends Component {
         updatedSections[sectionIndex].questions[questionIndex] = fieldData;
       });
     });
-    const title = this.headerRef.state
-    this.setState({ sections: updatedSections, title: this.headerRef.state.title });
+    console.log("updatedSections", updatedSections)
+    this.setState({ sections: updatedSections, title: this.headerRef.state });
   }
 
 
   render() {
     const { sections } = this.state;
-    console.log(this.state)
     return (
       <FormContainer>
         <Header ref={(ref) => { this.headerRef = ref }}
+          title={this.state.title}
         />
-        {sections.map((section, sectionIndex) => (
+        {sections?.map((section, sectionIndex) => (
           <div key={sectionIndex}>
             <Section label={section.label}
               section={section}

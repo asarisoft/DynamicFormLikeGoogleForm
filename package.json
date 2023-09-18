@@ -1,6 +1,6 @@
 {
   "name": "react-google-form-clone",
-  "version": "1.0.12",
+  "version": "1.0.21",
   "description": "React form generator",
   "private": false,
   "main": "src/components/form/index.js",
@@ -57,9 +57,6 @@
     "src/components/form/index.js"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.22.15",
-    "@babel/core": "^7.22.19",
-    "@babel/plugin-syntax-jsx": "^7.22.5",
     "@babel/preset-react": "^7.22.15"
   }
 }
