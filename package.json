@@ -1,9 +1,11 @@
 {
   "name": "react-google-form-clone",
-  "version": "1.0.21",
+  "version": "1.0.26",
   "description": "React form generator",
   "private": false,
-  "main": "src/components/form/index.js",
+  "main": "dist/components/form/index.js",
+  "module": "dist/components/form/index.js",
+  "files": [ "dist", "README.md" ],
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -19,7 +21,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "publish": "npm publish --access public"
+    "publish:npm": "rm -rf dist && mkdir dist &&  babel src -d dist --copy-files"
   },
   "repository": {
     "type": "git",
@@ -52,11 +54,13 @@
   },
   "author": "Asari Software",
   "license": "",
-  "files": [
-    "src/components",
-    "src/components/form/index.js"
-  ],
   "devDependencies": {
+    "@babel/cli": "^7.22.15",
     "@babel/preset-react": "^7.22.15"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-react"
+    ]
   }
 }
