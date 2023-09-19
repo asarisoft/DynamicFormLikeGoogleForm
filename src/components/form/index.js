@@ -6,54 +6,20 @@ import { FormContainer } from './indexElement';
 import { StyledButton } from '../general';
 
 
-const dummyData = [{
+const initialData = [{
   "sections": [
-      {
-          "label": "Section 1",
-          "questions": [
-              {
-                  "type": "paragraph",
-                  "question": "asfsdfdsfsd"
-              },
-              {
-                "type": "paragraph",
-                "question": "asfsdfdsfsd"
-            },
-              {
-                  "type": "multiple",
-                  "question": "asdfadsfdsa",
-                  "options": [
-                      {
-                          "label": "a",
-                          "action": ""
-                      },
-                      {
-                          "label": "b",
-                          "action": ""
-                      },
-                      {
-                          "label": "c",
-                          "action": ""
-                      },
-                      {
-                          "label": "d",
-                          "action": ""
-                      }
-                  ]
-              },
-              {
-                  "type": "scale",
-                  "question": "aaaaaa",
-                  "scale": {
-                      "start": 1,
-                      "finish": 3
-                  }
-              }
-          ],
-          "isQuestionsVisible": true
-      }
+    {
+      "label": "Section 1",
+      "questions": [
+        {
+          "type": "",
+          "question": ""
+        },
+      ],
+      "isQuestionsVisible": true
+    }
   ],
-  "title": "Survey Oke"
+  "title": ""
 }]
 
 class Form extends Component {
@@ -67,8 +33,8 @@ class Form extends Component {
     this.headerRef = null;
   }
 
-  componentDidMount () {
-    // this.setState({sections: dummyData[0]['sections'], title: dummyData[0]['title'] })
+  componentDidMount() {
+    this.setState({ sections: initialData[0]['sections'], title: initialData[0]['title'] })
   }
 
   // Fungsi untuk menambah section baru
@@ -127,6 +93,13 @@ class Form extends Component {
     this.setState({ sections: updatedSections });
   }
 
+  // delete section 
+  deleteSection = (sectionIndex) => {
+    const updatedSections = [...this.state.sections];
+    updatedSections.splice(sectionIndex, 1);
+    this.setState({ sections: updatedSections });
+  }
+
   populateData = () => {
     const { sections } = this.state;
     const updatedSections = [...sections];
@@ -140,8 +113,8 @@ class Form extends Component {
         updatedSections[sectionIndex].questions[questionIndex] = fieldData;
       });
     });
-    console.log("updatedSections", updatedSections)
     this.setState({ sections: updatedSections, title: this.headerRef.state });
+    return updatedSections
   }
 
 
@@ -158,6 +131,7 @@ class Form extends Component {
               section={section}
               onAddField={() => this.addQuestionToSection(sectionIndex)}
               onToggleQustion={() => this.toggleQuestionsVisibility(sectionIndex)}
+              onDeleteSection={() => this.deleteSection(sectionIndex)}
             />
             <div style={{ display: section.isQuestionsVisible ? 'block' : 'none' }}>
               {section.questions.map((question, questionIndex) => (
@@ -181,7 +155,7 @@ class Form extends Component {
         ))}
         <div className='form-footer'>
           <StyledButton onClick={this.addSection}>Add Section</StyledButton>
-          <StyledButton onClick={this.populateData}>Generate & Submit</StyledButton>
+          {/* <StyledButton onClick={this.populateData}>Generate & Submit</StyledButton> */}
         </div>
       </FormContainer>
     );

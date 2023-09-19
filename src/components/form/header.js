@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import {
   Input,
-  TextArea
+  // TextArea
 } from '../general';
 import { HeaderFormContainer} from './headerElement';
 
@@ -34,7 +34,7 @@ class HeaderForm extends Component {
         <Input
           type="text"
           value={this.state.title || this.props.title}
-          placeholder='form title'
+          placeholder='Survey Title'
           onChange={this.handleTitleChange}
         />
         {/* <TextArea

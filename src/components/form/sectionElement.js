@@ -19,7 +19,10 @@ export const SectionContainer = styled.div`
     .button-wrapper {
         text-align: right;
         button {
-            margin-left: 8px;
+            margin-left: 10px;
+        }
+        .delete-button {
+            background-color: ${colors.red}   
         }
     }
 `;

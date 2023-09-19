@@ -1,5 +1,5 @@
-import styled, { css } from 'styled-components';
-import { screensize } from '../../utils'; // Gantilah 'path-to-your-utils' dengan path yang benar ke utils Anda
+import styled from 'styled-components';
+import {  screensize } from '../../utils'; // Gantilah 'path-to-your-utils' dengan path yang benar ke utils Anda
 
 export const FormContainer = styled.div`
     width: 100%;
@@ -12,7 +12,7 @@ export const FormContainer = styled.div`
         }
     }
     @media ${screensize.desktopUp} {
-        width: 65%;
+        width: 70%;
         margin: 0 auto;
     }
 `;

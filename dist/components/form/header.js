@@ -59,7 +59,7 @@ var HeaderForm = /*#__PURE__*/function (_Component) {
       return /*#__PURE__*/_react.default.createElement(_headerElement.HeaderFormContainer, null, /*#__PURE__*/_react.default.createElement(_general.Input, {
         type: "text",
         value: this.state.title || this.props.title,
-        placeholder: "form title",
+        placeholder: "Survey Title",
         onChange: this.handleTitleChange
       }));
     }

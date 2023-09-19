@@ -33,42 +33,16 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-var dummyData = [{
+var initialData = [{
   "sections": [{
     "label": "Section 1",
     "questions": [{
-      "type": "paragraph",
-      "question": "asfsdfdsfsd"
-    }, {
-      "type": "paragraph",
-      "question": "asfsdfdsfsd"
-    }, {
-      "type": "multiple",
-      "question": "asdfadsfdsa",
-      "options": [{
-        "label": "a",
-        "action": ""
-      }, {
-        "label": "b",
-        "action": ""
-      }, {
-        "label": "c",
-        "action": ""
-      }, {
-        "label": "d",
-        "action": ""
-      }]
-    }, {
-      "type": "scale",
-      "question": "aaaaaa",
-      "scale": {
-        "start": 1,
-        "finish": 3
-      }
+      "type": "",
+      "question": ""
     }],
     "isQuestionsVisible": true
   }],
-  "title": "Survey Oke"
+  "title": ""
 }];
 var Form = /*#__PURE__*/function (_Component) {
   _inherits(Form, _Component);
@@ -140,6 +114,14 @@ var Form = /*#__PURE__*/function (_Component) {
         sections: updatedSections
       });
     });
+    // delete section 
+    _defineProperty(_assertThisInitialized(_this), "deleteSection", function (sectionIndex) {
+      var updatedSections = _toConsumableArray(_this.state.sections);
+      updatedSections.splice(sectionIndex, 1);
+      _this.setState({
+        sections: updatedSections
+      });
+    });
     _defineProperty(_assertThisInitialized(_this), "populateData", function () {
       var sections = _this.state.sections;
       var updatedSections = _toConsumableArray(sections);
@@ -153,11 +135,11 @@ var Form = /*#__PURE__*/function (_Component) {
           updatedSections[sectionIndex].questions[questionIndex] = fieldData;
         });
       });
-      console.log("updatedSections", updatedSections);
       _this.setState({
         sections: updatedSections,
         title: _this.headerRef.state
       });
+      return updatedSections;
     });
     _this.state = {
       sections: [],
@@ -170,7 +152,10 @@ var Form = /*#__PURE__*/function (_Component) {
   _createClass(Form, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      // this.setState({sections: dummyData[0]['sections'], title: dummyData[0]['title'] })
+      this.setState({
+        sections: initialData[0]['sections'],
+        title: initialData[0]['title']
+      });
     }
   }, {
     key: "render",
@@ -193,6 +178,9 @@ var Form = /*#__PURE__*/function (_Component) {
           },
           onToggleQustion: function onToggleQustion() {
             return _this2.toggleQuestionsVisibility(sectionIndex);
+          },
+          onDeleteSection: function onDeleteSection() {
+            return _this2.deleteSection(sectionIndex);
           }
         }), /*#__PURE__*/_react.default.createElement("div", {
           style: {
@@ -225,9 +213,7 @@ var Form = /*#__PURE__*/function (_Component) {
         className: "form-footer"
       }, /*#__PURE__*/_react.default.createElement(_general.StyledButton, {
         onClick: this.addSection
-      }, "Add Section"), /*#__PURE__*/_react.default.createElement(_general.StyledButton, {
-        onClick: this.populateData
-      }, "Generate & Submit")));
+      }, "Add Section")));
     }
   }]);
   return Form;

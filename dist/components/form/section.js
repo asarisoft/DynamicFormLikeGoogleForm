@@ -12,16 +12,20 @@ var SectionForm = function SectionForm(_ref) {
   var section = _ref.section,
     label = _ref.label,
     onAddField = _ref.onAddField,
-    onToggleQustion = _ref.onToggleQustion;
+    onToggleQustion = _ref.onToggleQustion,
+    onDeleteSection = _ref.onDeleteSection;
   return /*#__PURE__*/_react.default.createElement(_sectionElement.SectionContainer, null, /*#__PURE__*/_react.default.createElement("h3", null, label), /*#__PURE__*/_react.default.createElement("div", {
     className: "button-wrapper"
-  }, section.questions.length == 0 && /*#__PURE__*/_react.default.createElement(_general.StyledButton, {
+  }, section.questions.length === 0 && /*#__PURE__*/_react.default.createElement(_general.StyledButton, {
     className: "add-button",
     onClick: onAddField
   }, "+ Question"), section.questions.length > 0 && /*#__PURE__*/_react.default.createElement(_general.StyledButton, {
     className: "add-button",
     onClick: onToggleQustion
-  }, section.isQuestionsVisible ? "Hide" : "Show")));
+  }, section.isQuestionsVisible ? "Hide" : "Show"), /*#__PURE__*/_react.default.createElement(_general.StyledButton, {
+    className: "delete-button",
+    onClick: onDeleteSection
+  }, "-")));
 };
 var _default = SectionForm;
 exports.default = _default;

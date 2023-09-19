@@ -1,7 +1,7 @@
 {
-  "name": "react-google-form-clone",
-  "version": "1.0.26",
-  "description": "React form generator",
+  "name": "react-survey-form-generator",
+  "version": "1.0.3",
+  "description": "React form survey generator like google form",
   "private": false,
   "main": "dist/components/form/index.js",
   "module": "dist/components/form/index.js",
@@ -10,8 +10,8 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "16.12.0",
+    "react-dom": "16.8.6",
     "react-scripts": "5.0.1",
     "styled-components": "^6.0.8",
     "web-vitals": "^2.1.4"
