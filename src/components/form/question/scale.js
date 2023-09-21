@@ -8,7 +8,9 @@ class Scale extends Component {
     super(props);
     this.state = {
       start: '', // Nilai awal
-      finish: '', // Nilai akhir
+      to: '', // Nilai akhir
+      label_start: '',
+      label_to: ''
     };
   }
 
@@ -27,7 +29,7 @@ class Scale extends Component {
   }
 
   render() {
-    const { start, finish } = this.state;
+    const { start, finish, label_start, label_to } = this.state;
 
     return (
       <Container>
@@ -41,10 +43,25 @@ class Scale extends Component {
           />
           <Input
             type="number"
-            name="finish"
+            name="to"
             value={finish}
             onChange={this.handleInputChange}
             placeholder="Finish"
+          />
+          <br/>
+          <Input
+            type="string"
+            name="label_start"
+            value={label_start}
+            onChange={this.handleInputChange}
+            placeholder="Left String"
+          />
+          <Input
+            type="string"
+            name="label_to"
+            value={label_to}
+            onChange={this.handleInputChange}
+            placeholder="Right String"
           />
         </div>
       </Container>

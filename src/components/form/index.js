@@ -13,7 +13,7 @@ const initialData = [{
       "questions": [
         {
           "type": "",
-          "question": ""
+          "title": ""
         },
       ],
       "isQuestionsVisible": true
@@ -104,6 +104,7 @@ class Form extends Component {
     const { sections } = this.state;
     const updatedSections = [...sections];
     // Loop melalui setiap section
+    const result = []
     updatedSections.forEach((section, sectionIndex) => {
       // Loop melalui setiap question dalam section
       section.questions.forEach((question, questionIndex) => {
@@ -111,12 +112,41 @@ class Form extends Component {
         // Berdasarkan indeks pertanyaan (question index)
         const fieldData = this.fieldRefs[sectionIndex][questionIndex].state;
         updatedSections[sectionIndex].questions[questionIndex] = fieldData;
+        const dataQuestion = {
+          _id: fieldData._id,
+          title: fieldData.title,
+          section: sectionIndex+1,
+          descriptions: fieldData.descriptions,
+          required: fieldData.required,
+          descriptions: fieldData.descriptions
+        }
+        const fieldataToUpdate = {...fieldData}
+        delete fieldataToUpdate._id
+        delete fieldataToUpdate.title
+        delete fieldataToUpdate.descriptions
+        delete fieldataToUpdate.required
+        if (fieldData.type === "single") {
+          const options = []
+          const actions = []
+          fieldData.options.map(dt=>{
+            options.push(dt.label)
+            actions.push(dt.action)
+          })
+          dataQuestion.form = {
+            type: "choice",
+            option: options,
+            action: actions
+          }
+        } else {
+          dataQuestion.form = fieldataToUpdate
+        }
+        result.push(dataQuestion)
       });
     });
+    console.log(result);
     this.setState({ sections: updatedSections, title: this.headerRef.state });
-    return updatedSections
+    return result
   }
-
 
   render() {
     const { sections } = this.state;
@@ -155,7 +185,7 @@ class Form extends Component {
         ))}
         <div className='form-footer'>
           <StyledButton onClick={this.addSection}>Add Section</StyledButton>
-          {/* <StyledButton onClick={this.populateData}>Generate & Submit</StyledButton> */}
+          <StyledButton onClick={this.populateData}>Generate & Submit</StyledButton>
         </div>
       </FormContainer>
     );

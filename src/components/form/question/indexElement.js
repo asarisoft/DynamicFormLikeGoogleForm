@@ -39,18 +39,38 @@ export const FieldsContainer = styled.div`
         .body {
             margin-top: 4px;
             positon: relative;
-            select {
-                padding: 4px;
-                background-color: ${colors.blue4};
-                color: white;
-                border-radius: 4px;
-                margin: 4px 0px 10px;
-            }
+            
             .btn-add-question {
                 position: absolute;
                 bottom: 8px;
                 right: 8px;
             }
+            .type-wrapper {
+                display: flex;
+                align-items: center;
+                margin-top: 10px;
+                select {
+                    padding: 4px;
+                    background-color: ${colors.blue4};
+                    color: white;
+                    border-radius: 4px;
+                }
+                .required-wrapper {
+                    background-color: ${colors.blue4};
+                    width: 100px;
+                    max-width: 100px;
+                    border-radius: 4px;
+                    color: white;
+                    display: flex;
+                    height: 25px;
+                    margin-left: 10px;
+                    border: 1px solid grey;
+                    font-size: 13px;
+                    justify-content: center;
+                    align-items: center;
+                }
+            }
+            
         }
     }
 `;

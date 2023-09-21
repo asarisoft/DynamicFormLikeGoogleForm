@@ -132,14 +132,18 @@ var Form = /*#__PURE__*/function (_Component) {
           // Di sini Anda bisa mengambil data dari komponen Question dan menggantinya
           // Berdasarkan indeks pertanyaan (question index)
           var fieldData = _this.fieldRefs[sectionIndex][questionIndex].state;
+          fieldData['answer'] = "";
           updatedSections[sectionIndex].questions[questionIndex] = fieldData;
         });
       });
       _this.setState({
         sections: updatedSections,
-        title: _this.headerRef.state
+        title: _this.headerRef.state.title
       });
-      return updatedSections;
+      return {
+        title: _this.headerRef.state.title,
+        sections: updatedSections
+      };
     });
     _this.state = {
       sections: [],
@@ -213,7 +217,9 @@ var Form = /*#__PURE__*/function (_Component) {
         className: "form-footer"
       }, /*#__PURE__*/_react.default.createElement(_general.StyledButton, {
         onClick: this.addSection
-      }, "Add Section")));
+      }, "Add Section"), /*#__PURE__*/_react.default.createElement(_general.StyledButton, {
+        onClick: this.populateData
+      }, "Generate & Submit")));
     }
   }]);
   return Form;

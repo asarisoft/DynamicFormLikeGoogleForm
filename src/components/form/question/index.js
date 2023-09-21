@@ -10,21 +10,28 @@ class Question extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      _id: `${Date.now()}`,
       type: 'paragraph',
-      question: '',
+      title: '',
+      descriptions: '',
+      required: false,
     }
   }
 
   componentDidMount() {
     const question = this.props.question;
     this.setState({
-      type: question.type,
+      _id: `${Date.now()}`,
+      type: 'paragraph',
+      title: '',
+      descriptions: '',
+      required: false,
     })
   }
 
   // update data ke props utama
   handleInputQuestion = (e) => {
-    this.setState({ question: e.target.value });
+    this.setState({ title: e.target.value });
   };
 
   // digunakan untuk mengubah children type
@@ -33,13 +40,17 @@ class Question extends Component {
     this.setState({ type: e.target.value });
   };
 
+  handleRequiredChange = (e) => {
+    this.setState((prevState) => ({ required: !prevState.required }));
+  };
+
   // digunakan untuk render setalah type dirubah
   renderAnswerTypeComponent() {
     const { type } = this.state;
     switch (type) {
       case 'single':
         return <Options type="single"
-           // digunakan untuk update state pas edit
+          // digunakan untuk update state pas edit
           question={this.props.question}
           onUpdateState={(data) => {
             this.setState({ options: data })
@@ -49,15 +60,17 @@ class Question extends Component {
           // digunakan untuk update state pas edit
           question={this.props.question}
           onUpdateState={(data) => {
-            this.setState({ options: data })
+            this.setState({ ...data })
           }} />;
       case 'scale':
         return <Scale
-           // digunakan untuk update state pas edit
-           question={this.props.question}
+          // digunakan untuk update state pas edit
+          question={this.props.question}
           onUpdateState={(data) => {
-            this.setState({ scale: data })
+            this.setState({ ...data })
           }} />;
+      case 'info':
+        return <Paragraph />;
       case 'paragraph':
         return <Paragraph />;
       default:
@@ -78,6 +91,14 @@ class Question extends Component {
           <div className='question' >
             <div onClick={this.props.onClick}>
               <Input
+                type="hidden"
+                name="question"
+                placeholder='Input Question'
+                value={this.state._id}
+                onChange={this.handleInputQuestion}
+              />
+
+              <Input
                 type="text"
                 name="question"
                 placeholder='Input Question'
@@ -92,16 +113,33 @@ class Question extends Component {
             <StyledButton
               className='btn-add-question'
               onClick={() => onAddQuestion()}>+ Question</StyledButton>
+            
+            <div className='type-wrapper'>
             <select
               name="answerType"
               value={this.state.type}
               onChange={this.handleAnswerTypeChange}
             >
+              <option value="paragraph">Paragraph</option>
               <option value="single">Single</option>
               <option value="multiple">Multiple</option>
               <option value="scale">Scale</option>
-              <option value="paragraph">Paragraph</option>
+              <option value="info">Info</option>
             </select>
+
+            <div className='required-wrapper'>
+              <label> Required:</label>
+              <input
+                type="checkbox"
+                name="required"
+                checked={this.state.required}
+                onChange={this.handleRequiredChange}
+              />
+            </div>
+            </div>
+
+
+
             {this.renderAnswerTypeComponent()}
           </div>
         </div>

@@ -12,7 +12,7 @@ class HeaderForm extends Component {
     super(props);
     this.state = {
       title: '',
-      description: ''
+      descriptions: ''
     };
   }
 
