@@ -6,6 +6,54 @@ import { FormContainer } from './indexElement';
 import { StyledButton } from '../general';
 
 
+const dataFromServer = [
+  {
+      "_id": "1695356215212",
+      "title": "paragraph",
+      "section": 1,
+      "descriptions": "paragraph",
+      "required": false,
+      "form": {
+          "type": "scale",
+          "start": "1",
+          "to": "2",
+          "label_start": "34",
+          "label_to": "11"
+      }
+  },
+  {
+      "_id": "1695356652910",
+      "title": "single",
+      "section": 1,
+      "descriptions": "",
+      "required": false,
+      "form": {
+          "type": "choice",
+          "option": [
+              "1",
+              "2",
+              "3"
+          ],
+          "action": [
+              "1",
+              "2",
+              "3"
+          ]
+      }
+  },
+  {
+      "_id": "1695356664548",
+      "title": "11",
+      "section": 1,
+      "descriptions": "",
+      "required": false,
+      "form": {
+          "type": "multiple",
+          "option": []
+      }
+  }
+]
+
 const initialData = [{
   "sections": [
     {
@@ -35,6 +83,8 @@ class Form extends Component {
 
   componentDidMount() {
     this.setState({ sections: initialData[0]['sections'], title: initialData[0]['title'] })
+    const data = this.buildStateFromListQuestion(dataFromServer);
+    this.setState({ sections: data, title: initialData[0]['title'] })
   }
 
   // Fungsi untuk menambah section baru
@@ -103,21 +153,17 @@ class Form extends Component {
   populateData = () => {
     const { sections } = this.state;
     const updatedSections = [...sections];
-    // Loop melalui setiap section
     const result = []
     updatedSections.forEach((section, sectionIndex) => {
-      // Loop melalui setiap question dalam section
       section.questions.forEach((question, questionIndex) => {
-        // Di sini Anda bisa mengambil data dari komponen Question dan menggantinya
-        // Berdasarkan indeks pertanyaan (question index)
         const fieldData = this.fieldRefs[sectionIndex][questionIndex].state;
         updatedSections[sectionIndex].questions[questionIndex] = fieldData;
-        const dataQuestion = this.buildFormQuestionFromState(fieldData, questionIndex)
+        const dataQuestion = this.buildFormQuestionFromState(fieldData, sectionIndex)
         result.push(dataQuestion)
       });
     });
-    console.log(result);
     this.setState({ sections: updatedSections, title: this.headerRef.state });
+    console.log("resulst", result)
     return result
   }
 
@@ -156,10 +202,10 @@ class Form extends Component {
     } else if (fieldData.type === "scale") {
       dataQuestion.form = {
         type: fieldData.type,
-        start: fieldData.start,
-        to: fieldData.to,
-        label_start: fieldData.label_start,
-        label_to: fieldData.label_to,
+        start: fieldData.scale.start,
+        to: fieldData.scale.to,
+        label_start: fieldData.scale.label_start,
+        label_to: fieldData.scale.label_to,
       }
     } else { //paragraph, info
       dataQuestion.form = {
@@ -167,6 +213,57 @@ class Form extends Component {
       }
     }
     return dataQuestion
+  }
+
+  buildStateFromListQuestion = (inputData) => {
+    const sectionMap = new Map();
+    const transformedData = [];
+
+    inputData.forEach(item => {
+      const sectionId = item.section;
+      let sectionData = sectionMap.get(sectionId);
+
+      if (!sectionData) {
+        sectionData = {
+          label: `Section ${sectionId}`,
+          questions: [],
+          isQuestionsVisible: true,
+        };
+        sectionMap.set(sectionId, sectionData);
+        transformedData.push(sectionData);
+      }
+
+      const question = {
+        _id: item._id,
+        type: item.form.type,
+        title: item.title,
+        descriptions: item.descriptions,
+        required: item.required,
+      };
+
+      if (item.form.type === 'choice') {
+        question.options = item.form.option.map((option, idx) => ({
+          label: option,
+          action: item.form.action[idx], // Assuming the first action is correct
+        }));
+      } else if (item.form.type === 'multiple') {
+        question.options = item.form.option.map(option => ({
+          label: option,
+          action: '',
+        }));
+      } else if (item.form.type === 'scale') {
+        question.scale = {
+          start: item.form.start,
+          to : item.form.to,
+          label_start: item.form.label_start,
+          label_to: item.form.label_to
+        }
+      }
+
+      sectionData.questions.push(question);
+    });
+
+    return transformedData;
   }
 
   render() {

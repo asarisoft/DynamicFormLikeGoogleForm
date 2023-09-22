@@ -21,11 +21,13 @@ class Question extends Component {
   componentDidMount() {
     const question = this.props.question;
     this.setState({
-      _id: `${Date.now()}`,
-      type: 'paragraph',
-      title: '',
-      descriptions: '',
-      required: false,
+      _id: question._id || `${Date.now()}`,
+      type: question.type || 'paragraph',
+      title: question.title || '',
+      descriptions: question.descriptions || '',
+      required: question.required || false,
+      scale: question.scale,
+      options: question.scale
     })
   }
 
@@ -67,7 +69,7 @@ class Question extends Component {
           // digunakan untuk update state pas edit
           question={this.props.question}
           onUpdateState={(data) => {
-            this.setState({ ...data })
+            this.setState({ scale: {...data} })
           }} />;
       case 'info':
         return <Paragraph />;
@@ -91,7 +93,7 @@ class Question extends Component {
           <div className='question' >
             <div onClick={this.props.onClick}>
               <Input
-                type="hidden"
+                type="text"
                 name="question"
                 placeholder='Input Question'
                 value={this.state._id}
@@ -102,7 +104,7 @@ class Question extends Component {
                 type="text"
                 name="question"
                 placeholder='Input Question'
-                value={this.state.question || this.props.question.question}
+                value={this.state.title}
                 onChange={this.handleInputQuestion}
               />
             </div>

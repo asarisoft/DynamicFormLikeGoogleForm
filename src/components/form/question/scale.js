@@ -24,12 +24,14 @@ class Scale extends Component {
     if (this.props.question.scale)
       this.setState({
         start: this.props.question.scale.start,
-        finish: this.props.question.scale.finish
+        to: this.props.question.scale.to,
+        label_start: this.props.question.scale.label_start,
+        label_to: this.props.question.scale.label_to,
       })
   }
 
   render() {
-    const { start, finish, label_start, label_to } = this.state;
+    const { start, to, label_start, label_to } = this.state;
 
     return (
       <Container>
@@ -44,7 +46,7 @@ class Scale extends Component {
           <Input
             type="number"
             name="to"
-            value={finish}
+            value={to}
             onChange={this.handleInputChange}
             placeholder="Finish"
           />
