@@ -48,8 +48,8 @@ class Question extends Component {
   renderAnswerTypeComponent() {
     const { type } = this.state;
     switch (type) {
-      case 'single':
-        return <Options type="single"
+      case 'choice':
+        return <Options type="choice"
           // digunakan untuk update state pas edit
           question={this.props.question}
           onUpdateState={(data) => {
@@ -60,7 +60,7 @@ class Question extends Component {
           // digunakan untuk update state pas edit
           question={this.props.question}
           onUpdateState={(data) => {
-            this.setState({ ...data })
+            this.setState({ options: data })
           }} />;
       case 'scale':
         return <Scale
@@ -121,7 +121,7 @@ class Question extends Component {
               onChange={this.handleAnswerTypeChange}
             >
               <option value="paragraph">Paragraph</option>
-              <option value="single">Single</option>
+              <option value="choice">Single</option>
               <option value="multiple">Multiple</option>
               <option value="scale">Scale</option>
               <option value="info">Info</option>

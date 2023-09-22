@@ -112,40 +112,61 @@ class Form extends Component {
         // Berdasarkan indeks pertanyaan (question index)
         const fieldData = this.fieldRefs[sectionIndex][questionIndex].state;
         updatedSections[sectionIndex].questions[questionIndex] = fieldData;
-        const dataQuestion = {
-          _id: fieldData._id,
-          title: fieldData.title,
-          section: sectionIndex+1,
-          descriptions: fieldData.descriptions,
-          required: fieldData.required,
-          descriptions: fieldData.descriptions
-        }
-        const fieldataToUpdate = {...fieldData}
-        delete fieldataToUpdate._id
-        delete fieldataToUpdate.title
-        delete fieldataToUpdate.descriptions
-        delete fieldataToUpdate.required
-        if (fieldData.type === "single") {
-          const options = []
-          const actions = []
-          fieldData.options.map(dt=>{
-            options.push(dt.label)
-            actions.push(dt.action)
-          })
-          dataQuestion.form = {
-            type: "choice",
-            option: options,
-            action: actions
-          }
-        } else {
-          dataQuestion.form = fieldataToUpdate
-        }
+        const dataQuestion = this.buildFormQuestionFromState(fieldData, questionIndex)
         result.push(dataQuestion)
       });
     });
     console.log(result);
     this.setState({ sections: updatedSections, title: this.headerRef.state });
     return result
+  }
+
+  buildFormQuestionFromState = (fieldData, section) => {
+    const dataQuestion = {
+      _id: fieldData._id,
+      title: fieldData.title,
+      section: section + 1,
+      descriptions: fieldData.descriptions,
+      required: fieldData.required,
+      descriptions: fieldData.descriptions
+    }
+
+    if (fieldData.type === "choice") {
+      const options = []
+      const actions = []
+      fieldData.options?.map(dt => {
+        options.push(dt.label)
+        actions.push(dt.action)
+      })
+      dataQuestion.form = {
+        type: fieldData.type,
+        option: options,
+        action: actions
+      }
+    }
+    else if (fieldData.type === "multiple") {
+      const options = []
+      fieldData.options?.map(dt => {
+        options.push(dt.label)
+      })
+      dataQuestion.form = {
+        type: fieldData.type,
+        option: options,
+      }
+    } else if (fieldData.type === "scale") {
+      dataQuestion.form = {
+        type: fieldData.type,
+        start: fieldData.start,
+        to: fieldData.to,
+        label_start: fieldData.label_start,
+        label_to: fieldData.label_to,
+      }
+    } else { //paragraph, info
+      dataQuestion.form = {
+        type: fieldData.type
+      }
+    }
+    return dataQuestion
   }
 
   render() {

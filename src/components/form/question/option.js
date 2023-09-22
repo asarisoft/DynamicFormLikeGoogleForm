@@ -59,7 +59,7 @@ class Options extends Component {
               value={option.label}
               onChange={(e) => this.handleOptionChange(index, e)}
             />
-            {type == 'single' &&
+            {type == 'choice' &&
               <Input
                 type="number"
                 name="action"
