@@ -42,7 +42,7 @@ var HeaderForm = /*#__PURE__*/function (_Component) {
     });
     _this.state = {
       title: '',
-      description: ''
+      descriptions: ''
     };
     return _this;
   }

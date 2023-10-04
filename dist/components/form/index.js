@@ -33,17 +33,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-var initialData = [{
-  "sections": [{
-    "label": "Section 1",
-    "questions": [{
-      "type": "",
-      "question": ""
-    }],
-    "isQuestionsVisible": true
-  }],
-  "title": ""
-}];
 var Form = /*#__PURE__*/function (_Component) {
   _inherits(Form, _Component);
   var _super = _createSuper(Form);
@@ -125,25 +114,122 @@ var Form = /*#__PURE__*/function (_Component) {
     _defineProperty(_assertThisInitialized(_this), "populateData", function () {
       var sections = _this.state.sections;
       var updatedSections = _toConsumableArray(sections);
-      // Loop melalui setiap section
+      var result = [];
       updatedSections.forEach(function (section, sectionIndex) {
-        // Loop melalui setiap question dalam section
         section.questions.forEach(function (question, questionIndex) {
-          // Di sini Anda bisa mengambil data dari komponen Question dan menggantinya
-          // Berdasarkan indeks pertanyaan (question index)
           var fieldData = _this.fieldRefs[sectionIndex][questionIndex].state;
-          fieldData['answer'] = "";
           updatedSections[sectionIndex].questions[questionIndex] = fieldData;
+          var dataQuestion = _this.buildFormQuestionFromState(fieldData, sectionIndex);
+          result.push(dataQuestion);
         });
       });
       _this.setState({
         sections: updatedSections,
         title: _this.headerRef.state.title
       });
+      console.log("result", result);
       return {
-        title: _this.headerRef.state.title,
-        sections: updatedSections
+        title: _this.headerRef.state.title || _this.state.title,
+        jsonForm: result
       };
+    });
+    // before submit
+    _defineProperty(_assertThisInitialized(_this), "buildFormQuestionFromState", function (fieldData, section) {
+      console.log("filedData", fieldData);
+      var dataQuestion = _defineProperty({
+        _id: fieldData._id,
+        title: fieldData.title,
+        section: section + 1,
+        descriptions: fieldData.descriptions,
+        required: fieldData.required
+      }, "descriptions", fieldData.descriptions);
+      if (fieldData.type === "choice") {
+        var _fieldData$options;
+        var options = [];
+        var actions = [];
+        (_fieldData$options = fieldData.options) === null || _fieldData$options === void 0 || _fieldData$options.map(function (dt) {
+          options.push(dt.label);
+          actions.push(dt.action);
+        });
+        dataQuestion.form = {
+          type: fieldData.type,
+          option: options,
+          action: actions
+        };
+      } else if (fieldData.type === "multiple" || fieldData.type === "likert") {
+        var _fieldData$options2;
+        var _options = [];
+        (_fieldData$options2 = fieldData.options) === null || _fieldData$options2 === void 0 || _fieldData$options2.map(function (dt) {
+          _options.push(dt.label);
+        });
+        dataQuestion.form = {
+          type: fieldData.type,
+          option: _options
+        };
+      } else if (fieldData.type === "scale") {
+        dataQuestion.form = {
+          type: fieldData.type,
+          start: fieldData.scale.start,
+          to: fieldData.scale.to,
+          label_start: fieldData.scale.label_start,
+          label_to: fieldData.scale.label_to
+        };
+      } else {
+        //paragraph, info
+        dataQuestion.form = {
+          type: fieldData.type
+        };
+      }
+      return dataQuestion;
+    });
+    // before edit
+    _defineProperty(_assertThisInitialized(_this), "buildStateFromListQuestion", function (inputData) {
+      var sectionMap = new Map();
+      var transformedData = [];
+      inputData.forEach(function (item) {
+        var sectionId = item.section;
+        var sectionData = sectionMap.get(sectionId);
+        if (!sectionData) {
+          sectionData = {
+            label: "Section ".concat(sectionId),
+            questions: [],
+            isQuestionsVisible: true
+          };
+          sectionMap.set(sectionId, sectionData);
+          transformedData.push(sectionData);
+        }
+        var question = {
+          _id: item._id,
+          type: item.form.type,
+          title: item.title,
+          descriptions: item.descriptions,
+          required: item.required
+        };
+        if (item.form.type === 'choice') {
+          question.options = item.form.option.map(function (option, idx) {
+            return {
+              label: option,
+              action: item.form.action[idx] // Assuming the first action is correct
+            };
+          });
+        } else if (item.form.type === 'multiple' || item.form.type === 'likert') {
+          question.options = item.form.option.map(function (option) {
+            return {
+              label: option,
+              action: ''
+            };
+          });
+        } else if (item.form.type === 'scale') {
+          question.scale = {
+            start: item.form.start,
+            to: item.form.to,
+            label_start: item.form.label_start,
+            label_to: item.form.label_to
+          };
+        }
+        sectionData.questions.push(question);
+      });
+      return transformedData;
     });
     _this.state = {
       sections: [],
@@ -156,10 +242,54 @@ var Form = /*#__PURE__*/function (_Component) {
   _createClass(Form, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.setState({
-        sections: initialData[0]['sections'],
-        title: initialData[0]['title']
-      });
+      var initialData = {
+        "sections": [{
+          "label": "Section 1",
+          "questions": [{
+            "type": "",
+            "title": ""
+          }],
+          "isQuestionsVisible": true
+        }],
+        "title": ""
+      };
+      //   const data = this.buildStateFromListQuestion(dataFromServer);
+      if (this.props.formData) {
+        var data = this.props.formData;
+        var formData = this.buildStateFromListQuestion(data.json_form);
+        this.setState({
+          sections: formData,
+          title: data.title
+        });
+      } else {
+        this.setState({
+          sections: initialData['sections'],
+          title: initialData['title']
+        });
+      }
+      var testData = [{
+        "_id": "1696400270089",
+        "title": "sssss",
+        "section": 1,
+        "descriptions": "",
+        "required": true,
+        "form": {
+          "type": "likert",
+          "option": ["Sangat tidak setuju", "Tidak setuju", "Setuju", "Sangat Setuju"]
+        }
+      }, {
+        "_id": "1696400280432",
+        "title": "sss",
+        "section": 1,
+        "descriptions": "",
+        "required": true,
+        "form": {
+          "type": "choice",
+          "option": ["ss", "sss"],
+          "action": ["", ""]
+        }
+      }];
+      this.buildStateFromListQuestion(testData);
     }
   }, {
     key: "render",

@@ -6,70 +6,6 @@ import { FormContainer } from './indexElement';
 import { StyledButton } from '../general';
 
 
-const dataFromServer = [
-  {
-      "_id": "1695356215212",
-      "title": "paragraph",
-      "section": 1,
-      "descriptions": "paragraph",
-      "required": false,
-      "form": {
-          "type": "scale",
-          "start": "1",
-          "to": "2",
-          "label_start": "34",
-          "label_to": "11"
-      }
-  },
-  {
-      "_id": "1695356652910",
-      "title": "single",
-      "section": 1,
-      "descriptions": "",
-      "required": false,
-      "form": {
-          "type": "choice",
-          "option": [
-              "1",
-              "2",
-              "3"
-          ],
-          "action": [
-              "1",
-              "2",
-              "3"
-          ]
-      }
-  },
-  {
-      "_id": "1695356664548",
-      "title": "11",
-      "section": 1,
-      "descriptions": "",
-      "required": false,
-      "form": {
-          "type": "multiple",
-          "option": []
-      }
-  }
-]
-
-const initialData = [{
-  "sections": [
-    {
-      "label": "Section 1",
-      "questions": [
-        {
-          "type": "",
-          "title": ""
-        },
-      ],
-      "isQuestionsVisible": true
-    }
-  ],
-  "title": ""
-}]
-
 class Form extends Component {
   constructor(props) {
     super(props);
@@ -82,9 +18,67 @@ class Form extends Component {
   }
 
   componentDidMount() {
-    this.setState({ sections: initialData[0]['sections'], title: initialData[0]['title'] })
-    const data = this.buildStateFromListQuestion(dataFromServer);
-    this.setState({ sections: data, title: initialData[0]['title'] })
+    const initialData = {
+      "sections": [
+        {
+          "label": "Section 1",
+          "questions": [
+            {
+              "type": "",
+              "title": ""
+            },
+          ],
+          "isQuestionsVisible": true
+        }
+      ],
+      "title": ""
+    }
+    //   const data = this.buildStateFromListQuestion(dataFromServer);
+    if (this.props.formData) {
+      const data = this.props.formData
+      const formData = this.buildStateFromListQuestion(data.json_form);
+      this.setState({ sections: formData, title: data.title })
+    } else {
+      this.setState({ sections: initialData['sections'], title: initialData['title'] })
+    }
+
+    const testData = [
+      {
+        "_id": "1696400270089",
+        "title": "sssss",
+        "section": 1,
+        "descriptions": "",
+        "required": true,
+        "form": {
+          "type": "likert",
+          "option": [
+            "Sangat tidak setuju",
+            "Tidak setuju",
+            "Setuju",
+            "Sangat Setuju"
+          ]
+        }
+      },
+      {
+        "_id": "1696400280432",
+        "title": "sss",
+        "section": 1,
+        "descriptions": "",
+        "required": true,
+        "form": {
+          "type": "choice",
+          "option": [
+            "ss",
+            "sss"
+          ],
+          "action": [
+            "",
+            ""
+          ]
+        }
+      }
+    ]
+    this.buildStateFromListQuestion(testData);
   }
 
   // Fungsi untuk menambah section baru
@@ -162,12 +156,17 @@ class Form extends Component {
         result.push(dataQuestion)
       });
     });
-    this.setState({ sections: updatedSections, title: this.headerRef.state });
-    console.log("resulst", result)
-    return result
+    this.setState({ sections: updatedSections, title: this.headerRef.state.title });
+    console.log("result", result)
+    return {
+      title: this.headerRef.state.title || this.state.title,
+      jsonForm: result
+    }
   }
 
+  // before submit
   buildFormQuestionFromState = (fieldData, section) => {
+    console.log("filedData", fieldData)
     const dataQuestion = {
       _id: fieldData._id,
       title: fieldData.title,
@@ -190,7 +189,7 @@ class Form extends Component {
         action: actions
       }
     }
-    else if (fieldData.type === "multiple") {
+    else if (fieldData.type === "multiple" || fieldData.type === "likert") {
       const options = []
       fieldData.options?.map(dt => {
         options.push(dt.label)
@@ -215,6 +214,7 @@ class Form extends Component {
     return dataQuestion
   }
 
+  // before edit
   buildStateFromListQuestion = (inputData) => {
     const sectionMap = new Map();
     const transformedData = [];
@@ -246,7 +246,7 @@ class Form extends Component {
           label: option,
           action: item.form.action[idx], // Assuming the first action is correct
         }));
-      } else if (item.form.type === 'multiple') {
+      } else if (item.form.type === 'multiple' || item.form.type === 'likert') {
         question.options = item.form.option.map(option => ({
           label: option,
           action: '',
@@ -254,7 +254,7 @@ class Form extends Component {
       } else if (item.form.type === 'scale') {
         question.scale = {
           start: item.form.start,
-          to : item.form.to,
+          to: item.form.to,
           label_start: item.form.label_start,
           label_to: item.form.label_to
         }
@@ -262,7 +262,6 @@ class Form extends Component {
 
       sectionData.questions.push(question);
     });
-
     return transformedData;
   }
 

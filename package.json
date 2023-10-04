@@ -1,6 +1,6 @@
 {
   "name": "react-survey-form-generator",
-  "version": "1.0.4",
+  "version": "1.0.19",
   "description": "React form survey generator like google form",
   "private": false,
   "main": "dist/components/form/index.js",

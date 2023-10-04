@@ -2,9 +2,8 @@ export const colors = {
     "white": "#ffffff",
     "blue1": "#cadeef",
     "blue2": "#9bd4e4",
-    "blue3": "#39ace7",
-    "blue4": "#0784b5",
-    "red": "#0784b5",
+    "blue3": "#013397;",
+    "blue4": "#013397;",
     "red": "#ff0000", 
     "softRed": "#ffcccc",
 }

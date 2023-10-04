@@ -49,6 +49,7 @@ export const FieldsContainer = styled.div`
                 display: flex;
                 align-items: center;
                 margin-top: 10px;
+                margin-bottom: 10px;
                 select {
                     padding: 4px;
                     background-color: ${colors.blue4};
@@ -63,7 +64,7 @@ export const FieldsContainer = styled.div`
                     color: white;
                     display: flex;
                     height: 25px;
-                    margin-left: 10px;
+                    margin-right: 10px;
                     border: 1px solid grey;
                     font-size: 13px;
                     justify-content: center;

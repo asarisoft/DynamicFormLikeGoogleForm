@@ -34,13 +34,17 @@ var Scale = /*#__PURE__*/function (_Component) {
       var _e$target = e.target,
         name = _e$target.name,
         value = _e$target.value;
-      _this.setState(_defineProperty({}, name, value));
-      _this.props.onUpdateState(_this.state);
+      _this.setState(_defineProperty({}, name, value), function () {
+        _this.props.onUpdateState(_this.state);
+      });
     });
     _this.state = {
       start: '',
       // Nilai awal
-      finish: '' // Nilai akhir
+      to: '',
+      // Nilai akhir
+      label_start: '',
+      label_to: ''
     };
     return _this;
   }
@@ -49,7 +53,9 @@ var Scale = /*#__PURE__*/function (_Component) {
     value: function componentDidMount() {
       if (this.props.question.scale) this.setState({
         start: this.props.question.scale.start,
-        finish: this.props.question.scale.finish
+        to: this.props.question.scale.to,
+        label_start: this.props.question.scale.label_start,
+        label_to: this.props.question.scale.label_to
       });
     }
   }, {
@@ -57,7 +63,9 @@ var Scale = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this$state = this.state,
         start = _this$state.start,
-        finish = _this$state.finish;
+        to = _this$state.to,
+        label_start = _this$state.label_start,
+        label_to = _this$state.label_to;
       return /*#__PURE__*/_react.default.createElement(_scaleElement.Container, null, /*#__PURE__*/_react.default.createElement("div", {
         className: "input-wrapper"
       }, /*#__PURE__*/_react.default.createElement(_general.Input, {
@@ -68,10 +76,22 @@ var Scale = /*#__PURE__*/function (_Component) {
         placeholder: "Start"
       }), /*#__PURE__*/_react.default.createElement(_general.Input, {
         type: "number",
-        name: "finish",
-        value: finish,
+        name: "to",
+        value: to,
         onChange: this.handleInputChange,
         placeholder: "Finish"
+      }), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement(_general.Input, {
+        type: "string",
+        name: "label_start",
+        value: label_start,
+        onChange: this.handleInputChange,
+        placeholder: "Left String"
+      }), /*#__PURE__*/_react.default.createElement(_general.Input, {
+        type: "string",
+        name: "label_to",
+        value: label_to,
+        onChange: this.handleInputChange,
+        placeholder: "Right String"
       })));
     }
   }]);

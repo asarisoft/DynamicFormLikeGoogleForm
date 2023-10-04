@@ -1,0 +1,50 @@
+[
+    // {
+    //     "_id": "1695266280051598",
+    //     "form": {
+    //         "to": 5,
+    //         "type": "scale",
+    //         "start": 0,
+    //         "label_to": "bagus banget",
+    //         "label_start": "kurang"
+    //     },
+    //     "title": "adsd",
+    //     "section": 1,
+    //     "required": true,
+    //     "descriptions": "asdas"
+    // },
+    {
+        "_id": "1695266305355618",
+        "form": {
+            "type": "choice",
+            "option": [
+                "sdfsdf",
+                "sdf",
+                "sdfdsf"
+            ]
+        },
+        "title": "dasdsad",
+        "section": 1,
+        "required": true,
+        "descriptions": "sdfdsf"
+    },
+    // {
+    //     "_id": "1695266404337642",
+    //     "form": {
+    //         "type": "paragraph"
+    //     },
+    //     "title": "paragraph",
+    //     "section": 1,
+    //     "required": true,
+    //     "descriptions": "paragraph"
+    // },
+    // {
+    //     "_id": "1695266440505596",
+    //     "form": {
+    //         "type": "info"
+    //     },
+    //     "title": "dsfsdf",
+    //     "section": 1,
+    //     "descriptions": "sdfsdf"
+    // }
+]

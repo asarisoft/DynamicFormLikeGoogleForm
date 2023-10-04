@@ -3,21 +3,27 @@ import React, { Component } from 'react';
 import { Container } from './optionElement'
 import { Input, StyledButton } from '../../general'
 
-class Options extends Component {
+class Likert extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      options: [{ label: '', action: '' }],
+      options: [
+        { label: 'Sangat tidak setuju', action: '' },
+        { label: 'Tidak setuju', action: '' },
+        { label: 'Setuju', action: '' },
+        { label: 'Sangat Setuju', action: '' }
+      ]
     };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     if (this.props.question.options)
       this.setState({
         options: this.props.question.options
       })
+    this.props.onUpdateState(this.state.options)
   }
-   
+
   addOption = () => {
     this.setState((prevState) => ({
       options: [...prevState.options, { label: '', action: '' }],
@@ -69,7 +75,7 @@ class Options extends Component {
               />
             } */}
             <StyledButton onClick={this.addOption}>+</StyledButton>
-            <StyledButton onClick={() => this.removeOption(index)} 
+            <StyledButton onClick={() => this.removeOption(index)}
               className='remove-button'>x</StyledButton>
           </div>
         ))}
@@ -78,4 +84,4 @@ class Options extends Component {
   }
 }
 
-export default Options;
+export default Likert;

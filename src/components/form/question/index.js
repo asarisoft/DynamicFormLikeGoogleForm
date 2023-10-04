@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Options from './option';
+import Likert from './likert';
 import Scale from './scale';
 import Paragraph from './paragraph';
 import { FieldsContainer } from './indexElement';
@@ -11,23 +12,31 @@ class Question extends Component {
     super(props);
     this.state = {
       _id: `${Date.now()}`,
-      type: 'paragraph',
+      type: 'likert',
       title: '',
       descriptions: '',
-      required: false,
+      required: true,
     }
   }
 
   componentDidMount() {
     const question = this.props.question;
+    // by default likert will be first 
+    const defaultOptions = [
+      { label: 'Sangat tidak setuju', action: '' },
+      { label: 'Tidak setuju', action: '' },
+      { label: 'Setuju', action: '' },
+      { label: 'Sangat Setuju', action: '' }
+    ]
+
     this.setState({
       _id: question._id || `${Date.now()}`,
-      type: question.type || 'paragraph',
+      type: question.type || 'likert',
       title: question.title || '',
       descriptions: question.descriptions || '',
-      required: question.required || false,
+      required: question.required || true,
       scale: question.scale,
-      options: question.scale
+      options: question.options || defaultOptions
     })
   }
 
@@ -36,8 +45,6 @@ class Question extends Component {
     this.setState({ title: e.target.value });
   };
 
-  // digunakan untuk mengubah children type
-  // saat dirubah maka harus dirubah juga yang sebelumnya ke default
   handleAnswerTypeChange = (e) => {
     this.setState({ type: e.target.value });
   };
@@ -50,6 +57,13 @@ class Question extends Component {
   renderAnswerTypeComponent() {
     const { type } = this.state;
     switch (type) {
+      case 'likert':
+        return <Likert 
+          type="likert"
+          question={this.props.question}
+          onUpdateState={(data) => {
+            this.setState({ options: data })
+          }} />;
       case 'choice':
         return <Options type="choice"
           // digunakan untuk update state pas edit
@@ -69,7 +83,7 @@ class Question extends Component {
           // digunakan untuk update state pas edit
           question={this.props.question}
           onUpdateState={(data) => {
-            this.setState({ scale: {...data} })
+            this.setState({ scale: { ...data } })
           }} />;
       case 'info':
         return <Paragraph />;
@@ -93,7 +107,7 @@ class Question extends Component {
           <div className='question' >
             <div onClick={this.props.onClick}>
               <Input
-                type="text"
+                type="hidden"
                 name="question"
                 placeholder='Input Question'
                 value={this.state._id}
@@ -115,33 +129,34 @@ class Question extends Component {
             <StyledButton
               className='btn-add-question'
               onClick={() => onAddQuestion()}>+ Question</StyledButton>
-            
+
             <div className='type-wrapper'>
-            <select
-              name="answerType"
-              value={this.state.type}
-              onChange={this.handleAnswerTypeChange}
-            >
-              <option value="paragraph">Paragraph</option>
-              <option value="choice">Single</option>
-              <option value="multiple">Multiple</option>
-              <option value="scale">Scale</option>
-              <option value="info">Info</option>
-            </select>
-
             <div className='required-wrapper'>
-              <label> Required:</label>
-              <input
-                type="checkbox"
-                name="required"
-                checked={this.state.required}
-                onChange={this.handleRequiredChange}
-              />
+                <label> Required:</label>
+                <input
+                  type="checkbox"
+                  name="required"
+                  disabled={true}
+                  checked={this.state.required}
+                  onChange={this.handleRequiredChange}
+                />
+              </div>
+              
+              <select
+                name="answerType"
+                value={this.state.type}
+                onChange={this.handleAnswerTypeChange}
+              >
+                <option value="likert">Likert</option>
+                <option value="paragraph">Paragraph</option>
+                <option value="choice">Single</option>
+                <option value="multiple">Multiple</option>
+                <option value="scale">Scale</option>
+                <option value="info">Info</option>
+              </select>
+
+              
             </div>
-            </div>
-
-
-
             {this.renderAnswerTypeComponent()}
           </div>
         </div>

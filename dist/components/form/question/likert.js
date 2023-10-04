@@ -29,12 +29,12 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); } // components/form/option.js
-var Options = /*#__PURE__*/function (_Component) {
-  _inherits(Options, _Component);
-  var _super = _createSuper(Options);
-  function Options(props) {
+var Likert = /*#__PURE__*/function (_Component) {
+  _inherits(Likert, _Component);
+  var _super = _createSuper(Likert);
+  function Likert(props) {
     var _this;
-    _classCallCheck(this, Options);
+    _classCallCheck(this, Likert);
     _this = _super.call(this, props);
     _defineProperty(_assertThisInitialized(_this), "addOption", function () {
       _this.setState(function (prevState) {
@@ -72,18 +72,28 @@ var Options = /*#__PURE__*/function (_Component) {
     });
     _this.state = {
       options: [{
-        label: '',
+        label: 'Sangat tidak setuju',
+        action: ''
+      }, {
+        label: 'Tidak setuju',
+        action: ''
+      }, {
+        label: 'Setuju',
+        action: ''
+      }, {
+        label: 'Sangat Setuju',
         action: ''
       }]
     };
     return _this;
   }
-  _createClass(Options, [{
+  _createClass(Likert, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       if (this.props.question.options) this.setState({
         options: this.props.question.options
       });
+      this.props.onUpdateState(this.state.options);
     }
   }, {
     key: "render",
@@ -114,7 +124,7 @@ var Options = /*#__PURE__*/function (_Component) {
       }));
     }
   }]);
-  return Options;
+  return Likert;
 }(_react.Component);
-var _default = Options;
+var _default = Likert;
 exports.default = _default;
