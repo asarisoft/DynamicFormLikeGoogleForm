@@ -1,11 +1,14 @@
 {
   "name": "react-survey-form-generator",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "React form survey generator like google form",
   "private": false,
   "main": "dist/components/form/index.js",
   "module": "dist/components/form/index.js",
-  "files": [ "dist", "README.md" ],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -14,6 +17,7 @@
     "react-dom": "16.8.6",
     "react-scripts": "5.0.1",
     "styled-components": "^6.0.8",
+    "sweetalert2": "^11.7.32",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

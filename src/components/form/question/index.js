@@ -131,7 +131,7 @@ class Question extends Component {
               onClick={() => onAddQuestion()}>+ Question</StyledButton>
 
             <div className='type-wrapper'>
-            <div className='required-wrapper'>
+              {/* <div className='required-wrapper'>
                 <label> Required:</label>
                 <input
                   type="checkbox"
@@ -140,7 +140,7 @@ class Question extends Component {
                   checked={this.state.required}
                   onChange={this.handleRequiredChange}
                 />
-              </div>
+              </div> */}
               
               <select
                 name="answerType"

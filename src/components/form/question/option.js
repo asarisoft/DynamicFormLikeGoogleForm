@@ -1,7 +1,9 @@
 // components/form/option.js
 import React, { Component } from 'react';
-import { Container } from './optionElement'
-import { Input, StyledButton } from '../../general'
+import { Container } from './optionElement';
+import { Input, StyledButton } from '../../general';
+import Swal from 'sweetalert2';
+import '../global.css'
 
 class Options extends Component {
   constructor(props) {
@@ -26,12 +28,26 @@ class Options extends Component {
   };
 
   removeOption = (index) => {
-    this.setState((prevState) => {
-      const updatedOptions = [...prevState.options];
-      updatedOptions.splice(index, 1);
-      return { options: updatedOptions };
+    Swal.fire({
+      title: '',
+      text: 'Are you sure to delete this option?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        confirmButton: 'custom-yes-button', // Apply the custom CSS class to the Yes button
+        cancelButton: 'cancel-button', // Apply the custom CSS class to the Yes button
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.setState((prevState) => {
+          const updatedOptions = [...prevState.options];
+          updatedOptions.splice(index, 1);
+          return { options: updatedOptions };
+        });
+        this.props.onUpdateState(this.state.options)
+      }
     });
-    this.props.onUpdateState(this.state.options)
   };
 
   handleOptionChange = (index, e) => {

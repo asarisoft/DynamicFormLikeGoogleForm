@@ -66,7 +66,7 @@ export const FieldsContainer = styled.div`
                     height: 25px;
                     margin-right: 10px;
                     border: 1px solid grey;
-                    font-size: 13px;
+                    font-size: 14px;
                     justify-content: center;
                     align-items: center;
                 }

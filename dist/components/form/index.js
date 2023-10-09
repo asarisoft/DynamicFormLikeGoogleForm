@@ -267,29 +267,6 @@ var Form = /*#__PURE__*/function (_Component) {
           title: initialData['title']
         });
       }
-      var testData = [{
-        "_id": "1696400270089",
-        "title": "sssss",
-        "section": 1,
-        "descriptions": "",
-        "required": true,
-        "form": {
-          "type": "likert",
-          "option": ["Sangat tidak setuju", "Tidak setuju", "Setuju", "Sangat Setuju"]
-        }
-      }, {
-        "_id": "1696400280432",
-        "title": "sss",
-        "section": 1,
-        "descriptions": "",
-        "required": true,
-        "form": {
-          "type": "choice",
-          "option": ["ss", "sss"],
-          "action": ["", ""]
-        }
-      }];
-      this.buildStateFromListQuestion(testData);
     }
   }, {
     key: "render",
@@ -345,11 +322,7 @@ var Form = /*#__PURE__*/function (_Component) {
         })));
       }), /*#__PURE__*/_react.default.createElement("div", {
         className: "form-footer"
-      }, /*#__PURE__*/_react.default.createElement(_general.StyledButton, {
-        onClick: this.addSection
-      }, "Add Section"), /*#__PURE__*/_react.default.createElement(_general.StyledButton, {
-        onClick: this.populateData
-      }, "Generate & Submit")));
+      }));
     }
   }]);
   return Form;

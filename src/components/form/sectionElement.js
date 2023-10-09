@@ -8,12 +8,19 @@ export const SectionContainer = styled.div`
     padding: 8px;
     margin-top: 8px;
     position: relative;
-    display: flex;
-    justify-content: space-between;
+    
     margin-top: 24px;
+    .top-section {
+        display: flex;
+        justify-content: space-between;
+    }
+    input { 
+        width: 95%;
+        margin-top: 8px;
+    }
     h3 {
         color: ${colors.blue4};
-        font-size: 14px;
+        font-size: 16px;
         margin: 0;
     }
     .button-wrapper {

@@ -4,6 +4,8 @@ import Question from './question';
 import Header from './header';
 import { FormContainer } from './indexElement';
 import { StyledButton } from '../general';
+import Swal from 'sweetalert2';
+import './global.css'
 
 
 class Form extends Component {
@@ -22,6 +24,7 @@ class Form extends Component {
       "sections": [
         {
           "label": "Section 1",
+          "section_title": "",
           "questions": [
             {
               "type": "",
@@ -41,50 +44,13 @@ class Form extends Component {
     } else {
       this.setState({ sections: initialData['sections'], title: initialData['title'] })
     }
-
-    const testData = [
-      {
-        "_id": "1696400270089",
-        "title": "sssss",
-        "section": 1,
-        "descriptions": "",
-        "required": true,
-        "form": {
-          "type": "likert",
-          "option": [
-            "Sangat tidak setuju",
-            "Tidak setuju",
-            "Setuju",
-            "Sangat Setuju"
-          ]
-        }
-      },
-      {
-        "_id": "1696400280432",
-        "title": "sss",
-        "section": 1,
-        "descriptions": "",
-        "required": true,
-        "form": {
-          "type": "choice",
-          "option": [
-            "ss",
-            "sss"
-          ],
-          "action": [
-            "",
-            ""
-          ]
-        }
-      }
-    ]
-    this.buildStateFromListQuestion(testData);
   }
 
   // Fungsi untuk menambah section baru
   addSection = () => {
     const newSection = {
       label: `Section ${this.state.sections.length + 1}`,
+      section_title: ``,
       questions: [],
       isQuestionsVisible: true, // Tambahkan ini
     };
@@ -109,16 +75,36 @@ class Form extends Component {
     this.setState({ sections: updatedSections });
   }
 
+  // Fungsi untuk mengganti title section
+  onUpdateTitleSection = (e, sectionIndex) => {
+    const updatedSections = [...this.state.sections];
+    updatedSections[sectionIndex].section_title = e.target.value
+    this.setState({ sections: updatedSections });
+  }
+
   // digunakan untuk menghapus question
   removeQuestionFromSection = (sectionIndex, questionIndex) => {
-    const updatedSections = [...this.state.sections];
-    const section = updatedSections[sectionIndex];
-
-    if (section) {
-      const updatedquestions = section.questions.filter((question, index) => index !== questionIndex);
-      section.questions = updatedquestions;
-      this.setState({ sections: updatedSections });
-    }
+    Swal.fire({
+      title: '',
+      text: 'Are you sure to delete this question?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        confirmButton: 'custom-yes-button', // Apply the custom CSS class to the Yes button
+        cancelButton: 'cancel-button', // Apply the custom CSS class to the Yes button
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const updatedSections = [...this.state.sections];
+        const section = updatedSections[sectionIndex];
+        if (section) {
+          const updatedquestions = section.questions.filter((question, index) => index !== questionIndex);
+          section.questions = updatedquestions;
+          this.setState({ sections: updatedSections });
+        }
+      }
+    });
   }
 
   // Fungsi untuk mengatur pertanyaan sebagai aktif saat diklik
@@ -139,9 +125,23 @@ class Form extends Component {
 
   // delete section 
   deleteSection = (sectionIndex) => {
-    const updatedSections = [...this.state.sections];
-    updatedSections.splice(sectionIndex, 1);
-    this.setState({ sections: updatedSections });
+    Swal.fire({
+      title: '',
+      text: 'Are you sure to delete this section?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        confirmButton: 'custom-yes-button', // Apply the custom CSS class to the Yes button
+        cancelButton: 'cancel-button', // Apply the custom CSS class to the Yes button
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const updatedSections = [...this.state.sections];
+        updatedSections.splice(sectionIndex, 1);
+        this.setState({ sections: updatedSections });
+      }
+    });
   }
 
   populateData = () => {
@@ -152,12 +152,13 @@ class Form extends Component {
       section.questions.forEach((question, questionIndex) => {
         const fieldData = this.fieldRefs[sectionIndex][questionIndex].state;
         updatedSections[sectionIndex].questions[questionIndex] = fieldData;
-        const dataQuestion = this.buildFormQuestionFromState(fieldData, sectionIndex)
+        const dataQuestion = this.buildFormQuestionFromState(
+          fieldData, sectionIndex, updatedSections[sectionIndex].section_title)
         result.push(dataQuestion)
       });
     });
-    this.setState({ sections: updatedSections, title: this.headerRef.state.title });
     console.log("result", result)
+    this.setState({ sections: updatedSections, title: this.headerRef.state.title });
     return {
       title: this.headerRef.state.title || this.state.title,
       jsonForm: result
@@ -165,12 +166,12 @@ class Form extends Component {
   }
 
   // before submit
-  buildFormQuestionFromState = (fieldData, section) => {
-    console.log("filedData", fieldData)
+  buildFormQuestionFromState = (fieldData, sectionIndex, sectionTitle) => {
     const dataQuestion = {
       _id: fieldData._id,
       title: fieldData.title,
-      section: section + 1,
+      section_title: sectionTitle,
+      section: sectionIndex + 1,
       descriptions: fieldData.descriptions,
       required: fieldData.required,
       descriptions: fieldData.descriptions
@@ -226,6 +227,7 @@ class Form extends Component {
       if (!sectionData) {
         sectionData = {
           label: `Section ${sectionId}`,
+          section_title: item.section_title,
           questions: [],
           isQuestionsVisible: true,
         };
@@ -265,8 +267,10 @@ class Form extends Component {
     return transformedData;
   }
 
+
   render() {
     const { sections } = this.state;
+    console.log("sections", sections)
     return (
       <FormContainer>
         <Header ref={(ref) => { this.headerRef = ref }}
@@ -279,6 +283,8 @@ class Form extends Component {
               onAddField={() => this.addQuestionToSection(sectionIndex)}
               onToggleQustion={() => this.toggleQuestionsVisibility(sectionIndex)}
               onDeleteSection={() => this.deleteSection(sectionIndex)}
+              onUpdateTitle={(title) => this.onUpdateTitleSection(title, sectionIndex)}
+              title={section.section_title}
             />
             <div style={{ display: section.isQuestionsVisible ? 'block' : 'none' }}>
               {section.questions.map((question, questionIndex) => (
