@@ -307,8 +307,8 @@ class Form extends Component {
           </div>
         ))}
         <div className='form-footer'>
-          <StyledButton onClick={this.addSection}>Add Section</StyledButton>
-          <StyledButton onClick={this.populateData}>Generate & Submit</StyledButton>
+          {/* <StyledButton onClick={this.addSection}>Add Section</StyledButton>
+          <StyledButton onClick={this.populateData}>Generate & Submit</StyledButton> */}
         </div>
       </FormContainer>
     );

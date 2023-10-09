@@ -10,6 +10,8 @@ var _question = _interopRequireDefault(require("./question"));
 var _header = _interopRequireDefault(require("./header"));
 var _indexElement = require("./indexElement");
 var _general = require("../general");
+var _sweetalert = _interopRequireDefault(require("sweetalert2"));
+require("./global.css");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -44,6 +46,7 @@ var Form = /*#__PURE__*/function (_Component) {
     _defineProperty(_assertThisInitialized(_this), "addSection", function () {
       var newSection = {
         label: "Section ".concat(_this.state.sections.length + 1),
+        section_title: "",
         questions: [],
         isQuestionsVisible: true // Tambahkan ini
       };
@@ -71,19 +74,42 @@ var Form = /*#__PURE__*/function (_Component) {
         sections: updatedSections
       });
     });
+    // Fungsi untuk mengganti title section
+    _defineProperty(_assertThisInitialized(_this), "onUpdateTitleSection", function (e, sectionIndex) {
+      var updatedSections = _toConsumableArray(_this.state.sections);
+      updatedSections[sectionIndex].section_title = e.target.value;
+      _this.setState({
+        sections: updatedSections
+      });
+    });
     // digunakan untuk menghapus question
     _defineProperty(_assertThisInitialized(_this), "removeQuestionFromSection", function (sectionIndex, questionIndex) {
-      var updatedSections = _toConsumableArray(_this.state.sections);
-      var section = updatedSections[sectionIndex];
-      if (section) {
-        var updatedquestions = section.questions.filter(function (question, index) {
-          return index !== questionIndex;
-        });
-        section.questions = updatedquestions;
-        _this.setState({
-          sections: updatedSections
-        });
-      }
+      _sweetalert.default.fire({
+        title: '',
+        text: 'Are you sure to delete this question?',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        customClass: {
+          confirmButton: 'custom-yes-button',
+          // Apply the custom CSS class to the Yes button
+          cancelButton: 'cancel-button' // Apply the custom CSS class to the Yes button
+        }
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          var updatedSections = _toConsumableArray(_this.state.sections);
+          var section = updatedSections[sectionIndex];
+          if (section) {
+            var updatedquestions = section.questions.filter(function (question, index) {
+              return index !== questionIndex;
+            });
+            section.questions = updatedquestions;
+            _this.setState({
+              sections: updatedSections
+            });
+          }
+        }
+      });
     });
     // Fungsi untuk mengatur pertanyaan sebagai aktif saat diklik
     _defineProperty(_assertThisInitialized(_this), "setActiveQuestion", function (sectionIndex, questionIndex) {
@@ -105,10 +131,25 @@ var Form = /*#__PURE__*/function (_Component) {
     });
     // delete section 
     _defineProperty(_assertThisInitialized(_this), "deleteSection", function (sectionIndex) {
-      var updatedSections = _toConsumableArray(_this.state.sections);
-      updatedSections.splice(sectionIndex, 1);
-      _this.setState({
-        sections: updatedSections
+      _sweetalert.default.fire({
+        title: '',
+        text: 'Are you sure to delete this section?',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        customClass: {
+          confirmButton: 'custom-yes-button',
+          // Apply the custom CSS class to the Yes button
+          cancelButton: 'cancel-button' // Apply the custom CSS class to the Yes button
+        }
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          var updatedSections = _toConsumableArray(_this.state.sections);
+          updatedSections.splice(sectionIndex, 1);
+          _this.setState({
+            sections: updatedSections
+          });
+        }
       });
     });
     _defineProperty(_assertThisInitialized(_this), "populateData", function () {
@@ -119,27 +160,27 @@ var Form = /*#__PURE__*/function (_Component) {
         section.questions.forEach(function (question, questionIndex) {
           var fieldData = _this.fieldRefs[sectionIndex][questionIndex].state;
           updatedSections[sectionIndex].questions[questionIndex] = fieldData;
-          var dataQuestion = _this.buildFormQuestionFromState(fieldData, sectionIndex);
+          var dataQuestion = _this.buildFormQuestionFromState(fieldData, sectionIndex, updatedSections[sectionIndex].section_title);
           result.push(dataQuestion);
         });
       });
+      console.log("result", result);
       _this.setState({
         sections: updatedSections,
         title: _this.headerRef.state.title
       });
-      console.log("result", result);
       return {
         title: _this.headerRef.state.title || _this.state.title,
         jsonForm: result
       };
     });
     // before submit
-    _defineProperty(_assertThisInitialized(_this), "buildFormQuestionFromState", function (fieldData, section) {
-      console.log("filedData", fieldData);
+    _defineProperty(_assertThisInitialized(_this), "buildFormQuestionFromState", function (fieldData, sectionIndex, sectionTitle) {
       var dataQuestion = _defineProperty({
         _id: fieldData._id,
         title: fieldData.title,
-        section: section + 1,
+        section_title: sectionTitle,
+        section: sectionIndex + 1,
         descriptions: fieldData.descriptions,
         required: fieldData.required
       }, "descriptions", fieldData.descriptions);
@@ -192,6 +233,7 @@ var Form = /*#__PURE__*/function (_Component) {
         if (!sectionData) {
           sectionData = {
             label: "Section ".concat(sectionId),
+            section_title: item.section_title,
             questions: [],
             isQuestionsVisible: true
           };
@@ -245,6 +287,7 @@ var Form = /*#__PURE__*/function (_Component) {
       var initialData = {
         "sections": [{
           "label": "Section 1",
+          "section_title": "",
           "questions": [{
             "type": "",
             "title": ""
@@ -273,6 +316,7 @@ var Form = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this2 = this;
       var sections = this.state.sections;
+      console.log("sections", sections);
       return /*#__PURE__*/_react.default.createElement(_indexElement.FormContainer, null, /*#__PURE__*/_react.default.createElement(_header.default, {
         ref: function ref(_ref) {
           _this2.headerRef = _ref;
@@ -292,7 +336,11 @@ var Form = /*#__PURE__*/function (_Component) {
           },
           onDeleteSection: function onDeleteSection() {
             return _this2.deleteSection(sectionIndex);
-          }
+          },
+          onUpdateTitle: function onUpdateTitle(title) {
+            return _this2.onUpdateTitleSection(title, sectionIndex);
+          },
+          title: section.section_title
         }), /*#__PURE__*/_react.default.createElement("div", {
           style: {
             display: section.isQuestionsVisible ? 'block' : 'none'

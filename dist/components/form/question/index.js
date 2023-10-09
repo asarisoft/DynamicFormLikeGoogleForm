@@ -195,15 +195,7 @@ var Question = /*#__PURE__*/function (_Component) {
         }
       }, "+ Question"), /*#__PURE__*/_react.default.createElement("div", {
         className: "type-wrapper"
-      }, /*#__PURE__*/_react.default.createElement("div", {
-        className: "required-wrapper"
-      }, /*#__PURE__*/_react.default.createElement("label", null, " Required:"), /*#__PURE__*/_react.default.createElement("input", {
-        type: "checkbox",
-        name: "required",
-        disabled: true,
-        checked: this.state.required,
-        onChange: this.handleRequiredChange
-      })), /*#__PURE__*/_react.default.createElement("select", {
+      }, /*#__PURE__*/_react.default.createElement("select", {
         name: "answerType",
         value: this.state.type,
         onChange: this.handleAnswerTypeChange

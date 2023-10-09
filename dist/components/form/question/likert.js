@@ -7,6 +7,8 @@ exports.default = void 0;
 var _react = _interopRequireWildcard(require("react"));
 var _optionElement = require("./optionElement");
 var _general = require("../../general");
+var _sweetalert = _interopRequireDefault(require("sweetalert2"));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
@@ -48,14 +50,29 @@ var Likert = /*#__PURE__*/function (_Component) {
       _this.props.onUpdateState(_this.state.options);
     });
     _defineProperty(_assertThisInitialized(_this), "removeOption", function (index) {
-      _this.setState(function (prevState) {
-        var updatedOptions = _toConsumableArray(prevState.options);
-        updatedOptions.splice(index, 1);
-        return {
-          options: updatedOptions
-        };
+      _sweetalert.default.fire({
+        title: '',
+        text: 'Are you sure to delete this option?',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        customClass: {
+          confirmButton: 'custom-yes-button',
+          // Apply the custom CSS class to the Yes button
+          cancelButton: 'cancel-button' // Apply the custom CSS class to the Yes button
+        }
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          _this.setState(function (prevState) {
+            var updatedOptions = _toConsumableArray(prevState.options);
+            updatedOptions.splice(index, 1);
+            return {
+              options: updatedOptions
+            };
+          });
+          _this.props.onUpdateState(_this.state.options);
+        }
       });
-      _this.props.onUpdateState(_this.state.options);
     });
     _defineProperty(_assertThisInitialized(_this), "handleOptionChange", function (index, e) {
       var _e$target = e.target,
