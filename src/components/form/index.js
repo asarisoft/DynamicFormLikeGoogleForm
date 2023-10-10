@@ -148,16 +148,22 @@ class Form extends Component {
     const { sections } = this.state;
     const updatedSections = [...sections];
     const result = []
+
     updatedSections.forEach((section, sectionIndex) => {
+      let questionNumber = 1;
       section.questions.forEach((question, questionIndex) => {
         const fieldData = this.fieldRefs[sectionIndex][questionIndex].state;
         updatedSections[sectionIndex].questions[questionIndex] = fieldData;
         const dataQuestion = this.buildFormQuestionFromState(
-          fieldData, sectionIndex, updatedSections[sectionIndex].section_title)
+          fieldData, 
+          sectionIndex, 
+          updatedSections[sectionIndex].section_title,
+          questionNumber
+        )
+        questionNumber++;
         result.push(dataQuestion)
       });
     });
-    console.log("result", result)
     this.setState({ sections: updatedSections, title: this.headerRef.state.title });
     return {
       title: this.headerRef.state.title || this.state.title,
@@ -166,12 +172,13 @@ class Form extends Component {
   }
 
   // before submit
-  buildFormQuestionFromState = (fieldData, sectionIndex, sectionTitle) => {
+  buildFormQuestionFromState = (fieldData, sectionIndex, sectionTitle, questionNumber) => {
     const dataQuestion = {
       _id: fieldData._id,
       title: fieldData.title,
       section_title: sectionTitle,
       section: sectionIndex + 1,
+      questionNumber: questionNumber,
       descriptions: fieldData.descriptions,
       required: fieldData.required,
       descriptions: fieldData.descriptions
