@@ -157,14 +157,15 @@ var Form = /*#__PURE__*/function (_Component) {
       var updatedSections = _toConsumableArray(sections);
       var result = [];
       updatedSections.forEach(function (section, sectionIndex) {
+        var questionNumber = 1;
         section.questions.forEach(function (question, questionIndex) {
           var fieldData = _this.fieldRefs[sectionIndex][questionIndex].state;
           updatedSections[sectionIndex].questions[questionIndex] = fieldData;
-          var dataQuestion = _this.buildFormQuestionFromState(fieldData, sectionIndex, updatedSections[sectionIndex].section_title);
+          var dataQuestion = _this.buildFormQuestionFromState(fieldData, sectionIndex, updatedSections[sectionIndex].section_title, questionNumber);
+          questionNumber++;
           result.push(dataQuestion);
         });
       });
-      console.log("result", result);
       _this.setState({
         sections: updatedSections,
         title: _this.headerRef.state.title
@@ -175,12 +176,13 @@ var Form = /*#__PURE__*/function (_Component) {
       };
     });
     // before submit
-    _defineProperty(_assertThisInitialized(_this), "buildFormQuestionFromState", function (fieldData, sectionIndex, sectionTitle) {
+    _defineProperty(_assertThisInitialized(_this), "buildFormQuestionFromState", function (fieldData, sectionIndex, sectionTitle, questionNumber) {
       var dataQuestion = _defineProperty({
         _id: fieldData._id,
         title: fieldData.title,
         section_title: sectionTitle,
         section: sectionIndex + 1,
+        questionNumber: questionNumber,
         descriptions: fieldData.descriptions,
         required: fieldData.required
       }, "descriptions", fieldData.descriptions);
