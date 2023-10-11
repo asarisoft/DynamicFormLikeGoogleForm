@@ -10,21 +10,35 @@ class Options extends Component {
     super(props);
     this.state = {
       options: [{ label: '', action: '' }],
+      other_options: false,
     };
   }
 
-  componentDidMount () {
-    if (this.props.question.options)
+  componentDidMount() {
+    console.log("this.props.question.options", this.props.question)
+    if (this.props.question.options) {
       this.setState({
-        options: this.props.question.options
+        options: this.props.question.options,
+        other_options: this.props.question.other_options
+      }, ()=>{
+        this.props.onUpdateState(this.state)
       })
+    }
   }
-   
+
   addOption = () => {
     this.setState((prevState) => ({
       options: [...prevState.options, { label: '', action: '' }],
     }));
-    this.props.onUpdateState(this.state.options)
+    this.props.onUpdateState(this.state)
+  };
+
+  handleOtherOptionsChange = (e) => {
+    const { name, checked } = e.target;
+    this.setState({ [name]: checked }, () => {
+      this.props.onUpdateState(this.state)
+    });
+
   };
 
   removeOption = (index) => {
@@ -44,8 +58,9 @@ class Options extends Component {
           const updatedOptions = [...prevState.options];
           updatedOptions.splice(index, 1);
           return { options: updatedOptions };
+        }, ()=>{
+          this.props.onUpdateState(this.state)
         });
-        this.props.onUpdateState(this.state.options)
       }
     });
   };
@@ -56,8 +71,9 @@ class Options extends Component {
       const updatedOptions = [...prevState.options];
       updatedOptions[index][name] = value;
       return { options: updatedOptions };
+    }, ()=>{
+      this.props.onUpdateState(this.state)
     });
-    this.props.onUpdateState(this.state.options)
   };
 
   render() {
@@ -85,10 +101,22 @@ class Options extends Component {
               />
             } */}
             <StyledButton onClick={this.addOption}>+</StyledButton>
-            <StyledButton onClick={() => this.removeOption(index)} 
+            <StyledButton onClick={() => this.removeOption(index)}
               className='remove-button'>x</StyledButton>
           </div>
         ))}
+        <div className='last-wrapper'>
+          {type == 'choice' &&
+            <input
+              type="checkbox"
+              name="other_options"
+              checked={this.state.other_options}
+              onChange={this.handleOtherOptionsChange}
+            />
+          }
+          <label className='label-last-options'>
+            The last option requires the user to manually input an answer</label>
+        </div>
       </Container>
     );
   }

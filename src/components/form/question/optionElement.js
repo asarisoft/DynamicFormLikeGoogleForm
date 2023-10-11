@@ -15,4 +15,15 @@ export const Container = styled.div`
             background-color: ${colors.red}
         }
     }
+    .last-wrapper {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+    }
+    .label-last-options {
+        font-size: 14px;
+        max-width: 60%;
+        display: block;
+        margin-left: 10px;
+    }
 `;

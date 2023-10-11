@@ -69,14 +69,17 @@ class Question extends Component {
           // digunakan untuk update state pas edit
           question={this.props.question}
           onUpdateState={(data) => {
-            this.setState({ options: data })
+            this.setState({ 
+              options: data.options,
+              other_options: data.other_options
+          })
           }} />;
       case 'multiple':
         return <Options type="multiple"
           // digunakan untuk update state pas edit
           question={this.props.question}
           onUpdateState={(data) => {
-            this.setState({ options: data })
+            this.setState({ options: data.options })
           }} />;
       case 'scale':
         return <Scale

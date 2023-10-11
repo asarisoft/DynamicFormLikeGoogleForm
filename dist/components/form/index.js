@@ -166,10 +166,19 @@ var Form = /*#__PURE__*/function (_Component) {
           result.push(dataQuestion);
         });
       });
+      console.log("updatedSections", updatedSections);
+      // update local state
       _this.setState({
         sections: updatedSections,
         title: _this.headerRef.state.title
       });
+      // send to iframe
+      console.log("resuls", result);
+      _this.sendDataToParent({
+        title: _this.headerRef.state.title || _this.state.title,
+        json_form: result
+      });
+      // 
       return {
         title: _this.headerRef.state.title || _this.state.title,
         jsonForm: result
@@ -177,15 +186,16 @@ var Form = /*#__PURE__*/function (_Component) {
     });
     // before submit
     _defineProperty(_assertThisInitialized(_this), "buildFormQuestionFromState", function (fieldData, sectionIndex, sectionTitle, questionNumber) {
-      var dataQuestion = _defineProperty({
+      var dataQuestion = {
         _id: fieldData._id,
         title: fieldData.title,
         section_title: sectionTitle,
         section: sectionIndex + 1,
         questionNumber: questionNumber,
         descriptions: fieldData.descriptions,
-        required: fieldData.required
-      }, "descriptions", fieldData.descriptions);
+        required: fieldData.required,
+        other_options: fieldData.other_options
+      };
       if (fieldData.type === "choice") {
         var _fieldData$options;
         var options = [];
@@ -207,7 +217,8 @@ var Form = /*#__PURE__*/function (_Component) {
         });
         dataQuestion.form = {
           type: fieldData.type,
-          option: _options
+          option: _options,
+          other_options: fieldData.other_options
         };
       } else if (fieldData.type === "scale") {
         dataQuestion.form = {
@@ -247,7 +258,8 @@ var Form = /*#__PURE__*/function (_Component) {
           type: item.form.type,
           title: item.title,
           descriptions: item.descriptions,
-          required: item.required
+          required: item.required,
+          other_options: item.other_options
         };
         if (item.form.type === 'choice') {
           question.options = item.form.option.map(function (option, idx) {
@@ -275,17 +287,23 @@ var Form = /*#__PURE__*/function (_Component) {
       });
       return transformedData;
     });
+    // send data to iframe
+    _defineProperty(_assertThisInitialized(_this), "sendDataToParent", function (data) {
+      window.parent.postMessage(data, '*'); // '*' mengizinkan dari semua sumber
+    });
     _this.state = {
       sections: [],
       title: ""
     };
     _this.fieldRefs = [];
     _this.headerRef = null;
+    _this.dataReceivedFromIframe = false;
     return _this;
   }
   _createClass(Form, [{
     key: "componentDidMount",
     value: function componentDidMount() {
+      var _this2 = this;
       var initialData = {
         "sections": [{
           "label": "Section 1",
@@ -298,30 +316,118 @@ var Form = /*#__PURE__*/function (_Component) {
         }],
         "title": ""
       };
-      //   const data = this.buildStateFromListQuestion(dataFromServer);
-      if (this.props.formData) {
-        var data = this.props.formData;
-        var formData = this.buildStateFromListQuestion(data.json_form);
-        this.setState({
+
+      // Menentukan apakah data telah diterima dari iframe
+      // Fungsi untuk menangani pesan yang diterima dari dokumen utama
+      var handleMessageFromIframe = function handleMessageFromIframe(event) {
+        var receivedData = event.data;
+        if (!receivedData.json_form) {
+          return;
+        }
+        // Mengatur dataReceivedFromIframe menjadi true ketika data diterima
+        _this2.dataReceivedFromIframe = true;
+        var formData = _this2.buildStateFromListQuestion(receivedData.json_form);
+        _this2.setState({
           sections: formData,
-          title: data.title
+          title: receivedData.title
         });
-      } else {
-        this.setState({
-          sections: initialData['sections'],
-          title: initialData['title']
-        });
-      }
+      };
+
+      // Menambahkan event listener untuk mendengarkan pesan dari iframe
+      window.addEventListener('message', handleMessageFromIframe);
+      // Jika data dari props dan tidak ada data dari iframe, maka inisialisasi state
+      setTimeout(function () {
+        if (!_this2.dataReceivedFromIframe) {
+          if (_this2.props.formData) {
+            var data = _this2.props.formData;
+            var formData = _this2.buildStateFromListQuestion(data.json_form);
+            _this2.setState({
+              sections: formData,
+              title: data.title
+            });
+          } else {
+            _this2.setState({
+              sections: initialData.sections,
+              title: initialData.title
+            });
+          }
+        }
+      }, 1000);
+      // For Test
+      // const uu = [
+      //   {
+      //     "_id": "1696996749326",
+      //     "title": "qqq",
+      //     "section_title": "qq",
+      //     "section": 1,
+      //     "questionNumber": 1,
+      //     "descriptions": "",
+      //     "required": true,
+      //     "form": {
+      //       "type": "likert",
+      //       "option": [
+      //         "Sangat tidak setuju",
+      //         "Tidak setuju",
+      //         "Setuju",
+      //         "Sangat Setuju"
+      //       ]
+      //     }
+      //   },
+      //   {
+      //     "_id": "1696999469076",
+      //     "title": "edd",
+      //     "section_title": "qq",
+      //     "section": 1,
+      //     "questionNumber": 2,
+      //     "descriptions": "",
+      //     "required": true,
+      //     "other_options": true,
+      //     "form": {
+      //       "type": "choice",
+      //       "option": [
+      //         "2",
+      //         "3"
+      //       ],
+      //       "action": [
+      //         "",
+      //         ""
+      //       ]
+      //     }
+      //   },
+      //   {
+      //     "_id": "1696999477458",
+      //     "title": "dddd",
+      //     "section_title": "qq",
+      //     "section": 1,
+      //     "questionNumber": 3,
+      //     "descriptions": "",
+      //     "required": true,
+      //     "other_options": false,
+      //     "form": {
+      //       "type": "choice",
+      //       "option": [
+      //         "b",
+      //         "f"
+      //       ],
+      //       "action": [
+      //         "",
+      //         ""
+      //       ]
+      //     }
+      //   }
+      // ]
+      // const kkk = this.buildStateFromListQuestion(data.json_form);
+      // this.setState({ sections: kkk, title: data.title });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
       var sections = this.state.sections;
       console.log("sections", sections);
       return /*#__PURE__*/_react.default.createElement(_indexElement.FormContainer, null, /*#__PURE__*/_react.default.createElement(_header.default, {
         ref: function ref(_ref) {
-          _this2.headerRef = _ref;
+          _this3.headerRef = _ref;
         },
         title: this.state.title
       }), sections === null || sections === void 0 ? void 0 : sections.map(function (section, sectionIndex) {
@@ -331,16 +437,16 @@ var Form = /*#__PURE__*/function (_Component) {
           label: section.label,
           section: section,
           onAddField: function onAddField() {
-            return _this2.addQuestionToSection(sectionIndex);
+            return _this3.addQuestionToSection(sectionIndex);
           },
           onToggleQustion: function onToggleQustion() {
-            return _this2.toggleQuestionsVisibility(sectionIndex);
+            return _this3.toggleQuestionsVisibility(sectionIndex);
           },
           onDeleteSection: function onDeleteSection() {
-            return _this2.deleteSection(sectionIndex);
+            return _this3.deleteSection(sectionIndex);
           },
           onUpdateTitle: function onUpdateTitle(title) {
-            return _this2.onUpdateTitleSection(title, sectionIndex);
+            return _this3.onUpdateTitleSection(title, sectionIndex);
           },
           title: section.section_title
         }), /*#__PURE__*/_react.default.createElement("div", {
@@ -353,26 +459,30 @@ var Form = /*#__PURE__*/function (_Component) {
             question: question,
             questionIndex: questionIndex,
             onClick: function onClick() {
-              return _this2.setActiveQuestion(sectionIndex, questionIndex);
+              return _this3.setActiveQuestion(sectionIndex, questionIndex);
             },
             onRemoveQuestion: function onRemoveQuestion() {
-              return _this2.removeQuestionFromSection(sectionIndex, questionIndex);
+              return _this3.removeQuestionFromSection(sectionIndex, questionIndex);
             },
             ref: function ref(_ref2) {
-              if (!_this2.fieldRefs[sectionIndex]) {
-                _this2.fieldRefs[sectionIndex] = [];
+              if (!_this3.fieldRefs[sectionIndex]) {
+                _this3.fieldRefs[sectionIndex] = [];
               }
-              _this2.fieldRefs[sectionIndex][questionIndex] = _ref2; // Simpan referensi ke komponen Question
+              _this3.fieldRefs[sectionIndex][questionIndex] = _ref2; // Simpan referensi ke komponen Question
             },
 
             onAddQuestion: function onAddQuestion() {
-              return _this2.addQuestionToSection(sectionIndex);
+              return _this3.addQuestionToSection(sectionIndex);
             }
           });
         })));
       }), /*#__PURE__*/_react.default.createElement("div", {
         className: "form-footer"
-      }));
+      }, /*#__PURE__*/_react.default.createElement(_general.StyledButton, {
+        onClick: this.addSection
+      }, "Add Section"), /*#__PURE__*/_react.default.createElement(_general.StyledButton, {
+        onClick: this.populateData
+      }, "Generate & Submit")));
     }
   }]);
   return Form;

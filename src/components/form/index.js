@@ -17,6 +17,7 @@ class Form extends Component {
     };
     this.fieldRefs = [];
     this.headerRef = null;
+    this.dataReceivedFromIframe = false;
   }
 
   componentDidMount() {
@@ -35,15 +36,100 @@ class Form extends Component {
         }
       ],
       "title": ""
-    }
-    //   const data = this.buildStateFromListQuestion(dataFromServer);
-    if (this.props.formData) {
-      const data = this.props.formData
-      const formData = this.buildStateFromListQuestion(data.json_form);
-      this.setState({ sections: formData, title: data.title })
-    } else {
-      this.setState({ sections: initialData['sections'], title: initialData['title'] })
-    }
+    };
+
+    // Menentukan apakah data telah diterima dari iframe
+    // Fungsi untuk menangani pesan yang diterima dari dokumen utama
+    const handleMessageFromIframe = (event) => {
+      const receivedData = event.data;
+      if (!receivedData.json_form) {
+        return;
+      }
+      // Mengatur dataReceivedFromIframe menjadi true ketika data diterima
+      this.dataReceivedFromIframe = true;
+      const formData = this.buildStateFromListQuestion(receivedData.json_form);
+      this.setState({ sections: formData, title: receivedData.title });
+    };
+
+    // Menambahkan event listener untuk mendengarkan pesan dari iframe
+    window.addEventListener('message', handleMessageFromIframe);
+    // Jika data dari props dan tidak ada data dari iframe, maka inisialisasi state
+    setTimeout(() => {
+      if (!this.dataReceivedFromIframe) {
+        if (this.props.formData) {
+          const data = this.props.formData;
+          const formData = this.buildStateFromListQuestion(data.json_form);
+          this.setState({ sections: formData, title: data.title });
+        } else {
+          this.setState({ sections: initialData.sections, title: initialData.title });
+        }
+      }
+    }, 1000)
+    // For Test
+    // const uu = [
+    //   {
+    //     "_id": "1696996749326",
+    //     "title": "qqq",
+    //     "section_title": "qq",
+    //     "section": 1,
+    //     "questionNumber": 1,
+    //     "descriptions": "",
+    //     "required": true,
+    //     "form": {
+    //       "type": "likert",
+    //       "option": [
+    //         "Sangat tidak setuju",
+    //         "Tidak setuju",
+    //         "Setuju",
+    //         "Sangat Setuju"
+    //       ]
+    //     }
+    //   },
+    //   {
+    //     "_id": "1696999469076",
+    //     "title": "edd",
+    //     "section_title": "qq",
+    //     "section": 1,
+    //     "questionNumber": 2,
+    //     "descriptions": "",
+    //     "required": true,
+    //     "other_options": true,
+    //     "form": {
+    //       "type": "choice",
+    //       "option": [
+    //         "2",
+    //         "3"
+    //       ],
+    //       "action": [
+    //         "",
+    //         ""
+    //       ]
+    //     }
+    //   },
+    //   {
+    //     "_id": "1696999477458",
+    //     "title": "dddd",
+    //     "section_title": "qq",
+    //     "section": 1,
+    //     "questionNumber": 3,
+    //     "descriptions": "",
+    //     "required": true,
+    //     "other_options": false,
+    //     "form": {
+    //       "type": "choice",
+    //       "option": [
+    //         "b",
+    //         "f"
+    //       ],
+    //       "action": [
+    //         "",
+    //         ""
+    //       ]
+    //     }
+    //   }
+    // ]
+    // const kkk = this.buildStateFromListQuestion(data.json_form);
+    // this.setState({ sections: kkk, title: data.title });
   }
 
   // Fungsi untuk menambah section baru
@@ -155,8 +241,8 @@ class Form extends Component {
         const fieldData = this.fieldRefs[sectionIndex][questionIndex].state;
         updatedSections[sectionIndex].questions[questionIndex] = fieldData;
         const dataQuestion = this.buildFormQuestionFromState(
-          fieldData, 
-          sectionIndex, 
+          fieldData,
+          sectionIndex,
           updatedSections[sectionIndex].section_title,
           questionNumber
         )
@@ -164,7 +250,16 @@ class Form extends Component {
         result.push(dataQuestion)
       });
     });
+    console.log("updatedSections", updatedSections)
+    // update local state
     this.setState({ sections: updatedSections, title: this.headerRef.state.title });
+    // send to iframe
+    console.log("resuls", result)
+    this.sendDataToParent({
+      title: this.headerRef.state.title || this.state.title,
+      json_form: result
+    });
+    // 
     return {
       title: this.headerRef.state.title || this.state.title,
       jsonForm: result
@@ -181,7 +276,7 @@ class Form extends Component {
       questionNumber: questionNumber,
       descriptions: fieldData.descriptions,
       required: fieldData.required,
-      descriptions: fieldData.descriptions
+      other_options: fieldData.other_options
     }
 
     if (fieldData.type === "choice") {
@@ -205,6 +300,7 @@ class Form extends Component {
       dataQuestion.form = {
         type: fieldData.type,
         option: options,
+        other_options: fieldData.other_options,
       }
     } else if (fieldData.type === "scale") {
       dataQuestion.form = {
@@ -248,6 +344,7 @@ class Form extends Component {
         title: item.title,
         descriptions: item.descriptions,
         required: item.required,
+        other_options: item.other_options
       };
 
       if (item.form.type === 'choice') {
@@ -274,6 +371,10 @@ class Form extends Component {
     return transformedData;
   }
 
+  // send data to iframe
+  sendDataToParent = (data) => {
+    window.parent.postMessage(data, '*'); // '*' mengizinkan dari semua sumber
+  }
 
   render() {
     const { sections } = this.state;
@@ -314,8 +415,8 @@ class Form extends Component {
           </div>
         ))}
         <div className='form-footer'>
-          {/* <StyledButton onClick={this.addSection}>Add Section</StyledButton>
-          <StyledButton onClick={this.populateData}>Generate & Submit</StyledButton> */}
+          <StyledButton onClick={this.addSection}>Add Section</StyledButton>
+          <StyledButton onClick={this.populateData}>Generate & Submit</StyledButton>
         </div>
       </FormContainer>
     );

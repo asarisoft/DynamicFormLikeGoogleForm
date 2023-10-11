@@ -48,7 +48,15 @@ var Options = /*#__PURE__*/function (_Component) {
           }])
         };
       });
-      _this.props.onUpdateState(_this.state.options);
+      _this.props.onUpdateState(_this.state);
+    });
+    _defineProperty(_assertThisInitialized(_this), "handleOtherOptionsChange", function (e) {
+      var _e$target = e.target,
+        name = _e$target.name,
+        checked = _e$target.checked;
+      _this.setState(_defineProperty({}, name, checked), function () {
+        _this.props.onUpdateState(_this.state);
+      });
     });
     _defineProperty(_assertThisInitialized(_this), "removeOption", function (index) {
       _sweetalert.default.fire({
@@ -70,43 +78,53 @@ var Options = /*#__PURE__*/function (_Component) {
             return {
               options: updatedOptions
             };
+          }, function () {
+            _this.props.onUpdateState(_this.state);
           });
-          _this.props.onUpdateState(_this.state.options);
         }
       });
     });
     _defineProperty(_assertThisInitialized(_this), "handleOptionChange", function (index, e) {
-      var _e$target = e.target,
-        name = _e$target.name,
-        value = _e$target.value;
+      var _e$target2 = e.target,
+        name = _e$target2.name,
+        value = _e$target2.value;
       _this.setState(function (prevState) {
         var updatedOptions = _toConsumableArray(prevState.options);
         updatedOptions[index][name] = value;
         return {
           options: updatedOptions
         };
+      }, function () {
+        _this.props.onUpdateState(_this.state);
       });
-      _this.props.onUpdateState(_this.state.options);
     });
     _this.state = {
       options: [{
         label: '',
         action: ''
-      }]
+      }],
+      other_options: false
     };
     return _this;
   }
   _createClass(Options, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      if (this.props.question.options) this.setState({
-        options: this.props.question.options
-      });
+      var _this2 = this;
+      console.log("this.props.question.options", this.props.question);
+      if (this.props.question.options) {
+        this.setState({
+          options: this.props.question.options,
+          other_options: this.props.question.other_options
+        }, function () {
+          _this2.props.onUpdateState(_this2.state);
+        });
+      }
     }
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
       var options = this.state.options;
       var type = this.props.type;
       return /*#__PURE__*/_react.default.createElement(_optionElement.Container, null, options.map(function (option, index) {
@@ -119,17 +137,26 @@ var Options = /*#__PURE__*/function (_Component) {
           placeholder: "Option Text",
           value: option.label,
           onChange: function onChange(e) {
-            return _this2.handleOptionChange(index, e);
+            return _this3.handleOptionChange(index, e);
           }
         }), /*#__PURE__*/_react.default.createElement(_general.StyledButton, {
-          onClick: _this2.addOption
+          onClick: _this3.addOption
         }, "+"), /*#__PURE__*/_react.default.createElement(_general.StyledButton, {
           onClick: function onClick() {
-            return _this2.removeOption(index);
+            return _this3.removeOption(index);
           },
           className: "remove-button"
         }, "x"));
-      }));
+      }), /*#__PURE__*/_react.default.createElement("div", {
+        className: "last-wrapper"
+      }, type == 'choice' && /*#__PURE__*/_react.default.createElement("input", {
+        type: "checkbox",
+        name: "other_options",
+        checked: this.state.other_options,
+        onChange: this.handleOtherOptionsChange
+      }), /*#__PURE__*/_react.default.createElement("label", {
+        className: "label-last-options"
+      }, "The last option requires the user to manually input an answer")));
     }
   }]);
   return Options;

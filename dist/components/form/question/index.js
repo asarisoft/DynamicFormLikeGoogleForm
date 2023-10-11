@@ -118,7 +118,8 @@ var Question = /*#__PURE__*/function (_Component) {
             question: this.props.question,
             onUpdateState: function onUpdateState(data) {
               _this2.setState({
-                options: data
+                options: data.options,
+                other_options: data.other_options
               });
             }
           });
@@ -130,7 +131,7 @@ var Question = /*#__PURE__*/function (_Component) {
             question: this.props.question,
             onUpdateState: function onUpdateState(data) {
               _this2.setState({
-                options: data
+                options: data.options
               });
             }
           });

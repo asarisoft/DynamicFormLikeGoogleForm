@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Iframe Communication Example</title>
+    <style>
+      iframe {
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Konten Dokumen Utama</h1>
+
+    <!-- Iframe yang mengarah ke https://survey-generator-template.netlify.app/ -->
+    <iframe
+      id="myIframe"
+      src="https://survey-generator-template.netlify.app/"
+      width="800"
+      height="600"
+    ></iframe>
+
+    <script>
+      console.log("ssss");
+      // Mendapatkan referensi ke iframe
+      const iframe = document.getElementById("myIframe");
+
+      // Mengirim pesan ke iframe saat dokumen utama dimuat
+      iframe.addEventListener("load", () => {
+        data = {
+          title: "ss",
+          json_form: [
+            {
+              _id: "1696929873471",
+              title: "dddddddd",
+              section_title: "sss",
+              section: 1,
+              questionNumber: 1,
+              descriptions: "",
+              required: true,
+              form: {
+                type: "paragraph",
+              },
+            },
+            {
+              _id: "1696929542900",
+              title: "dddd",
+              section_title: "sss",
+              section: 1,
+              questionNumber: 2,
+              descriptions: "",
+              required: true,
+              form: {
+                type: "choice",
+                option: [
+                  "Sangat tidak setuju",
+                  "Tidak setuju",
+                  "Setuju",
+                  "sss",
+                ],
+                action: ["", "", "", ""],
+              },
+            },
+            {
+              _id: "1696929893888",
+              title: "ssss",
+              section_title: "sss",
+              section: 1,
+              questionNumber: 3,
+              descriptions: "",
+              required: true,
+              form: {
+                type: "scale",
+                start: "1",
+                to: "2",
+                label_start: "",
+                label_to: "",
+              },
+            },
+          ],
+        };
+        // const message = {
+        //   source: "Dokumen Utama",
+        //   message: "Hello from Dokumen Utama!",
+        // };
+        iframe.contentWindow.postMessage(
+          data,
+          "https://survey-generator-template.netlify.app/"
+        );
+      });
+
+      // Mendengarkan pesan dari iframe
+      window.addEventListener("message", (event) => {
+        // Pastikan pesan berasal dari sumber yang diizinkan
+        //   if (event.origin === 'https://survey-generator-template.netlify.app/') {
+        const receivedData = event.data;
+        console.log("Data yang diterima dari iframe:", receivedData);
+        axios.post (create/update)
+
+        // Kirim balik pesan ke iframe (opsional)
+        // const responseMessage = {
+        //   source: 'Dokumen Utama',
+        //   message: 'Pesan diterima!'
+        // };
+        // iframe.contentWindow.postMessage(responseMessage, 'https://survey-generator-template.netlify.app/');
+        //   }
+      });
+    </script>
+  </body>
+</html>
