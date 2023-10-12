@@ -44,6 +44,9 @@ class Question extends Component {
   handleInputQuestion = (e) => {
     this.setState({ title: e.target.value });
   };
+  handleInputDescription = (e) => {
+    this.setState({ descriptions: e.target.value });
+  };
 
   handleAnswerTypeChange = (e) => {
     this.setState({ type: e.target.value });
@@ -58,7 +61,7 @@ class Question extends Component {
     const { type } = this.state;
     switch (type) {
       case 'likert':
-        return <Likert 
+        return <Likert
           type="likert"
           question={this.props.question}
           onUpdateState={(data) => {
@@ -69,10 +72,10 @@ class Question extends Component {
           // digunakan untuk update state pas edit
           question={this.props.question}
           onUpdateState={(data) => {
-            this.setState({ 
+            this.setState({
               options: data.options,
               other_options: data.other_options
-          })
+            })
           }} />;
       case 'multiple':
         return <Options type="multiple"
@@ -108,15 +111,14 @@ class Question extends Component {
         </div>
         <div>
           <div className='question' >
+            <Input
+              type="hidden"
+              name="question"
+              placeholder='Input Question'
+              value={this.state._id}
+              onChange={this.handleInputQuestion}
+            />
             <div onClick={this.props.onClick}>
-              <Input
-                type="hidden"
-                name="question"
-                placeholder='Input Question'
-                value={this.state._id}
-                onChange={this.handleInputQuestion}
-              />
-
               <Input
                 type="text"
                 name="question"
@@ -128,7 +130,20 @@ class Question extends Component {
             <StyledButton
               onClick={() => onRemoveQuestion(questionIndex)}>x</StyledButton>
           </div>
+
+
+
           <div className='body' style={{ display: question?.isActive ? 'block' : 'none' }}>
+            <div className='question' >
+              <Input
+                type="text"
+                name="question"
+                placeholder='Description'
+                value={this.state.descriptions}
+                onChange={this.handleInputDescription}
+              />
+              <div style={{width: '30px'}}>&nbsp;</div>
+            </div>
             <StyledButton
               className='btn-add-question'
               onClick={() => onAddQuestion()}>+ Question</StyledButton>
@@ -144,7 +159,6 @@ class Question extends Component {
                   onChange={this.handleRequiredChange}
                 />
               </div> */}
-              
               <select
                 name="answerType"
                 value={this.state.type}
@@ -158,7 +172,7 @@ class Question extends Component {
                 <option value="info">Info</option>
               </select>
 
-              
+
             </div>
             {this.renderAnswerTypeComponent()}
           </div>

@@ -147,16 +147,16 @@ var Options = /*#__PURE__*/function (_Component) {
           },
           className: "remove-button"
         }, "x"));
-      }), /*#__PURE__*/_react.default.createElement("div", {
+      }), type == 'choice' && /*#__PURE__*/_react.default.createElement("div", {
         className: "last-wrapper"
-      }, type == 'choice' && /*#__PURE__*/_react.default.createElement("input", {
+      }, /*#__PURE__*/_react.default.createElement("input", {
         type: "checkbox",
         name: "other_options",
         checked: this.state.other_options,
         onChange: this.handleOtherOptionsChange
       }), /*#__PURE__*/_react.default.createElement("label", {
         className: "label-last-options"
-      }, "The last option requires the user to manually input an answer")));
+      }, "Set last option as other options")));
     }
   }]);
   return Options;

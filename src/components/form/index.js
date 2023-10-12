@@ -66,70 +66,28 @@ class Form extends Component {
       }
     }, 1000)
     // For Test
-    // const uu = [
-    //   {
-    //     "_id": "1696996749326",
-    //     "title": "qqq",
-    //     "section_title": "qq",
-    //     "section": 1,
-    //     "questionNumber": 1,
-    //     "descriptions": "",
-    //     "required": true,
-    //     "form": {
-    //       "type": "likert",
-    //       "option": [
-    //         "Sangat tidak setuju",
-    //         "Tidak setuju",
-    //         "Setuju",
-    //         "Sangat Setuju"
-    //       ]
-    //     }
-    //   },
-    //   {
-    //     "_id": "1696999469076",
-    //     "title": "edd",
-    //     "section_title": "qq",
-    //     "section": 1,
-    //     "questionNumber": 2,
-    //     "descriptions": "",
-    //     "required": true,
-    //     "other_options": true,
-    //     "form": {
-    //       "type": "choice",
-    //       "option": [
-    //         "2",
-    //         "3"
-    //       ],
-    //       "action": [
-    //         "",
-    //         ""
-    //       ]
-    //     }
-    //   },
-    //   {
-    //     "_id": "1696999477458",
-    //     "title": "dddd",
-    //     "section_title": "qq",
-    //     "section": 1,
-    //     "questionNumber": 3,
-    //     "descriptions": "",
-    //     "required": true,
-    //     "other_options": false,
-    //     "form": {
-    //       "type": "choice",
-    //       "option": [
-    //         "b",
-    //         "f"
-    //       ],
-    //       "action": [
-    //         "",
-    //         ""
-    //       ]
-    //     }
-    //   }
-    // ]
-    // const kkk = this.buildStateFromListQuestion(data.json_form);
-    // this.setState({ sections: kkk, title: data.title });
+    const uu = [
+      {
+        "_id": "1697092737554",
+        "title": "sdfdsfds",
+        "section_title": "sdfsdf",
+        "section": 1,
+        "questionNumber": 1,
+        "descriptions": "ssssss",
+        "required": true,
+        "form": {
+          "type": "likert",
+          "option": [
+            "Sangat tidak setuju",
+            "Tidak setuju",
+            "Setuju",
+            "Sangat Setuju"
+          ]
+        }
+      }
+    ]
+    const kkk = this.buildStateFromListQuestion(uu);
+    this.setState({ sections: kkk, title: "data.title" });
   }
 
   // Fungsi untuk menambah section baru

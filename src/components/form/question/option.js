@@ -20,7 +20,7 @@ class Options extends Component {
       this.setState({
         options: this.props.question.options,
         other_options: this.props.question.other_options
-      }, ()=>{
+      }, () => {
         this.props.onUpdateState(this.state)
       })
     }
@@ -58,7 +58,7 @@ class Options extends Component {
           const updatedOptions = [...prevState.options];
           updatedOptions.splice(index, 1);
           return { options: updatedOptions };
-        }, ()=>{
+        }, () => {
           this.props.onUpdateState(this.state)
         });
       }
@@ -71,7 +71,7 @@ class Options extends Component {
       const updatedOptions = [...prevState.options];
       updatedOptions[index][name] = value;
       return { options: updatedOptions };
-    }, ()=>{
+    }, () => {
       this.props.onUpdateState(this.state)
     });
   };
@@ -105,18 +105,18 @@ class Options extends Component {
               className='remove-button'>x</StyledButton>
           </div>
         ))}
-        <div className='last-wrapper'>
-          {type == 'choice' &&
+        {type == 'choice' &&
+          <div className='last-wrapper'>
             <input
               type="checkbox"
               name="other_options"
               checked={this.state.other_options}
               onChange={this.handleOtherOptionsChange}
             />
-          }
-          <label className='label-last-options'>
-            The last option requires the user to manually input an answer</label>
-        </div>
+            <label className='label-last-options'>
+              Set last option as other options</label>
+          </div>
+        }
       </Container>
     );
   }

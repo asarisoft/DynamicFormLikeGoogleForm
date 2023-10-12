@@ -478,11 +478,7 @@ var Form = /*#__PURE__*/function (_Component) {
         })));
       }), /*#__PURE__*/_react.default.createElement("div", {
         className: "form-footer"
-      }, /*#__PURE__*/_react.default.createElement(_general.StyledButton, {
-        onClick: this.addSection
-      }, "Add Section"), /*#__PURE__*/_react.default.createElement(_general.StyledButton, {
-        onClick: this.populateData
-      }, "Generate & Submit")));
+      }));
     }
   }]);
   return Form;
