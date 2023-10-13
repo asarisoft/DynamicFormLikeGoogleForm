@@ -66,28 +66,28 @@ class Form extends Component {
       }
     }, 1000)
     // For Test
-    const uu = [
-      {
-        "_id": "1697092737554",
-        "title": "sdfdsfds",
-        "section_title": "sdfsdf",
-        "section": 1,
-        "questionNumber": 1,
-        "descriptions": "ssssss",
-        "required": true,
-        "form": {
-          "type": "likert",
-          "option": [
-            "Sangat tidak setuju",
-            "Tidak setuju",
-            "Setuju",
-            "Sangat Setuju"
-          ]
-        }
-      }
-    ]
-    const kkk = this.buildStateFromListQuestion(uu);
-    this.setState({ sections: kkk, title: "data.title" });
+    // const uu = [
+    //   {
+    //     "_id": "1697092737554",
+    //     "title": "sdfdsfds",
+    //     "section_title": "sdfsdf",
+    //     "section": 1,
+    //     "questionNumber": 1,
+    //     "descriptions": "ssssss",
+    //     "required": true,
+    //     "form": {
+    //       "type": "single",
+    //       "option": [
+    //         "Sangat tidak setuju",
+    //         "Tidak setuju",
+    //         "Setuju",
+    //         "Sangat Setuju"
+    //       ]
+    //     }
+    //   }
+    // ]
+    // const kkk = this.buildStateFromListQuestion(uu);
+    // this.setState({ sections: kkk, title: "data.title" });
   }
 
   // Fungsi untuk menambah section baru
@@ -104,20 +104,16 @@ class Form extends Component {
   }
 
   // Fungsi untuk menambah pertanyaan baru ke dalam section
-  addQuestionToSection = (sectionIndex) => {
-    // Set semua pertanyaan dalam section sebagai non-aktif saat pertanyaan baru ditambahkan
+  addQuestionToSection = (sectionIndex, questionIndex) => {
     const updatedSections = [...this.state.sections];
     updatedSections[sectionIndex].questions.forEach((question) => {
       question.isActive = false;
     });
-
-    // update data question
-    updatedSections[sectionIndex].questions.push({
-      isActive: true,
-    });
+    updatedSections[sectionIndex].questions.splice(questionIndex+1, 0, { isActive: true, _id: `${Date.now()}`, });
     updatedSections[sectionIndex].isQuestionsVisible = true
     this.setState({ sections: updatedSections });
   }
+
 
   // Fungsi untuk mengganti title section
   onUpdateTitleSection = (e, sectionIndex) => {
@@ -208,7 +204,6 @@ class Form extends Component {
         result.push(dataQuestion)
       });
     });
-    console.log("updatedSections", updatedSections)
     // update local state
     this.setState({ sections: updatedSections, title: this.headerRef.state.title });
     // send to iframe
@@ -250,7 +245,7 @@ class Form extends Component {
         action: actions
       }
     }
-    else if (fieldData.type === "multiple" || fieldData.type === "likert") {
+    else if (fieldData.type === "multiple") {
       const options = []
       fieldData.options?.map(dt => {
         options.push(dt.label)
@@ -310,7 +305,7 @@ class Form extends Component {
           label: option,
           action: item.form.action[idx], // Assuming the first action is correct
         }));
-      } else if (item.form.type === 'multiple' || item.form.type === 'likert') {
+      } else if (item.form.type === 'multiple') {
         question.options = item.form.option.map(option => ({
           label: option,
           action: '',
@@ -336,7 +331,6 @@ class Form extends Component {
 
   render() {
     const { sections } = this.state;
-    console.log("sections", sections)
     return (
       <FormContainer>
         <Header ref={(ref) => { this.headerRef = ref }}
@@ -346,7 +340,7 @@ class Form extends Component {
           <div key={sectionIndex}>
             <Section label={section.label}
               section={section}
-              onAddField={() => this.addQuestionToSection(sectionIndex)}
+              onAddField={() => this.addQuestionToSection(sectionIndex, -1)}
               onToggleQustion={() => this.toggleQuestionsVisibility(sectionIndex)}
               onDeleteSection={() => this.deleteSection(sectionIndex)}
               onUpdateTitle={(title) => this.onUpdateTitleSection(title, sectionIndex)}
@@ -355,7 +349,7 @@ class Form extends Component {
             <div style={{ display: section.isQuestionsVisible ? 'block' : 'none' }}>
               {section.questions.map((question, questionIndex) => (
                 <Question
-                  key={`${sectionIndex}${questionIndex}`}
+                  key={`${sectionIndex}-${question._id}`}
                   question={question}
                   questionIndex={questionIndex}
                   onClick={() => this.setActiveQuestion(sectionIndex, questionIndex)}
@@ -366,7 +360,7 @@ class Form extends Component {
                     }
                     this.fieldRefs[sectionIndex][questionIndex] = ref; // Simpan referensi ke komponen Question
                   }}
-                  onAddQuestion={() => this.addQuestionToSection(sectionIndex)}
+                  onAddQuestion={() => this.addQuestionToSection(sectionIndex, questionIndex)}
                 />
               ))}
             </div>

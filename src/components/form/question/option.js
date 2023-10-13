@@ -15,13 +15,20 @@ class Options extends Component {
   }
 
   componentDidMount() {
-    console.log("this.props.question.options", this.props.question)
     if (this.props.question.options) {
       this.setState({
         options: this.props.question.options,
         other_options: this.props.question.other_options
       }, () => {
         this.props.onUpdateState(this.state)
+      })
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.defaultOptions && this.props.defaultOptions !== prevProps.defaultOptions) {
+      this.setState({
+        options: this.props.defaultOptions,
       })
     }
   }
