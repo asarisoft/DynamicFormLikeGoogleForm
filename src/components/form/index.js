@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Section from './section';
 import Question from './question';
 import Header from './header';
@@ -109,7 +110,7 @@ class Form extends Component {
     updatedSections[sectionIndex].questions.forEach((question) => {
       question.isActive = false;
     });
-    updatedSections[sectionIndex].questions.splice(questionIndex+1, 0, { isActive: true, _id: `${Date.now()}`, });
+    updatedSections[sectionIndex].questions.splice(questionIndex + 1, 0, { isActive: true, _id: `${Date.now()}`, });
     updatedSections[sectionIndex].isQuestionsVisible = true
     this.setState({ sections: updatedSections });
   }
@@ -329,6 +330,32 @@ class Form extends Component {
     window.parent.postMessage(data, '*'); // '*' mengizinkan dari semua sumber
   }
 
+  onDragEnd = (result) => {
+    if (!result.destination) {
+      return; // Drag tidak selesai atau tidak ada perubahan
+    }
+
+    const { source, destination, draggableId } = result;
+
+    if (source.droppableId === destination.droppableId) {
+      // Pengurutan dalam satu Droppable (sama dengan satu section)
+      const sectionIndex = parseInt(source.droppableId.replace('section-', ''));
+      const updatedSections = [...this.state.sections];
+      const [movedQuestion] = updatedSections[sectionIndex].questions.splice(source.index, 1);
+      updatedSections[sectionIndex].questions.splice(destination.index, 0, movedQuestion);
+      this.setState({ sections: updatedSections });
+    } else {
+      // Pengurutan antar Droppable (misalnya, antara dua section)
+      const sourceSectionIndex = parseInt(source.droppableId.replace('section-', ''));
+      const destSectionIndex = parseInt(destination.droppableId.replace('section-', ''));
+
+      const updatedSections = [...this.state.sections];
+      const [movedQuestion] = updatedSections[sourceSectionIndex].questions.splice(source.index, 1);
+      updatedSections[destSectionIndex].questions.splice(destination.index, 0, movedQuestion);
+      this.setState({ sections: updatedSections });
+    }
+  }
+
   render() {
     const { sections } = this.state;
     return (
@@ -336,36 +363,58 @@ class Form extends Component {
         <Header ref={(ref) => { this.headerRef = ref }}
           title={this.state.title}
         />
-        {sections?.map((section, sectionIndex) => (
-          <div key={sectionIndex}>
-            <Section label={section.label}
-              section={section}
-              onAddField={() => this.addQuestionToSection(sectionIndex, -1)}
-              onToggleQustion={() => this.toggleQuestionsVisibility(sectionIndex)}
-              onDeleteSection={() => this.deleteSection(sectionIndex)}
-              onUpdateTitle={(title) => this.onUpdateTitleSection(title, sectionIndex)}
-              title={section.section_title}
-            />
-            <div style={{ display: section.isQuestionsVisible ? 'block' : 'none' }}>
-              {section.questions.map((question, questionIndex) => (
-                <Question
-                  key={`${sectionIndex}-${question._id}`}
-                  question={question}
-                  questionIndex={questionIndex}
-                  onClick={() => this.setActiveQuestion(sectionIndex, questionIndex)}
-                  onRemoveQuestion={() => this.removeQuestionFromSection(sectionIndex, questionIndex)}
-                  ref={(ref) => {
-                    if (!this.fieldRefs[sectionIndex]) {
-                      this.fieldRefs[sectionIndex] = [];
-                    }
-                    this.fieldRefs[sectionIndex][questionIndex] = ref; // Simpan referensi ke komponen Question
-                  }}
-                  onAddQuestion={() => this.addQuestionToSection(sectionIndex, questionIndex)}
-                />
-              ))}
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          {sections?.map((section, sectionIndex) => (
+            <div key={sectionIndex}>
+              <Section label={section.label}
+                section={section}
+                onAddField={() => this.addQuestionToSection(sectionIndex, -1)}
+                onToggleQustion={() => this.toggleQuestionsVisibility(sectionIndex)}
+                onDeleteSection={() => this.deleteSection(sectionIndex)}
+                onUpdateTitle={(title) => this.onUpdateTitleSection(title, sectionIndex)}
+                title={section.section_title}
+              />
+              <div style={{ display: section.isQuestionsVisible ? 'block' : 'none' }}>
+                <Droppable droppableId={`section-${sectionIndex}`}>
+                  {(provided) => (
+                    <div ref={provided.innerRef} {...provided.droppableProps}>
+                      {section.questions.map((question, questionIndex) => (
+                        <Draggable
+                          key={`${sectionIndex}-${question._id}`}
+                          draggableId={`${sectionIndex}-${question._id}`}
+                          index={questionIndex}
+                        >
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <Question
+                                question={question}
+                                questionIndex={questionIndex}
+                                onClick={() => this.setActiveQuestion(sectionIndex, questionIndex)}
+                                onRemoveQuestion={() => this.removeQuestionFromSection(sectionIndex, questionIndex)}
+                                ref={(ref) => {
+                                  if (!this.fieldRefs[sectionIndex]) {
+                                    this.fieldRefs[sectionIndex] = [];
+                                  }
+                                  this.fieldRefs[sectionIndex][questionIndex] = ref; // Simpan referensi ke komponen Question
+                                }}
+                                onAddQuestion={() => this.addQuestionToSection(sectionIndex, questionIndex)}
+                              />
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </DragDropContext>
         <div className='form-footer'>
           <StyledButton onClick={this.addSection}>Add Section</StyledButton>
           <StyledButton onClick={this.populateData}>Generate & Submit</StyledButton>
