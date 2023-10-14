@@ -14,6 +14,8 @@ class Question extends Component {
       type: 'choice',
       title: '',
       descriptions: '',
+      min_to_select: 1,
+      max_to_select: 20,
       required: true,
     }
   }
@@ -26,21 +28,19 @@ class Question extends Component {
       type: question.type || 'choice',
       title: question.title || '',
       descriptions: question.descriptions || '',
-      required: question.required || true,
+      required: question.required,
       scale: question.scale,
-      options: question.options
+      options: question.options,
+      min_to_select: question.min_to_select,
+      max_to_select: question.max_to_select,
     })
   }
-
-  // update data ke props utama
-  handleInputQuestion = (e) => {
-    this.setState({ title: e.target.value }, () => {
-      // this.props.onUpdateQuestion(this.state)
+  handleInput = (e) => {
+    const name = e.target.name; // Mengakses nilai name dari elemen input
+    const value = e.target.value; // Mengakses nilai value dari elemen input
+    this.setState({ [name]: value }, () => {
+      // Lakukan sesuatu dengan nilai name dan value
     });
-  };
-
-  handleInputDescription = (e) => {
-    this.setState({ descriptions: e.target.value });
   };
 
   handleAnswerTypeChange = (e) => {
@@ -77,7 +77,7 @@ class Question extends Component {
       case 'choice':
         return <Options type="choice"
           question={this.props.question}
-          defaultOptions = {this.state.options}
+          defaultOptions={this.state.options}
           onUpdateState={(data) => {
             this.setState({
               options: data.options,
@@ -119,17 +119,16 @@ class Question extends Component {
             <Input
               type="hidden"
               name="question"
-              placeholder='Input Question'
+              placeholder='Input ID'
               value={this.state._id}
-              onChange={this.handleInputQuestion}
             />
             <div onClick={this.props.onClick}>
               <Input
                 type="text"
-                name="question"
+                name="title"
                 placeholder='Input Question'
                 value={this.state.title}
-                onChange={this.handleInputQuestion}
+                onChange={this.handleInput}
               />
             </div>
             <StyledButton
@@ -140,10 +139,10 @@ class Question extends Component {
             <div className='question' >
               <Input
                 type="text"
-                name="question"
+                name="descriptions"
                 placeholder='Description'
                 value={this.state.descriptions}
-                onChange={this.handleInputDescription}
+                onChange={this.handleInput}
               />
               <div style={{ width: '30px' }}>&nbsp;</div>
             </div>
@@ -173,8 +172,30 @@ class Question extends Component {
                 <option value="paragraph">Paragraph</option>
                 <option value="info">Info</option>
               </select>
+              {this.state.type === 'multiple' &&
+                <>
+                  <label className='label'>Min To Select</label>
+                  <Input
+                    type="number"
+                    name="min_to_select"
+                    placeholder='Min to select'
+                    value={this.state.min_to_select}
+                    onChange={this.handleInput}
+                    style={{ width: '35px', marginLeft: '8px', marginRight: '8px' }}
+                  />
+                  <label className='label'>Max To Select</label>
+                  <Input
+                    type="number"
+                    name="max_to_select"
+                    placeholder='Max to select'
+                    value={this.state.max_to_select}
+                    onChange={this.handleInput}
+                    style={{ width: '35px', marginLeft: '8px', marginRight: '8px' }}
+                  />
+                </>
+              }
               {this.state.type === 'choice' &&
-                < select
+                <select
                   name="answerType"
                   value={this.state.defaultOptions}
                   onChange={this.handleDefaultOptions}

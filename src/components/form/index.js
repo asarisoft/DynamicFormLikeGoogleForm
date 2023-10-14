@@ -66,23 +66,23 @@ class Form extends Component {
         }
       }
     }, 1000)
-    // For Test
+
     // const uu = [
     //   {
-    //     "_id": "1697092737554",
-    //     "title": "sdfdsfds",
-    //     "section_title": "sdfsdf",
+    //     "_id": "1697243387313",
+    //     "title": "aaaaa",
+    //     "section_title": "",
     //     "section": 1,
     //     "questionNumber": 1,
-    //     "descriptions": "ssssss",
+    //     "descriptions": "",
     //     "required": true,
+    //     "min_to_select": 1,
+    //     "max_to_select": 4,
     //     "form": {
-    //       "type": "single",
+    //       "type": "multiple",
     //       "option": [
-    //         "Sangat tidak setuju",
-    //         "Tidak setuju",
-    //         "Setuju",
-    //         "Sangat Setuju"
+    //         "a",
+    //         "a"
     //       ]
     //     }
     //   }
@@ -208,12 +208,12 @@ class Form extends Component {
     // update local state
     this.setState({ sections: updatedSections, title: this.headerRef.state.title });
     // send to iframe
-    console.log("resuls", result)
     this.sendDataToParent({
       title: this.headerRef.state.title || this.state.title,
       json_form: result
     });
     // 
+    console.log("result", result)
     return {
       title: this.headerRef.state.title || this.state.title,
       jsonForm: result
@@ -230,7 +230,9 @@ class Form extends Component {
       questionNumber: questionNumber,
       descriptions: fieldData.descriptions,
       required: fieldData.required,
-      other_options: fieldData.other_options
+      other_options: fieldData.other_options,
+      min_to_select: fieldData.min_to_select,
+      max_to_select: fieldData.max_to_select
     }
 
     if (fieldData.type === "choice") {
@@ -298,7 +300,9 @@ class Form extends Component {
         title: item.title,
         descriptions: item.descriptions,
         required: item.required,
-        other_options: item.other_options
+        other_options: item.other_options,
+        min_to_select: item.min_to_select,
+        max_to_select: item.max_to_select
       };
 
       if (item.form.type === 'choice') {

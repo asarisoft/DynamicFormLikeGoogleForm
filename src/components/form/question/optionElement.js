@@ -2,14 +2,14 @@ import styled from 'styled-components';
 import { colors, screensize } from '../../../utils'; // Gantilah 'path-to-your-utils' dengan path yang benar ke utils Anda
 
 export const Container = styled.div`
-    width: 80%;
+    width: 100%;
     .input-wrapper {
         display: flex;
         flex-direcation: column;
         align-items: center;
         column-gap: 4px;
         input {
-            width: 43%
+            width: 60%
         }
         .remove-button {
             background-color: ${colors.red}

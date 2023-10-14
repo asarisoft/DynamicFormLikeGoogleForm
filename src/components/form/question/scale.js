@@ -42,14 +42,14 @@ class Scale extends Component {
             name="start"
             value={start}
             onChange={this.handleInputChange}
-            placeholder="Start"
+            placeholder="Start*"
           />
           <Input
             type="number"
             name="to"
             value={to}
             onChange={this.handleInputChange}
-            placeholder="Finish"
+            placeholder="Finish*"
           />
           <br/>
           <Input
@@ -57,14 +57,14 @@ class Scale extends Component {
             name="label_start"
             value={label_start}
             onChange={this.handleInputChange}
-            placeholder="Left String"
+            placeholder="Left String (optional)"
           />
           <Input
             type="string"
             name="label_to"
             value={label_to}
             onChange={this.handleInputChange}
-            placeholder="Right String"
+            placeholder="Right String (optional)"
           />
         </div>
       </Container>

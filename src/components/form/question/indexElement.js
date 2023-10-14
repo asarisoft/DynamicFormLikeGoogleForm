@@ -42,7 +42,7 @@ export const FieldsContainer = styled.div`
             
             .btn-add-question {
                 position: absolute;
-                bottom: 8px;
+                top: 100px;
                 right: 8px;
             }
             .type-wrapper {
@@ -55,6 +55,9 @@ export const FieldsContainer = styled.div`
                     background-color: ${colors.blue4};
                     color: white;
                     border-radius: 4px;
+                }
+                .label {
+                    font-size: 14px;
                 }
                 .required-wrapper {
                     background-color: ${colors.blue4};
