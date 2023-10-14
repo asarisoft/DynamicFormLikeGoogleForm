@@ -30,7 +30,8 @@ class Form extends Component {
           "questions": [
             {
               "type": "",
-              "title": ""
+              "title": "",
+              "required": true
             },
           ],
           "isQuestionsVisible": true
@@ -110,7 +111,8 @@ class Form extends Component {
     updatedSections[sectionIndex].questions.forEach((question) => {
       question.isActive = false;
     });
-    updatedSections[sectionIndex].questions.splice(questionIndex + 1, 0, { isActive: true, _id: `${Date.now()}`, });
+    updatedSections[sectionIndex].questions.splice(questionIndex + 1, 0, 
+      { isActive: true, _id: `${Date.now()}`, required: true });
     updatedSections[sectionIndex].isQuestionsVisible = true
     this.setState({ sections: updatedSections });
   }
@@ -222,6 +224,7 @@ class Form extends Component {
 
   // before submit
   buildFormQuestionFromState = (fieldData, sectionIndex, sectionTitle, questionNumber) => {
+    console.log("fieldata", fieldData)
     const dataQuestion = {
       _id: fieldData._id,
       title: fieldData.title,

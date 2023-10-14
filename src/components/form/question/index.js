@@ -15,7 +15,7 @@ class Question extends Component {
       title: '',
       descriptions: '',
       min_to_select: 1,
-      max_to_select: 20,
+      max_to_select: 10,
       required: true,
     }
   }
@@ -23,16 +23,19 @@ class Question extends Component {
   componentDidMount() {
     const question = this.props.question;
     // untuk default data bukan di kirim ke component
+    let required = true
+    if (question.required !== undefined)
+      required = question.required
     this.setState({
       _id: question._id || `${Date.now()}`,
       type: question.type || 'choice',
       title: question.title || '',
       descriptions: question.descriptions || '',
-      required: question.required,
+      required: required,
       scale: question.scale,
       options: question.options,
-      min_to_select: question.min_to_select,
-      max_to_select: question.max_to_select,
+      min_to_select: question.min_to_select || 1,
+      max_to_select: question.max_to_select || 3,
     })
   }
   handleInput = (e) => {
@@ -105,7 +108,7 @@ class Question extends Component {
     }
   }
 
-
+  
   render() {
     const { question, questionIndex, onAddQuestion, onRemoveQuestion } = this.props;
     return (
