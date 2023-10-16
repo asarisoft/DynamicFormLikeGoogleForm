@@ -4,6 +4,16 @@ import Scale from './scale';
 import Paragraph from './paragraph';
 import { FieldsContainer } from './indexElement';
 import { Input, StyledButton } from '../../general';
+import ReactQuill from 'react-quill'; // Import Quill React Component
+import 'react-quill/dist/quill.snow.css'; // Import styles
+
+
+const modules = {
+  toolbar: [
+    ['bold', 'italic', 'underline'],
+  ]
+};
+
 
 
 class Question extends Component {
@@ -22,10 +32,11 @@ class Question extends Component {
 
   componentDidMount() {
     const question = this.props.question;
-    // untuk default data bukan di kirim ke component
     let required = true
     if (question.required !== undefined)
       required = question.required
+    else
+      required = false
     this.setState({
       _id: question._id || `${Date.now()}`,
       type: question.type || 'choice',
@@ -108,7 +119,7 @@ class Question extends Component {
     }
   }
 
-  
+
   render() {
     const { question, questionIndex, onAddQuestion, onRemoveQuestion } = this.props;
     return (
@@ -126,15 +137,23 @@ class Question extends Component {
               value={this.state._id}
             />
             <div onClick={this.props.onClick}>
-              <Input
+              {/* <Input
                 type="text"
                 name="title"
-                placeholder='Input Question'
+                placeholder='Input Question*'
                 value={this.state.title}
+                required={true}
                 onChange={this.handleInput}
+              /> */}
+              <ReactQuill
+                theme="snow" 
+                value={this.state.title}
+                onChange={(v)=>this.setState({ title: v })}
+                modules={modules}
               />
             </div>
             <StyledButton
+              className='delete-button'
               onClick={() => onRemoveQuestion(questionIndex)}>x</StyledButton>
           </div>
 

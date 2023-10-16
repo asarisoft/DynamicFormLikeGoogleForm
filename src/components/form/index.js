@@ -190,12 +190,20 @@ class Form extends Component {
   populateData = () => {
     const { sections } = this.state;
     const updatedSections = [...sections];
-    const result = []
+    const result = [];
+    const surveyTitle = this.headerRef.state.title || this.state.title
+    let isFormValid = surveyTitle ? true : false; 
 
     updatedSections.forEach((section, sectionIndex) => {
       let questionNumber = 1;
+      if (!section.section_title) {
+        isFormValid = false;
+      }
       section.questions.forEach((question, questionIndex) => {
         const fieldData = this.fieldRefs[sectionIndex][questionIndex].state;
+        if (!fieldData.title) {
+          isFormValid = false;
+        }
         updatedSections[sectionIndex].questions[questionIndex] = fieldData;
         const dataQuestion = this.buildFormQuestionFromState(
           fieldData,
@@ -207,18 +215,27 @@ class Form extends Component {
         result.push(dataQuestion)
       });
     });
-    // update local state
-    this.setState({ sections: updatedSections, title: this.headerRef.state.title });
-    // send to iframe
-    this.sendDataToParent({
-      title: this.headerRef.state.title || this.state.title,
-      json_form: result
-    });
-    // 
-    console.log("result", result)
-    return {
-      title: this.headerRef.state.title || this.state.title,
-      jsonForm: result
+    if (isFormValid) {
+      // update local state
+      this.setState({ sections: updatedSections, title: this.headerRef.state.title });
+      // send to iframe
+      this.sendDataToParent({
+        title: this.headerRef.state.title || this.state.title,
+        json_form: result
+      });
+      // 
+      console.log("result", result)
+      return {
+        title: this.headerRef.state.title || this.state.title,
+        jsonForm: result
+      }
+    } else {
+      Swal.fire({
+        // icon: 'error',
+        title: '',
+        text: 'Please fill all required fields',
+      });
+      return null; // Atau kembalikan null jika ada kesalahan validasi
     }
   }
 

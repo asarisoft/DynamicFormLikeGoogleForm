@@ -25,7 +25,7 @@ const SectionForm = ({ section, label, onAddField, onToggleQustion, onDeleteSect
       </div>
       <Input
         name="title"
-        placeholder='Section Title'
+        placeholder='Section Title*'
         value={title}
         onChange={onUpdateTitle}
       />

@@ -34,7 +34,7 @@ class HeaderForm extends Component {
         <Input
           type="text"
           value={this.state.title || this.props.title}
-          placeholder='Survey Title'
+          placeholder='Survey Title*'
           onChange={this.handleTitleChange}
         />
         {/* <TextArea

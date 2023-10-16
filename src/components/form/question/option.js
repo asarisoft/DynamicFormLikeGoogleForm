@@ -117,6 +117,7 @@ class Options extends Component {
             <input
               type="checkbox"
               name="other_options"
+              required={true}
               checked={this.state.other_options}
               onChange={this.handleOtherOptionsChange}
             />
