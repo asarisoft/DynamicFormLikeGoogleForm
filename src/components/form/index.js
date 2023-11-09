@@ -337,7 +337,7 @@ class Form extends Component {
                               <Question
                                 question={question}
                                 questionIndex={questionIndex}
-                                onClick={() => this.props.setActiveQuestion({sectionIndex, questionIndex})}
+                                sectionIndex={sectionIndex}
                                 onRemoveQuestion={() => this.removeQuestionFromSection(sectionIndex, questionIndex)}
                                 ref={(ref) => {
                                   if (!this.fieldRefs[sectionIndex]) {
@@ -345,7 +345,7 @@ class Form extends Component {
                                   }
                                   this.fieldRefs[sectionIndex][questionIndex] = ref; // Simpan referensi ke komponen Question
                                 }}
-                                onAddQuestion={() => this.addQuestionToSection(sectionIndex, questionIndex)}
+                                onAddQuestion={() => this.props.addQuestion({sectionIndex, questionIndex})}
                               />
                             </div>
                           )}

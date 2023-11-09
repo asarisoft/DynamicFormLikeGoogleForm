@@ -6,6 +6,13 @@ import { FieldsContainer } from './indexElement';
 import { Input, StyledButton } from '../../general';
 import ReactQuill from 'react-quill'; // Import Quill React Component
 import 'react-quill/dist/quill.snow.css'; // Import styles
+import { connect } from 'react-redux';
+
+import {
+  updateQuestion,
+  setActiveQuestion
+} from '../../../redux/formSlice';
+
 
 
 const modules = {
@@ -14,55 +21,31 @@ const modules = {
   ]
 };
 
-
-
 class Question extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      _id: `${Date.now()}`,
-      type: 'choice',
-      title: '',
-      descriptions: '',
-      min_to_select: 1,
-      max_to_select: 10,
-      required: true,
-    }
+    this.sectionIndex = this.props.sectionIndex;
+    this.questionIndex = this.props.questionIndex;
   }
 
-  componentDidMount() {
-    const question = this.props.question;
-    let required = true
-    if (question.required !== undefined)
-      required = question.required
-    else
-      required = false
-    this.setState({
-      _id: question._id || `${Date.now()}`,
-      type: question.type || 'choice',
-      title: question.title || '',
-      descriptions: question.descriptions || '',
-      required: required,
-      scale: question.scale,
-      options: question.options,
-      min_to_select: question.min_to_select || 1,
-      max_to_select: question.max_to_select || 3,
-    })
-  }
   handleInput = (e) => {
     const name = e.target.name; // Mengakses nilai name dari elemen input
     const value = e.target.value; // Mengakses nilai value dari elemen input
-    this.setState({ [name]: value }, () => {
-      // Lakukan sesuatu dengan nilai name dan value
-    });
+    console.log("masuk sini", name, value, this.questionIndex, this.sectionIndex)
+    this.props.updateQuestion({
+      questionIndex: this.questionIndex,
+      sectionIndex: this.sectionIndex,
+      data: { [name]: value }
+    })
   };
 
-  handleAnswerTypeChange = (e) => {
-    this.setState({ type: e.target.value });
-  };
 
   handleRequiredChange = (e) => {
-    this.setState((prevState) => ({ required: !prevState.required }));
+    this.props.updateQuestion({
+      questionIndex: this.questionIndex,
+      sectionIndex: this.sectionIndex,
+      data: { required: e.target.checked }
+    })
   };
 
   handleDefaultOptions = (e) => {
@@ -81,30 +64,43 @@ class Question extends Component {
         { label: 'Sangat Setuju', action: '' }
       ]
     }
-    this.setState({ options: defaultOptions });
+    this.props.updateQuestion({
+      questionIndex: this.questionIndex,
+      sectionIndex: this.sectionIndex,
+      data: { options: defaultOptions }
+    })
   };
 
   // digunakan untuk render setalah type dirubah
   renderAnswerTypeComponent() {
-    const { type, options } = this.state;
+    const question = this.props.form.sections[this.sectionIndex].questions[this.questionIndex];
+    const type = question.type;
+    const options = question.options;
     switch (type) {
       case 'choice':
         return <Options type="choice"
-          question={this.props.question}
-          defaultOptions={this.state.options}
+          question={question}
           onUpdateState={(data) => {
-            this.setState({
-              options: data.options,
-              other_options: data.other_options
+            this.props.updateQuestion({
+              questionIndex: this.questionIndex,
+              sectionIndex: this.sectionIndex,
+              data: {
+                options: data.options,
+                other_options: data.other_options
+              }
             })
           }} />;
       case 'multiple':
         return <Options type="multiple"
-          question={this.props.question}
+          question={question}
           onUpdateState={(data) => {
-            this.setState({ 
-              options: data.options,
-              other_options: data.other_options
+            this.props.updateQuestion({
+              questionIndex: this.questionIndex,
+              sectionIndex: this.sectionIndex,
+              data: {
+                options: data.options,
+                other_options: data.other_options
+              }
             })
           }} />;
       case 'scale':
@@ -123,8 +119,11 @@ class Question extends Component {
   }
 
 
+
   render() {
-    const { question, questionIndex, onAddQuestion, onRemoveQuestion } = this.props;
+    const { sectionIndex, questionIndex, onAddQuestion, onRemoveQuestion } = this.props;
+    const question = this.props.form.sections[sectionIndex].questions[questionIndex];
+
     return (
       <FieldsContainer
         className={question?.isActive && 'active'}>
@@ -137,21 +136,17 @@ class Question extends Component {
               type="hidden"
               name="question"
               placeholder='Input ID'
-              value={this.state._id}
+              value={question._id}
             />
-            <div onClick={this.props.onClick}>
-              {/* <Input
-                type="text"
-                name="title"
-                placeholder='Input Question*'
-                value={this.state.title}
-                required={true}
-                onChange={this.handleInput}
-              /> */}
+            <div onClick={() => this.props.setActiveQuestion({ sectionIndex, questionIndex })}>
               <ReactQuill
-                theme="snow" 
-                value={this.state.title}
-                onChange={(v)=>this.setState({ title: v })}
+                theme="snow"
+                value={question?.title}
+                onChange={(v) => this.props.updateQuestion({
+                  questionIndex,
+                  sectionIndex,
+                  data: { title: v }
+                })}
                 modules={modules}
               />
             </div>
@@ -166,8 +161,8 @@ class Question extends Component {
                 type="text"
                 name="descriptions"
                 placeholder='Description'
-                value={this.state.descriptions}
-                onChange={this.handleInput}
+                value={question.descriptions}
+                onChange={(e) => this.handleInput(e)}
               />
               <div style={{ width: '30px' }}>&nbsp;</div>
             </div>
@@ -181,14 +176,14 @@ class Question extends Component {
                 <input
                   type="checkbox"
                   name="required"
-                  checked={this.state.required}
+                  checked={question.required}
                   onChange={this.handleRequiredChange}
                 />
               </div>
               <select
-                name="answerType"
-                value={this.state.type}
-                onChange={this.handleAnswerTypeChange}
+                name="type"
+                value={question.type}
+                onChange={(e) => this.handleInput(e)}
                 style={{ marginRight: '8px' }}
               >
                 <option value="choice">Multiple choice</option>
@@ -197,15 +192,15 @@ class Question extends Component {
                 <option value="paragraph">Paragraph</option>
                 <option value="info">Info</option>
               </select>
-              {this.state.type === 'multiple' &&
+              {question.type === 'multiple' &&
                 <>
                   <label className='label'>Min To Select</label>
                   <Input
                     type="number"
                     name="min_to_select"
                     placeholder='Min to select'
-                    value={this.state.min_to_select}
-                    onChange={this.handleInput}
+                    value={question.min_to_select}
+                    onChange={(e) => this.handleInput(e)}
                     style={{ width: '35px', marginLeft: '8px', marginRight: '8px' }}
                   />
                   <label className='label'>Max To Select</label>
@@ -213,16 +208,15 @@ class Question extends Component {
                     type="number"
                     name="max_to_select"
                     placeholder='Max to select'
-                    value={this.state.max_to_select}
-                    onChange={this.handleInput}
+                    value={question.max_to_select}
+                    onChange={(e) => this.handleInput(e)}
                     style={{ width: '35px', marginLeft: '8px', marginRight: '8px' }}
                   />
                 </>
               }
-              {this.state.type === 'choice' &&
+              {question.type === 'choice' &&
                 <select
                   name="answerType"
-                  value={this.state.defaultOptions}
                   onChange={this.handleDefaultOptions}
                   style={{ marginRight: '8px' }}
                 >
@@ -240,4 +234,16 @@ class Question extends Component {
   }
 }
 
-export default Question;
+
+const mapStateToProps = (state) => {
+  return {
+    form: state.form,
+  };
+};
+
+const mapDispatchToProps = {
+  updateQuestion,
+  setActiveQuestion
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Question);

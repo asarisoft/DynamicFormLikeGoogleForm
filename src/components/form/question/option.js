@@ -15,14 +15,12 @@ class Options extends Component {
   }
 
   componentDidMount() {
-    if (this.props.question.options) {
-      this.setState({
-        options: this.props.question.options,
-        other_options: this.props.question.other_options
-      }, () => {
-        this.props.onUpdateState(this.state)
-      })
-    }
+    this.setState({
+      options: this.props.question.options,
+      other_options: this.props.question.other_options
+    }, () => {
+      this.props.onUpdateState(this.state)
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -89,7 +87,7 @@ class Options extends Component {
 
     return (
       <Container>
-        {options.map((option, index) => (
+        {options?.map((option, index) => (
           <div key={index} className='input-wrapper'>
             <Input
               type="text"

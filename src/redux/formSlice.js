@@ -6,8 +6,7 @@ const initialFormState = {
     {
       label: 'Section 1',
       section_title: '',
-      questions: [
-      ],
+      questions: [],
       isQuestionsVisible: true
     }
   ]
@@ -44,20 +43,33 @@ export const formSlice = createSlice({
     addQuestion: (state, action) => {
       const { sectionIndex, questionIndex } = action.payload;
       const section = state.sections[sectionIndex];
-    
+
       // Setel semua pertanyaan sebelumnya dalam section menjadi isActive: false
       section.questions.forEach((question) => {
         question.isActive = false;
       });
-    
+
       // Tambahkan pertanyaan baru dengan isActive: true
       section.questions.splice(questionIndex + 1, 0, {
         isActive: true,
         _id: `${Date.now()}`,
-        required: true
+        required: true,
+        title: "",
+        type: 'choice',
+        descriptions: '',
+        min_to_select: 1,
+        max_to_select: 10,
+        other_options: true,
       });
-    
+
       section.isQuestionsVisible = true;
+    },
+    updateQuestion: (state, action) => {
+      const { sectionIndex, questionIndex, data } = action.payload;
+      const section = state.sections[sectionIndex];
+      if (section && section.questions[questionIndex]) {
+        section.questions[questionIndex] = { ...section.questions[questionIndex], ...data };
+      }
     },
     removeQuestion: (state, action) => {
       const { sectionIndex, questionIndex } = action.payload;
@@ -68,12 +80,11 @@ export const formSlice = createSlice({
     },
     setActiveQuestion: (state, action) => {
       const { sectionIndex, questionIndex } = action.payload;
+      console.log(sectionIndex, questionIndex)
       const section = state.sections[sectionIndex];
-      if (section) {
-        section.questions.forEach((question, index) => {
-          question.isActive = index === questionIndex;
-        });
-      }
+      section.questions.forEach((question, index) => {
+        question.isActive = index === questionIndex;
+      });
     },
     toggleQuestionsVisibility: (state, action) => {
       const { sectionIndex } = action.payload;
@@ -123,8 +134,9 @@ export const {
   addSection,
   updateSectionTitle,
   removeSection,
-  
+
   addQuestion,
+  updateQuestion,
   removeQuestion,
   setActiveQuestion,
   toggleQuestionsVisibility,
