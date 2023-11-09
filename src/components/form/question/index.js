@@ -102,7 +102,10 @@ class Question extends Component {
         return <Options type="multiple"
           question={this.props.question}
           onUpdateState={(data) => {
-            this.setState({ options: data.options })
+            this.setState({ 
+              options: data.options,
+              other_options: data.other_options
+            })
           }} />;
       case 'scale':
         return <Scale

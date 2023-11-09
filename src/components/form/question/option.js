@@ -98,7 +98,7 @@ class Options extends Component {
               value={option.label}
               onChange={(e) => this.handleOptionChange(index, e)}
             />
-            {/* {type == 'choice' &&
+            {type == 'choice' &&
               <Input
                 type="number"
                 name="action"
@@ -106,25 +106,23 @@ class Options extends Component {
                 value={option.action}
                 onChange={(e) => this.handleOptionChange(index, e)}
               />
-            } */}
+            }
             <StyledButton onClick={this.addOption}>+</StyledButton>
             <StyledButton onClick={() => this.removeOption(index)}
               className='remove-button'>x</StyledButton>
           </div>
         ))}
-        {type == 'choice' &&
-          <div className='last-wrapper'>
-            <input
-              type="checkbox"
-              name="other_options"
-              required={true}
-              checked={this.state.other_options}
-              onChange={this.handleOtherOptionsChange}
-            />
-            <label className='label-last-options'>
-              Set last option as other options</label>
-          </div>
-        }
+        <div className='last-wrapper'>
+          <input
+            type="checkbox"
+            name="other_options"
+            required={true}
+            checked={this.state.other_options}
+            onChange={this.handleOtherOptionsChange}
+          />
+          <label className='label-last-options'>
+            Set last option as other options</label>
+        </div>
       </Container>
     );
   }

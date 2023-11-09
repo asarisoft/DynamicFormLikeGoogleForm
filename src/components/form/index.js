@@ -8,6 +8,22 @@ import { StyledButton } from '../general';
 import Swal from 'sweetalert2';
 import './global.css'
 
+import { connect } from 'react-redux';
+import { 
+  setInitialData,
+
+  addSection, 
+  updateSectionTitle,
+  removeSection,
+
+  addQuestion,
+  removeQuestion,
+  setActiveQuestion,
+  toggleQuestionsVisibility,
+  reorderQuestions
+
+} from '../../redux/formSlice';
+
 
 class Form extends Component {
   constructor(props) {
@@ -22,25 +38,6 @@ class Form extends Component {
   }
 
   componentDidMount() {
-    const initialData = {
-      "sections": [
-        {
-          "label": "Section 1",
-          "section_title": "",
-          "questions": [
-            {
-              "type": "",
-              "title": "",
-              "required": true
-            },
-          ],
-          "isQuestionsVisible": true
-        }
-      ],
-      "title": ""
-    };
-
-    // Menentukan apakah data telah diterima dari iframe
     // Fungsi untuk menangani pesan yang diterima dari dokumen utama
     const handleMessageFromIframe = (event) => {
       const receivedData = event.data;
@@ -50,24 +47,13 @@ class Form extends Component {
       // Mengatur dataReceivedFromIframe menjadi true ketika data diterima
       this.dataReceivedFromIframe = true;
       const formData = this.buildStateFromListQuestion(receivedData.json_form);
-      this.setState({ sections: formData, title: receivedData.title });
+      this.props.setInitialData({ sections: formData, title: receivedData.title })
     };
 
     // Menambahkan event listener untuk mendengarkan pesan dari iframe
     window.addEventListener('message', handleMessageFromIframe);
-    // Jika data dari props dan tidak ada data dari iframe, maka inisialisasi state
-    setTimeout(() => {
-      if (!this.dataReceivedFromIframe) {
-        if (this.props.formData) {
-          const data = this.props.formData;
-          const formData = this.buildStateFromListQuestion(data.json_form);
-          this.setState({ sections: formData, title: data.title });
-        } else {
-          this.setState({ sections: initialData.sections, title: initialData.title });
-        }
-      }
-    }, 1000)
-
+    
+    // sample data untuk transpile form
     // const uu = [
     //   {
     //     "_id": "1697243387313",
@@ -92,38 +78,7 @@ class Form extends Component {
     // this.setState({ sections: kkk, title: "data.title" });
   }
 
-  // Fungsi untuk menambah section baru
-  addSection = () => {
-    const newSection = {
-      label: `Section ${this.state.sections.length + 1}`,
-      section_title: ``,
-      questions: [],
-      isQuestionsVisible: true, // Tambahkan ini
-    };
-    this.setState((prevState) => ({
-      sections: [...prevState.sections, newSection],
-    }));
-  }
 
-  // Fungsi untuk menambah pertanyaan baru ke dalam section
-  addQuestionToSection = (sectionIndex, questionIndex) => {
-    const updatedSections = [...this.state.sections];
-    updatedSections[sectionIndex].questions.forEach((question) => {
-      question.isActive = false;
-    });
-    updatedSections[sectionIndex].questions.splice(questionIndex + 1, 0, 
-      { isActive: true, _id: `${Date.now()}`, required: true });
-    updatedSections[sectionIndex].isQuestionsVisible = true
-    this.setState({ sections: updatedSections });
-  }
-
-
-  // Fungsi untuk mengganti title section
-  onUpdateTitleSection = (e, sectionIndex) => {
-    const updatedSections = [...this.state.sections];
-    updatedSections[sectionIndex].section_title = e.target.value
-    this.setState({ sections: updatedSections });
-  }
 
   // digunakan untuk menghapus question
   removeQuestionFromSection = (sectionIndex, questionIndex) => {
@@ -139,31 +94,12 @@ class Form extends Component {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        const updatedSections = [...this.state.sections];
-        const section = updatedSections[sectionIndex];
-        if (section) {
-          const updatedquestions = section.questions.filter((question, index) => index !== questionIndex);
-          section.questions = updatedquestions;
-          this.setState({ sections: updatedSections });
-        }
+        this.props.removeQuestion({
+          sectionIndex,
+          questionIndex
+        })
       }
     });
-  }
-
-  // Fungsi untuk mengatur pertanyaan sebagai aktif saat diklik
-  setActiveQuestion = (sectionIndex, questionIndex) => {
-    const updatedSections = [...this.state.sections];
-    updatedSections[sectionIndex].questions.forEach((question, index) => {
-      question.isActive = index === questionIndex;
-    });
-    this.setState({ sections: updatedSections });
-  }
-
-  // hide show questions di dalam section
-  toggleQuestionsVisibility = (sectionIndex) => {
-    const updatedSections = [...this.state.sections];
-    updatedSections[sectionIndex].isQuestionsVisible = !updatedSections[sectionIndex].isQuestionsVisible;
-    this.setState({ sections: updatedSections });
   }
 
   // delete section 
@@ -180,9 +116,7 @@ class Form extends Component {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        const updatedSections = [...this.state.sections];
-        updatedSections.splice(sectionIndex, 1);
-        this.setState({ sections: updatedSections });
+        this.props.removeSection({sectionIndex})
       }
     });
   }
@@ -239,7 +173,7 @@ class Form extends Component {
     }
   }
 
-  // before submit
+  // before submit, change format form to BE format
   buildFormQuestionFromState = (fieldData, sectionIndex, sectionTitle, questionNumber) => {
     console.log("fieldata", fieldData)
     const dataQuestion = {
@@ -294,7 +228,7 @@ class Form extends Component {
     return dataQuestion
   }
 
-  // before edit
+  // before edit, change BE format to form Format
   buildStateFromListQuestion = (inputData) => {
     const sectionMap = new Map();
     const transformedData = [];
@@ -358,44 +292,30 @@ class Form extends Component {
     if (!result.destination) {
       return; // Drag tidak selesai atau tidak ada perubahan
     }
-
-    const { source, destination, draggableId } = result;
-
-    if (source.droppableId === destination.droppableId) {
-      // Pengurutan dalam satu Droppable (sama dengan satu section)
-      const sectionIndex = parseInt(source.droppableId.replace('section-', ''));
-      const updatedSections = [...this.state.sections];
-      const [movedQuestion] = updatedSections[sectionIndex].questions.splice(source.index, 1);
-      updatedSections[sectionIndex].questions.splice(destination.index, 0, movedQuestion);
-      this.setState({ sections: updatedSections });
-    } else {
-      // Pengurutan antar Droppable (misalnya, antara dua section)
-      const sourceSectionIndex = parseInt(source.droppableId.replace('section-', ''));
-      const destSectionIndex = parseInt(destination.droppableId.replace('section-', ''));
-
-      const updatedSections = [...this.state.sections];
-      const [movedQuestion] = updatedSections[sourceSectionIndex].questions.splice(source.index, 1);
-      updatedSections[destSectionIndex].questions.splice(destination.index, 0, movedQuestion);
-      this.setState({ sections: updatedSections });
-    }
+    const { source, destination } = result;
+    this.props.reorderQuestions({ source, destination })
   }
 
   render() {
-    const { sections } = this.state;
+    const { form } = this.props;
+    console.log("form", form)
     return (
       <FormContainer>
         <Header ref={(ref) => { this.headerRef = ref }}
-          title={this.state.title}
+          title={form.title}
         />
         <DragDropContext onDragEnd={this.onDragEnd}>
-          {sections?.map((section, sectionIndex) => (
+          {form.sections?.map((section, sectionIndex) => (
             <div key={sectionIndex}>
               <Section label={section.label}
                 section={section}
-                onAddField={() => this.addQuestionToSection(sectionIndex, -1)}
-                onToggleQustion={() => this.toggleQuestionsVisibility(sectionIndex)}
+                onAddField={() => this.props.addQuestion({sectionIndex, questionIndex:-1})}
+                onToggleQustion={() => this.props.toggleQuestionsVisibility({sectionIndex})}
                 onDeleteSection={() => this.deleteSection(sectionIndex)}
-                onUpdateTitle={(title) => this.onUpdateTitleSection(title, sectionIndex)}
+                onUpdateTitle={(e) => this.props.updateSectionTitle({
+                  sectionIndex,
+                  sectionTitle: e.target.value
+                })}
                 title={section.section_title}
               />
               <div style={{ display: section.isQuestionsVisible ? 'block' : 'none' }}>
@@ -417,7 +337,7 @@ class Form extends Component {
                               <Question
                                 question={question}
                                 questionIndex={questionIndex}
-                                onClick={() => this.setActiveQuestion(sectionIndex, questionIndex)}
+                                onClick={() => this.props.setActiveQuestion({sectionIndex, questionIndex})}
                                 onRemoveQuestion={() => this.removeQuestionFromSection(sectionIndex, questionIndex)}
                                 ref={(ref) => {
                                   if (!this.fieldRefs[sectionIndex]) {
@@ -440,7 +360,7 @@ class Form extends Component {
           ))}
         </DragDropContext>
         <div className='form-footer'>
-          <StyledButton onClick={this.addSection}>Add Section</StyledButton>
+          <StyledButton onClick={()=>this.props.addSection()}>Add Section</StyledButton>
           <StyledButton onClick={this.populateData}>Generate & Submit</StyledButton>
         </div>
       </FormContainer>
@@ -448,4 +368,25 @@ class Form extends Component {
   }
 }
 
-export default Form;
+
+const mapStateToProps = (state) => {
+  return {
+    form: state.form,
+  };
+};
+
+const mapDispatchToProps = {
+  setInitialData,
+
+  addSection,
+  updateSectionTitle,
+  removeSection,
+
+  addQuestion,
+  removeQuestion,
+  setActiveQuestion,
+  toggleQuestionsVisibility,
+  reorderQuestions
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Form);
