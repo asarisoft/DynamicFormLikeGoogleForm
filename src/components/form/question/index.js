@@ -185,7 +185,7 @@ class Question extends Component {
                 onChange={(e) => this.handleInput(e)}
                 style={{ marginRight: '8px' }}
               >
-                <option value="choice">Multiple choice</option>
+                <option value="choice">Radio Button</option>
                 <option value="multiple">Checkboxes</option>
                 <option value="scale">Linear Scale</option>
                 <option value="paragraph">Paragraph</option>

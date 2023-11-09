@@ -20,28 +20,46 @@ class SectionForm extends Component {
     return (
       <SectionContainer>
         <div className='top-section'>
-          <div className='nextSectionWrapper'>
-            <h3>{section.label}</h3>
-            <label>Next : </label>
-            <select
-              name="action"
-              value={section?.nextIndex}
-              onChange={(e) => this.props.updateSection({
-                sectionIndex,
-                data: { nextIndex: parseInt(e.target.value) }
+          <div className='left'>
+            <h3>Section: {sectionIndex + 1}</h3>
+            <div className='next-wrapper'>
+              <div style={{ marginRight: '16px' }}>
+                <input
+                  type="checkbox"
+                  name="required"
+                  checked={section.subsection}
+                  onChange={(e) => this.props.updateSection({
+                    sectionIndex,
+                    data: { subsection: e.target.checked }
+                  })}
+                />
+                <label>Subsection</label>
+              </div>
+              {!section.subsection &&
+                <div>
+                  <select
+                    name="action"
+                    value={section?.nextIndex}
+                    onChange={(e) => this.props.updateSection({
+                      sectionIndex,
+                      data: { nextIndex: parseInt(e.target.value) }
+                    })}
+                  >
+                    <option value="">Next Sections</option>
+                    {sections.map((section, idx) => {
+                      if (idx <= sectionIndex)
+                        return null
+                      else if (section.subsection)
+                        return null
+                      else
+                        return <option key={idx} value={idx}>
+                          Section {idx + 1}
+                        </option>
+                    })}
+                  </select>
+                </div>
               }
-              )}
-            >
-              <option value="">Next Sections</option>
-              {sections.map((section, idx) => {
-                if (idx <= sectionIndex)
-                  return null
-                else
-                  return <option key={idx} value={idx}>
-                    {section.label}
-                  </option>
-              })}
-            </select>
+            </div>
           </div>
           <div className='button-wrapper'>
             {section.questions.length === 0 &&
@@ -61,6 +79,7 @@ class SectionForm extends Component {
         </div>
         <div>
           <Input
+            className='inputTitle'
             name="title"
             placeholder='Section Title*'
             value={section?.section_title}

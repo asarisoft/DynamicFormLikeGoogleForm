@@ -14,21 +14,31 @@ export const SectionContainer = styled.div`
     display: flex;
     justify-content: space-between;
 
-    .nextSectionWrapper {
-        text-align: left;
-        display: block;
-        margin-top: 4px;
-        select {
-            padding: 9px 0px;
-            border-radius: 4px;
-            // border: 1px solid #ccc;
-            width: 120px;
-            border: none;
-            color: ${colors.blue4}; 
+    .left {
+      text-align: left;
+      flex: 1;
+
+      .next-wrapper {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        div {
+          height: 40px;
+          display: flex;
+          align-items: center;
         }
+        select {
+          // padding: 9px 0px;
+          border-radius: 4px;
+          // border: 1px solid #ccc;
+          width: 120px;
+          border: none;
+          color: ${colors.blue4}; 
+        }
+      }
     }
   }
-  input { 
+  .inputTitle { 
     width: calc(100% - 24px); /* Adjusted width calculation */
     margin-top: 8px;
   }

@@ -4,11 +4,11 @@ const initialFormState = {
   title: '',
   sections: [
     {
-      label: 'Section 1',
       section_title: '',
       questions: [],
       isQuestionsVisible: true,
-      nextIndex: 0,
+      nextIndex: 'default',
+      subsection: false,
     }
   ]
 };
@@ -28,19 +28,12 @@ export const formSlice = createSlice({
     },
     addSection: (state) => {
       const newSection = {
-        label: `Section ${state.sections.length + 1}`,
         section_title: '',
         questions: [],
         isQuestionsVisible: true,
-        nextIndex: state.sections.length // Update nextIndex to the length of sections array
+        nextIndex: 'default',
+        subsection: false,
       };
-    
-      // Update the nextIndex of the previous section, if it exists
-      const lastIndex = state.sections.length - 1;
-      if (lastIndex >= 0) {
-        state.sections[lastIndex].nextIndex = state.sections.length;
-      }
-    
       state.sections.push(newSection);
     },
     updateSection: (state, action) => {

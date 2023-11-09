@@ -107,12 +107,14 @@ class Options extends Component {
               onChange={(e) => this.handleOptionChange(index, e)}
             >
               <option value="">Pilih Section</option>
-              {sections.map((section, index) => {
-                if (index <= sectionIndex)
+              {sections.map((section, idx) => {
+                if (sectionIndex >= idx)
+                  return null
+                else if (!section.subsection)
                   return null
                 else
-                  return <option key={index} value={index}>
-                    {section.label}
+                  return <option key={idx} value={idx}>
+                    Section {idx + 1}
                   </option>
               }
               )}
