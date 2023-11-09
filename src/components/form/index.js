@@ -158,7 +158,6 @@ class Form extends Component {
         json_form: result
       });
       // 
-      console.log("result", result)
       return {
         title: this.headerRef.state.title || this.state.title,
         jsonForm: result
@@ -175,7 +174,6 @@ class Form extends Component {
 
   // before submit, change format form to BE format
   buildFormQuestionFromState = (fieldData, sectionIndex, sectionTitle, questionNumber) => {
-    console.log("fieldata", fieldData)
     const dataQuestion = {
       _id: fieldData._id,
       title: fieldData.title,
@@ -298,7 +296,6 @@ class Form extends Component {
 
   render() {
     const { form } = this.props;
-    console.log("form", form)
     return (
       <FormContainer>
         <Header ref={(ref) => { this.headerRef = ref }}

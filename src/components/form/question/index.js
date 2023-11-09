@@ -13,8 +13,6 @@ import {
   setActiveQuestion
 } from '../../../redux/formSlice';
 
-
-
 const modules = {
   toolbar: [
     ['bold', 'italic', 'underline'],
@@ -31,7 +29,6 @@ class Question extends Component {
   handleInput = (e) => {
     const name = e.target.name; // Mengakses nilai name dari elemen input
     const value = e.target.value; // Mengakses nilai value dari elemen input
-    console.log("masuk sini", name, value, this.questionIndex, this.sectionIndex)
     this.props.updateQuestion({
       questionIndex: this.questionIndex,
       sectionIndex: this.sectionIndex,
@@ -77,9 +74,10 @@ class Question extends Component {
     const type = question.type;
     const options = question.options;
     switch (type) {
-      case 'choice':
+      case 'choice' || "multiple":
         return <Options type="choice"
-          question={question}
+          questionIndex={this.questionIndex}
+          sectionIndex={this.sectionIndex}
           onUpdateState={(data) => {
             this.props.updateQuestion({
               questionIndex: this.questionIndex,
@@ -92,7 +90,8 @@ class Question extends Component {
           }} />;
       case 'multiple':
         return <Options type="multiple"
-          question={question}
+          questionIndex={this.questionIndex}
+          sectionIndex={this.sectionIndex}
           onUpdateState={(data) => {
             this.props.updateQuestion({
               questionIndex: this.questionIndex,

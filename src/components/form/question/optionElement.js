@@ -11,6 +11,12 @@ export const Container = styled.div`
         input {
             width: 60%
         }
+        select {
+            width: 40%;
+            padding: 9px 0px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        },
         .remove-button {
             background-color: ${colors.red}
         }

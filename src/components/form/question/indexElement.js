@@ -30,7 +30,7 @@ export const FieldsContainer = styled.div`
             
             .btn-add-question {
                 position: absolute;
-                bottom: 8px;
+                bottom: 2px;
                 right: 8px;
             }
             .type-wrapper {

@@ -3,47 +3,39 @@ import React, { Component } from 'react';
 import { Container } from './optionElement';
 import { Input, StyledButton } from '../../general';
 import Swal from 'sweetalert2';
-import '../global.css'
+import '../global.css';
+import { connect } from 'react-redux';
+import {
+  updateQuestion,
+} from '../../../redux/formSlice';
 
 class Options extends Component {
   constructor(props) {
     super(props);
+    this.sectionIndex = this.props.sectionIndex;
+    this.questionIndex = this.props.questionIndex;
     this.state = {
       options: [{ label: '', action: '' }],
       other_options: false,
     };
   }
 
-  componentDidMount() {
-    this.setState({
-      options: this.props.question.options,
-      other_options: this.props.question.other_options
-    }, () => {
-      this.props.onUpdateState(this.state)
-    })
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.defaultOptions && this.props.defaultOptions !== prevProps.defaultOptions) {
-      this.setState({
-        options: this.props.defaultOptions,
-      })
+  componentDidMount = () => {
+    const question = this.props.form.sections[this.sectionIndex].questions[this.questionIndex];
+    if (question.options.length === 0) {
+      this.addOption()
     }
   }
 
   addOption = () => {
-    this.setState((prevState) => ({
-      options: [...prevState.options, { label: '', action: '' }],
-    }));
+    const question = this.props.form.sections[this.sectionIndex].questions[this.questionIndex];
+    const options = [...question.options, { label: '', action: '' }]
     this.props.onUpdateState(this.state)
-  };
-
-  handleOtherOptionsChange = (e) => {
-    const { name, checked } = e.target;
-    this.setState({ [name]: checked }, () => {
-      this.props.onUpdateState(this.state)
-    });
-
+    this.props.updateQuestion({
+      questionIndex: this.questionIndex,
+      sectionIndex: this.sectionIndex,
+      data: { options }
+    })
   };
 
   removeOption = (index) => {
@@ -59,12 +51,13 @@ class Options extends Component {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.setState((prevState) => {
-          const updatedOptions = [...prevState.options];
-          updatedOptions.splice(index, 1);
-          return { options: updatedOptions };
-        }, () => {
-          this.props.onUpdateState(this.state)
+        const question = this.props.form.sections[this.sectionIndex].questions[this.questionIndex];
+        const updatedOptions = [...question.options];
+        updatedOptions.splice(index, 1); // Menghapus elemen pada indeks tertentu
+        this.props.updateQuestion({
+          questionIndex: this.questionIndex,
+          sectionIndex: this.sectionIndex,
+          data: { options: updatedOptions }
         });
       }
     });
@@ -72,18 +65,31 @@ class Options extends Component {
 
   handleOptionChange = (index, e) => {
     const { name, value } = e.target;
-    this.setState((prevState) => {
-      const updatedOptions = [...prevState.options];
-      updatedOptions[index][name] = value;
-      return { options: updatedOptions };
-    }, () => {
-      this.props.onUpdateState(this.state)
+    const section = this.props.form.sections[this.sectionIndex];
+    const question = section.questions[this.questionIndex];
+    const updatedOptions = [...question.options]; // Buat salinan objek options
+    updatedOptions[index] = { ...updatedOptions[index], [name]: value }; // Perbarui salinan objek
+    this.props.updateQuestion({
+      questionIndex: this.questionIndex,
+      sectionIndex: this.sectionIndex,
+      data: { options: updatedOptions }
+    });
+  };
+
+  handleOtherOptionsChange = (e) => {
+    this.props.updateQuestion({
+      questionIndex: this.questionIndex,
+      sectionIndex: this.sectionIndex,
+      data: { other_options: e.target.checked }
     });
   };
 
   render() {
-    const { options } = this.state;
-    const { type } = this.props;
+    const { sectionIndex, questionIndex } = this.props;
+    const sections = this.props.form.sections;
+    const question = this.props.form.sections[sectionIndex].questions[questionIndex];
+    const options = question.options;
+    const type = question.type;
 
     return (
       <Container>
@@ -93,18 +99,25 @@ class Options extends Component {
               type="text"
               name="label"
               placeholder="Option Text"
-              value={option.label}
+              value={option?.label}
               onChange={(e) => this.handleOptionChange(index, e)}
             />
-            {type == 'choice' &&
-              <Input
-                type="number"
-                name="action"
-                placeholder="Go To Section"
-                value={option.action}
-                onChange={(e) => this.handleOptionChange(index, e)}
-              />
-            }
+            <select
+              name="action"
+              value={option.action}
+              onChange={(e) => this.handleOptionChange(index, e)}
+            >
+              <option value="">Pilih Section</option>
+              {sections.map((section, index) => {
+                if (index <= sectionIndex)
+                  return null
+                else
+                  return <option key={index} value={index}>
+                    {section.label}
+                  </option>
+              }
+              )}
+            </select>
             <StyledButton onClick={this.addOption}>+</StyledButton>
             <StyledButton onClick={() => this.removeOption(index)}
               className='remove-button'>x</StyledButton>
@@ -115,7 +128,7 @@ class Options extends Component {
             type="checkbox"
             name="other_options"
             required={true}
-            checked={this.state.other_options}
+            checked={question.other_options}
             onChange={this.handleOtherOptionsChange}
           />
           <label className='label-last-options'>
@@ -126,4 +139,15 @@ class Options extends Component {
   }
 }
 
-export default Options;
+
+const mapStateToProps = (state) => {
+  return {
+    form: state.form,
+  };
+};
+
+const mapDispatchToProps = {
+  updateQuestion,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Options);
