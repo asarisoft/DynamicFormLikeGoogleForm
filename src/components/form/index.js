@@ -10,10 +10,10 @@ import './global.css'
 
 import { connect } from 'react-redux';
 import { 
+  updateTitleForm,
   setInitialData,
 
   addSection, 
-  updateSectionTitle,
   removeSection,
 
   addQuestion,
@@ -300,20 +300,16 @@ class Form extends Component {
       <FormContainer>
         <Header ref={(ref) => { this.headerRef = ref }}
           title={form.title}
+          onChangetTitle={(value) => this.props.updateTitleForm({title: value })}
         />
         <DragDropContext onDragEnd={this.onDragEnd}>
           {form.sections?.map((section, sectionIndex) => (
             <div key={sectionIndex}>
               <Section label={section.label}
-                section={section}
                 onAddField={() => this.props.addQuestion({sectionIndex, questionIndex:-1})}
                 onToggleQustion={() => this.props.toggleQuestionsVisibility({sectionIndex})}
                 onDeleteSection={() => this.deleteSection(sectionIndex)}
-                onUpdateTitle={(e) => this.props.updateSectionTitle({
-                  sectionIndex,
-                  sectionTitle: e.target.value
-                })}
-                title={section.section_title}
+                sectionIndex={sectionIndex}
               />
               <div style={{ display: section.isQuestionsVisible ? 'block' : 'none' }}>
                 <Droppable droppableId={`section-${sectionIndex}`}>
@@ -373,10 +369,10 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
+  updateTitleForm,
   setInitialData,
 
   addSection,
-  updateSectionTitle,
   removeSection,
 
   addQuestion,

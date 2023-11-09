@@ -89,7 +89,6 @@ class Options extends Component {
     const sections = this.props.form.sections;
     const question = this.props.form.sections[sectionIndex].questions[questionIndex];
     const options = question.options;
-    const type = question.type;
 
     return (
       <Container>

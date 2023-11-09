@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { screensize, colors } from '../../../utils'; // Gantilah 'path-to-your-utils' dengan path yang benar ke utils Anda
 
 export const FieldsContainer = styled.div`
+    box-sizing: border-box;
     text-align: left;
     display: grid;
     grid-template-columns: 20px 1fr;

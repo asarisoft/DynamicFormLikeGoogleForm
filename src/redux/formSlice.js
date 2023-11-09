@@ -1,13 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialFormState = {
-  title: 'Test',
+  title: '',
   sections: [
     {
       label: 'Section 1',
       section_title: '',
       questions: [],
-      isQuestionsVisible: true
+      isQuestionsVisible: true,
+      nextIndex: 0,
     }
   ]
 };
@@ -21,19 +22,31 @@ export const formSlice = createSlice({
       state.sections = sections;
       state.title = title;
     },
-
+    updateTitleForm: (state, action) => {
+      const { title } = action.payload;
+      state.title = title;
+    },
     addSection: (state) => {
       const newSection = {
         label: `Section ${state.sections.length + 1}`,
         section_title: '',
         questions: [],
-        isQuestionsVisible: true
+        isQuestionsVisible: true,
+        nextIndex: state.sections.length // Update nextIndex to the length of sections array
       };
+    
+      // Update the nextIndex of the previous section, if it exists
+      const lastIndex = state.sections.length - 1;
+      if (lastIndex >= 0) {
+        state.sections[lastIndex].nextIndex = state.sections.length;
+      }
+    
       state.sections.push(newSection);
     },
-    updateSectionTitle: (state, action) => {
-      const { sectionIndex, sectionTitle } = action.payload;
-      state.sections[sectionIndex].section_title = sectionTitle;
+    updateSection: (state, action) => {
+      const { sectionIndex, data } = action.payload;
+      const section = state.sections[sectionIndex];
+      state.sections[sectionIndex] =  { ...section, ...data };
     },
     removeSection: (state, action) => {
       const { sectionIndex } = action.payload;
@@ -130,10 +143,11 @@ export const formSlice = createSlice({
 });
 
 export const {
+  updateTitleForm,
   setInitialData,
 
   addSection,
-  updateSectionTitle,
+  updateSection,
   removeSection,
 
   addQuestion,

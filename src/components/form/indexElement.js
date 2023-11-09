@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import {  screensize } from '../../utils'; // Gantilah 'path-to-your-utils' dengan path yang benar ke utils Anda
 
 export const FormContainer = styled.div`
+    box-sizing: border-box;
     width: 100%;
     .form-footer {
         text-align: center;
