@@ -7,13 +7,14 @@ import { FormContainer } from './indexElement';
 import { StyledButton } from '../general';
 import Swal from 'sweetalert2';
 import './global.css'
+import sampleData from './sample';
 
 import { connect } from 'react-redux';
-import { 
+import {
   updateTitleForm,
   setInitialData,
 
-  addSection, 
+  addSection,
   removeSection,
 
   addQuestion,
@@ -52,30 +53,10 @@ class Form extends Component {
 
     // Menambahkan event listener untuk mendengarkan pesan dari iframe
     window.addEventListener('message', handleMessageFromIframe);
-    
+
     // sample data untuk transpile form
-    // const uu = [
-    //   {
-    //     "_id": "1697243387313",
-    //     "title": "aaaaa",
-    //     "section_title": "",
-    //     "section": 1,
-    //     "questionNumber": 1,
-    //     "descriptions": "",
-    //     "required": true,
-    //     "min_to_select": 1,
-    //     "max_to_select": 4,
-    //     "form": {
-    //       "type": "multiple",
-    //       "option": [
-    //         "a",
-    //         "a"
-    //       ]
-    //     }
-    //   }
-    // ]
-    // const kkk = this.buildStateFromListQuestion(uu);
-    // this.setState({ sections: kkk, title: "data.title" });
+    // const kkk = this.buildStateFromListQuestion(sampleData);
+    // this.props.setInitialData(kkk)
   }
 
 
@@ -116,17 +97,17 @@ class Form extends Component {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.props.removeSection({sectionIndex})
+        this.props.removeSection({ sectionIndex })
       }
     });
   }
 
   populateData = () => {
-    const { sections } = this.state;
+    const { title, sections } = this.props.form;
     const updatedSections = [...sections];
     const result = [];
-    const surveyTitle = this.headerRef.state.title || this.state.title
-    let isFormValid = surveyTitle ? true : false; 
+    let isFormValid = title ? true : false;
+    console.log("aaaa", this.props.form)
 
     updatedSections.forEach((section, sectionIndex) => {
       let questionNumber = 1;
@@ -134,21 +115,22 @@ class Form extends Component {
         isFormValid = false;
       }
       section.questions.forEach((question, questionIndex) => {
-        const fieldData = this.fieldRefs[sectionIndex][questionIndex].state;
-        if (!fieldData.title) {
+        if (!question.title) {
           isFormValid = false;
         }
-        updatedSections[sectionIndex].questions[questionIndex] = fieldData;
         const dataQuestion = this.buildFormQuestionFromState(
-          fieldData,
+          title,
+          question,
           sectionIndex,
-          updatedSections[sectionIndex].section_title,
+          section,
           questionNumber
         )
         questionNumber++;
         result.push(dataQuestion)
       });
     });
+    console.log("resulst", result);
+
     if (isFormValid) {
       // update local state
       this.setState({ sections: updatedSections, title: this.headerRef.state.title });
@@ -173,18 +155,21 @@ class Form extends Component {
   }
 
   // before submit, change format form to BE format
-  buildFormQuestionFromState = (fieldData, sectionIndex, sectionTitle, questionNumber) => {
+  buildFormQuestionFromState = (surveyTitle, fieldData, sectionIndex, section, questionNumber) => {
     const dataQuestion = {
       _id: fieldData._id,
       title: fieldData.title,
-      section_title: sectionTitle,
-      section: sectionIndex + 1,
+      section_title: section.section_title,
+      section: sectionIndex,
+      next_section_index: section.nextIndex,
+      sub_section: section.subsection,
       questionNumber: questionNumber,
       descriptions: fieldData.descriptions,
       required: fieldData.required,
       other_options: fieldData.other_options,
       min_to_select: fieldData.min_to_select,
-      max_to_select: fieldData.max_to_select
+      max_to_select: fieldData.max_to_select,
+      survey_title: surveyTitle
     }
 
     if (fieldData.type === "choice") {
@@ -230,10 +215,13 @@ class Form extends Component {
   buildStateFromListQuestion = (inputData) => {
     const sectionMap = new Map();
     const transformedData = [];
+    let surveyTitle = ""
 
     inputData.forEach(item => {
       const sectionId = item.section;
       let sectionData = sectionMap.get(sectionId);
+      surveyTitle = item.survey_title
+
 
       if (!sectionData) {
         sectionData = {
@@ -241,6 +229,8 @@ class Form extends Component {
           section_title: item.section_title,
           questions: [],
           isQuestionsVisible: true,
+          nextIndex: item.next_section_index,
+          subsection: item.sub_section
         };
         sectionMap.set(sectionId, sectionData);
         transformedData.push(sectionData);
@@ -278,7 +268,10 @@ class Form extends Component {
 
       sectionData.questions.push(question);
     });
-    return transformedData;
+    return {
+      title: surveyTitle,
+      sections: transformedData
+    }
   }
 
   // send data to iframe
@@ -300,14 +293,14 @@ class Form extends Component {
       <FormContainer>
         <Header ref={(ref) => { this.headerRef = ref }}
           title={form.title}
-          onChangetTitle={(value) => this.props.updateTitleForm({title: value })}
+          onChangetTitle={(value) => this.props.updateTitleForm({ title: value })}
         />
         <DragDropContext onDragEnd={this.onDragEnd}>
           {form.sections?.map((section, sectionIndex) => (
             <div key={sectionIndex}>
               <Section label={section.label}
-                onAddField={() => this.props.addQuestion({sectionIndex, questionIndex:-1})}
-                onToggleQustion={() => this.props.toggleQuestionsVisibility({sectionIndex})}
+                onAddField={() => this.props.addQuestion({ sectionIndex, questionIndex: -1 })}
+                onToggleQustion={() => this.props.toggleQuestionsVisibility({ sectionIndex })}
                 onDeleteSection={() => this.deleteSection(sectionIndex)}
                 sectionIndex={sectionIndex}
               />
@@ -338,7 +331,7 @@ class Form extends Component {
                                   }
                                   this.fieldRefs[sectionIndex][questionIndex] = ref; // Simpan referensi ke komponen Question
                                 }}
-                                onAddQuestion={() => this.props.addQuestion({sectionIndex, questionIndex})}
+                                onAddQuestion={() => this.props.addQuestion({ sectionIndex, questionIndex })}
                               />
                             </div>
                           )}
@@ -353,7 +346,7 @@ class Form extends Component {
           ))}
         </DragDropContext>
         <div className='form-footer'>
-          <StyledButton onClick={()=>this.props.addSection()}>Add Section</StyledButton>
+          <StyledButton onClick={() => this.props.addSection()}>Add Section</StyledButton>
           <StyledButton onClick={this.populateData}>Generate & Submit</StyledButton>
         </div>
       </FormContainer>

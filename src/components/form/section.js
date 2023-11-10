@@ -16,7 +16,6 @@ class SectionForm extends Component {
     const sections = this.props.form.sections;
     const section = this.props.form.sections[sectionIndex];
 
-    console.log("this.porps", this.props)
     return (
       <SectionContainer>
         <div className='top-section'>

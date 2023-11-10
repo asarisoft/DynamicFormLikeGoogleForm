@@ -87,7 +87,6 @@ export const formSlice = createSlice({
     },
     setActiveQuestion: (state, action) => {
       const { sectionIndex, questionIndex } = action.payload;
-      console.log(sectionIndex, questionIndex)
       const section = state.sections[sectionIndex];
       section.questions.forEach((question, index) => {
         question.isActive = index === questionIndex;
