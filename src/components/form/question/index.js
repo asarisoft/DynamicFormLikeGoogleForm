@@ -104,7 +104,8 @@ class Question extends Component {
           }} />;
       case 'scale':
         return <Scale
-          question={this.props.question}
+          questionIndex={this.questionIndex}
+          sectionIndex={this.sectionIndex}
           onUpdateState={(data) => {
             this.setState({ scale: { ...data } })
           }} />;

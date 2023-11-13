@@ -48,13 +48,13 @@ class Form extends Component {
       // Mengatur dataReceivedFromIframe menjadi true ketika data diterima
       this.dataReceivedFromIframe = true;
       const formData = this.buildStateFromListQuestion(receivedData.json_form);
-      this.props.setInitialData({ sections: formData, title: receivedData.title })
+      this.props.setInitialData(formData)
     };
 
     // Menambahkan event listener untuk mendengarkan pesan dari iframe
     window.addEventListener('message', handleMessageFromIframe);
 
-    // sample data untuk transpile form
+    // // sample data untuk transpile form
     // const kkk = this.buildStateFromListQuestion(sampleData);
     // this.props.setInitialData(kkk)
   }
@@ -132,16 +132,14 @@ class Form extends Component {
     console.log("resulst", result);
 
     if (isFormValid) {
-      // update local state
-      this.setState({ sections: updatedSections, title: this.headerRef.state.title });
       // send to iframe
       this.sendDataToParent({
-        title: this.headerRef.state.title || this.state.title,
+        title: "OK",
         json_form: result
       });
       // 
       return {
-        title: this.headerRef.state.title || this.state.title,
+        title: "OK",
         jsonForm: result
       }
     } else {
@@ -187,12 +185,15 @@ class Form extends Component {
     }
     else if (fieldData.type === "multiple") {
       const options = []
+      const actions = []
       fieldData.options?.map(dt => {
         options.push(dt.label)
+        actions.push(dt.action)
       })
       dataQuestion.form = {
         type: fieldData.type,
         option: options,
+        action: actions,
         other_options: fieldData.other_options,
       }
     } else if (fieldData.type === "scale") {

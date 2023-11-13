@@ -1,38 +1,41 @@
 // components/form/scale.js
 import React, { Component } from 'react';
-import { Container } from './scaleElement'
-import { Input, StyledButton } from '../../general'
+import { Container } from './scaleElement';
+import { Input, StyledButton } from '../../general';
+import { connect } from 'react-redux';
+import {
+  updateQuestion,
+} from '../../../redux/formSlice';
+
 
 class Scale extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      start: '', // Nilai awal
-      to: '', // Nilai akhir
-      label_start: '',
-      label_to: ''
-    };
+    this.sectionIndex = this.props.sectionIndex;
+    this.questionIndex = this.props.questionIndex;
   }
+
 
   handleInputChange = (e) => {
     const { name, value } = e.target;
-    this.setState({ [name]: value }, () => {
-      this.props.onUpdateState(this.state)
+    this.props.updateQuestion({
+      questionIndex: this.questionIndex,
+      sectionIndex: this.sectionIndex,
+      data: {
+        scale: {
+          ...this.props.form.sections[this.sectionIndex].questions[this.questionIndex].scale,
+          [name]: value
+        }
+      }
     });
   };
 
-  componentDidMount () {
-    if (this.props.question.scale)
-      this.setState({
-        start: this.props.question.scale.start,
-        to: this.props.question.scale.to,
-        label_start: this.props.question.scale.label_start,
-        label_to: this.props.question.scale.label_to,
-      })
-  }
 
   render() {
-    const { start, to, label_start, label_to } = this.state;
+    const { sectionIndex, questionIndex } = this.props;
+    const question = this.props.form.sections[sectionIndex].questions[questionIndex];
+    console.log("questiosssn", question)
+    const { start, to, label_start, label_to } = question.scale;
 
     return (
       <Container>
@@ -51,7 +54,7 @@ class Scale extends Component {
             onChange={this.handleInputChange}
             placeholder="Finish*"
           />
-          <br/>
+          <br />
           <Input
             type="string"
             name="label_start"
@@ -72,4 +75,15 @@ class Scale extends Component {
   }
 }
 
-export default Scale;
+
+const mapStateToProps = (state) => {
+  return {
+    form: state.form,
+  };
+};
+
+const mapDispatchToProps = {
+  updateQuestion,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Scale);

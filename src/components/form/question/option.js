@@ -30,7 +30,6 @@ class Options extends Component {
   addOption = () => {
     const question = this.props.form.sections[this.sectionIndex].questions[this.questionIndex];
     const options = [...question.options, { label: '', action: '' }]
-    this.props.onUpdateState(this.state)
     this.props.updateQuestion({
       questionIndex: this.questionIndex,
       sectionIndex: this.sectionIndex,
