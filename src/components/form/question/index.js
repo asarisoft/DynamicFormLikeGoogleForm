@@ -147,7 +147,6 @@ class Question extends Component {
     const { sectionIndex, questionIndex, onAddQuestion, onRemoveQuestion } = this.props;
     const sections = this.props.form.sections;
     const question = this.props.form.sections[sectionIndex].questions[questionIndex];
-    console.log("serciontss", sections)
     return (
       <FieldsContainer
         className={question?.isActive && 'active'}>
@@ -155,6 +154,68 @@ class Question extends Component {
           <span>{questionIndex + 1}</span>
         </div>
         <div>
+          <div className='type-wrapper'>
+            <div className='required-wrapper'>
+              <label> Required:</label>
+              <input
+                type="checkbox"
+                name="required"
+                checked={question.required}
+                onChange={this.handleRequiredChange}
+              />
+            </div>
+            <select
+              name="type"
+              value={question.type}
+              onChange={(e) => this.handleInput(e)}
+              style={{ marginRight: '8px' }}
+            >
+              <option value="choice">Radio Button</option>
+              <option value="multiple">Checkboxes</option>
+              <option value="scale">Linear Scale</option>
+              <option value="paragraph">Paragraph</option>
+              <option value="sorting">Sorting</option>
+              <option value="info">Info</option>
+            </select>
+            {question.type === 'multiple' &&
+              <>
+                <label className='label'>Min To Select</label>
+                <Input
+                  type="number"
+                  name="min_to_select"
+                  placeholder='Min to select'
+                  value={question.min_to_select}
+                  onChange={(e) => this.handleInput(e)}
+                  style={{ width: '35px', marginLeft: '8px', marginRight: '8px' }}
+                />
+                <label className='label'>Max To Select</label>
+                <Input
+                  type="number"
+                  name="max_to_select"
+                  placeholder='Max to select'
+                  value={question.max_to_select}
+                  onChange={(e) => this.handleInput(e)}
+                  style={{ width: '35px', marginLeft: '8px', marginRight: '8px' }}
+                />
+              </>
+            }
+            {question.type === 'choice' &&
+              <select
+                name="answerType"
+                onChange={this.handleDefaultOptions}
+                style={{ marginRight: '8px' }}
+              >
+                <option value=""> Pilih Default </option>
+                <option value="baik">Baik - Tidak Baik</option>
+                <option value="setuju">Setuju - Tidak Setuju</option>
+              </select>
+            }
+            <StyledButton
+              className='toggle-button'
+              onClick={this.onToggleQustion}>{question.isActive ? "Hide" : "Show"}</StyledButton>
+          </div>
+
+
           <div className='question' >
             <Input
               type="hidden"
@@ -175,12 +236,12 @@ class Question extends Component {
               />
             </div>
             <div>
-            <StyledButton
-              className='toggle-button'
-              onClick={this.onToggleQustion}>{question.isActive ? "-" : "v"}</StyledButton>
-            <StyledButton
-              className='delete-button'
-              onClick={() => onRemoveQuestion(questionIndex)}>x</StyledButton>
+              <StyledButton
+                className='toggle-button'
+                onClick={() => onAddQuestion()}>+</StyledButton>
+              <StyledButton
+                className='delete-button'
+                onClick={() => onRemoveQuestion(questionIndex)}>x</StyledButton>
             </div>
           </div>
 
@@ -194,67 +255,6 @@ class Question extends Component {
                 onChange={(e) => this.handleInput(e)}
               />
               <div style={{ width: '30px' }}>&nbsp;</div>
-            </div>
-            <StyledButton
-              className='btn-add-question'
-              onClick={() => onAddQuestion()}>+ Question</StyledButton>
-
-            <div className='type-wrapper'>
-              <div className='required-wrapper'>
-                <label> Required:</label>
-                <input
-                  type="checkbox"
-                  name="required"
-                  checked={question.required}
-                  onChange={this.handleRequiredChange}
-                />
-              </div>
-              <select
-                name="type"
-                value={question.type}
-                onChange={(e) => this.handleInput(e)}
-                style={{ marginRight: '8px' }}
-              >
-                <option value="choice">Radio Button</option>
-                <option value="multiple">Checkboxes</option>
-                <option value="scale">Linear Scale</option>
-                <option value="paragraph">Paragraph</option>
-                <option value="sorting">Sorting</option>
-                <option value="info">Info</option>
-              </select>
-              {question.type === 'multiple' &&
-                <>
-                  <label className='label'>Min To Select</label>
-                  <Input
-                    type="number"
-                    name="min_to_select"
-                    placeholder='Min to select'
-                    value={question.min_to_select}
-                    onChange={(e) => this.handleInput(e)}
-                    style={{ width: '35px', marginLeft: '8px', marginRight: '8px' }}
-                  />
-                  <label className='label'>Max To Select</label>
-                  <Input
-                    type="number"
-                    name="max_to_select"
-                    placeholder='Max to select'
-                    value={question.max_to_select}
-                    onChange={(e) => this.handleInput(e)}
-                    style={{ width: '35px', marginLeft: '8px', marginRight: '8px' }}
-                  />
-                </>
-              }
-              {question.type === 'choice' &&
-                <select
-                  name="answerType"
-                  onChange={this.handleDefaultOptions}
-                  style={{ marginRight: '8px' }}
-                >
-                  <option value=""> Pilih Default </option>
-                  <option value="baik">Baik - Tidak Baik</option>
-                  <option value="setuju">Setuju - Tidak Setuju</option>
-                </select>
-              }
             </div>
 
             {this.renderAnswerTypeComponent()}

@@ -15,6 +15,43 @@ export const FieldsContainer = styled.div`
         border-bottom-width: 4px;
         border-bottom-color: ${colors.blue4}
     }
+
+    .type-wrapper {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        position: relative;
+        select {
+            padding: 4px;
+            background-color: ${colors.blue4};
+            color: white;
+            border-radius: 4px;
+        }
+        .label {
+            font-size: 14px;
+        }
+        .required-wrapper {
+            background-color: ${colors.blue4};
+            width: 100px;
+            max-width: 100px;
+            border-radius: 4px;
+            color: white;
+            display: flex;
+            height: 25px;
+            margin-right: 10px;
+            border: 1px solid grey;
+            font-size: 14px;
+            justify-content: center;
+            align-items: center;
+        }
+        .toggle-button {
+            position: absolute;
+            right: 0;
+            background:  ${colors.blue3};
+        }
+    }
+
     div {
         .question {
             display: grid;
@@ -38,35 +75,7 @@ export const FieldsContainer = styled.div`
                 bottom: 2px;
                 right: 8px;
             }
-            .type-wrapper {
-                display: flex;
-                align-items: center;
-                margin-top: 10px;
-                margin-bottom: 10px;
-                select {
-                    padding: 4px;
-                    background-color: ${colors.blue4};
-                    color: white;
-                    border-radius: 4px;
-                }
-                .label {
-                    font-size: 14px;
-                }
-                .required-wrapper {
-                    background-color: ${colors.blue4};
-                    width: 100px;
-                    max-width: 100px;
-                    border-radius: 4px;
-                    color: white;
-                    display: flex;
-                    height: 25px;
-                    margin-right: 10px;
-                    border: 1px solid grey;
-                    font-size: 14px;
-                    justify-content: center;
-                    align-items: center;
-                }
-            }
+            
             
         }
     }
