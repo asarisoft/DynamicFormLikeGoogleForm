@@ -14,9 +14,6 @@ class sorting extends Component {
     super(props);
     this.sectionIndex = this.props.sectionIndex;
     this.questionIndex = this.props.questionIndex;
-    this.state = {
-      sorting: [],
-    };
   }
 
   componentDidMount = () => {
@@ -28,11 +25,13 @@ class sorting extends Component {
 
   addSorting = () => {
     const question = this.props.form.sections[this.sectionIndex].questions[this.questionIndex];
-    const sorting = [...question.sorting, ""]
+    const newSorting = [...question.sorting, ""]
+    console.log("sdfsdfsdfds", question, sorting)
+
     this.props.updateQuestion({
       questionIndex: this.questionIndex,
       sectionIndex: this.sectionIndex,
-      data: { sorting }
+      data: {sorting: newSorting}
     })
   };
 
@@ -66,7 +65,7 @@ class sorting extends Component {
     const section = this.props.form.sections[this.sectionIndex];
     const question = section.questions[this.questionIndex];
     const updatedsorting = [...question.sorting]; // Buat salinan objek sorting
-    updatedsorting[index] = { ...updatedsorting[index], value }; // Perbarui salinan objek
+    updatedsorting[index] = value; // Perbarui salinan objek
     this.props.updateQuestion({
       questionIndex: this.questionIndex,
       sectionIndex: this.sectionIndex,
@@ -89,7 +88,7 @@ class sorting extends Component {
               type="text"
               name="label"
               placeholder="Option Text"
-              value={option?.label}
+              value={option}
               onChange={(e) => this.handleOptionChange(index, e)}
             />
             <StyledButton onClick={this.addSorting}>+</StyledButton>

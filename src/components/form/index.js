@@ -55,8 +55,8 @@ class Form extends Component {
     window.addEventListener('message', handleMessageFromIframe);
 
     // // sample data untuk transpile form
-    // const kkk = this.buildStateFromListQuestion(sampleData);
-    // this.props.setInitialData(kkk)
+    const kkk = this.buildStateFromListQuestion(sampleData);
+    this.props.setInitialData(kkk)
   }
 
 
@@ -167,7 +167,7 @@ class Form extends Component {
       other_options: fieldData.other_options,
       min_to_select: fieldData.min_to_select,
       max_to_select: fieldData.max_to_select,
-      survey_title: surveyTitle
+      survey_title: surveyTitle,
     }
 
     if (fieldData.type === "choice") {
@@ -195,6 +195,11 @@ class Form extends Component {
         option: options,
         action: actions,
         other_options: fieldData.other_options,
+      }
+    } else if (fieldData.type === "sorting") {
+      dataQuestion.form = {
+        type: fieldData.type,
+        sorting: fieldData.sorting,
       }
     } else if (fieldData.type === "scale") {
       dataQuestion.form = {
@@ -258,6 +263,8 @@ class Form extends Component {
           label: option,
           action: '',
         }));
+      } else if (item.form.type === 'sorting') {
+        question.sorting = item.form.sorting;
       } else if (item.form.type === 'scale') {
         question.scale = {
           start: item.form.start,
@@ -265,7 +272,7 @@ class Form extends Component {
           label_start: item.form.label_start,
           label_to: item.form.label_to
         }
-      }
+      } 
 
       sectionData.questions.push(question);
     });
