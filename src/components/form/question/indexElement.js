@@ -70,13 +70,11 @@ export const FieldsContainer = styled.div`
             margin-top: 4px;
             positon: relative;
             
-            .btn-add-question {
-                position: absolute;
-                bottom: 2px;
-                right: 8px;
+            .description {
+                margin-bottom: 8px;
+                display: grid;
+                grid-template-columns: 1fr 48px;
             }
-            
-            
         }
     }
 `;

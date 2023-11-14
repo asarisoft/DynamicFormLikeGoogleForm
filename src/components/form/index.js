@@ -197,9 +197,17 @@ class Form extends Component {
         other_options: fieldData.other_options,
       }
     } else if (fieldData.type === "sorting") {
+      const sorting = []
+      const actions = []
+      fieldData.sorting?.map(dt => {
+        sorting.push(dt.label)
+        actions.push(dt.action)
+      })
       dataQuestion.form = {
         type: fieldData.type,
-        sorting: fieldData.sorting,
+        sorting: sorting,
+        action: actions,
+        top_to_show: fieldData.top_to_show,
       }
     } else if (fieldData.type === "scale") {
       dataQuestion.form = {
@@ -263,9 +271,14 @@ class Form extends Component {
           label: option,
           action: '',
         }));
-      } else if (item.form.type === 'sorting') {
-        question.sorting = item.form.sorting;
-      } else if (item.form.type === 'scale') {
+      } 
+      else if (item.form.type === 'sorting') {
+        question.sorting = item.form.sorting.map((option, idx) => ({
+          label: option,
+          action: item.form.action[idx], // Assuming the first action is correct
+        }));
+      } 
+      else if (item.form.type === 'scale') {
         question.scale = {
           start: item.form.start,
           to: item.form.to,

@@ -9,7 +9,7 @@ import {
   updateQuestion,
 } from '../../../redux/formSlice';
 
-class Sorting extends Component {
+class sorting extends Component {
   constructor(props) {
     super(props);
     this.sectionIndex = this.props.sectionIndex;
@@ -19,24 +19,26 @@ class Sorting extends Component {
   componentDidMount = () => {
     const question = this.props.form.sections[this.sectionIndex].questions[this.questionIndex];
     if (question.sorting.length === 0) {
-      this.addOption()
+      this.addSorting()
     }
   }
 
-  addOption = () => {
+  addSorting = () => {
     const question = this.props.form.sections[this.sectionIndex].questions[this.questionIndex];
-    const sorting = [...question.sorting, { label: '', action: '' }]
+    const newSorting = [...question.sorting, ""]
+    console.log("sdfsdfsdfds", question, sorting)
+
     this.props.updateQuestion({
       questionIndex: this.questionIndex,
       sectionIndex: this.sectionIndex,
-      data: { sorting }
+      data: {sorting: newSorting}
     })
   };
 
   removeOption = (index) => {
     Swal.fire({
       title: '',
-      text: 'Are you sure to delete this option?',
+      text: 'Are you sure to delete this field?',
       showCancelButton: true,
       confirmButtonText: 'Yes',
       cancelButtonText: 'Cancel',
@@ -47,23 +49,23 @@ class Sorting extends Component {
     }).then((result) => {
       if (result.isConfirmed) {
         const question = this.props.form.sections[this.sectionIndex].questions[this.questionIndex];
-        const updatedsorting = [...question.sorting];
-        updatedsorting.splice(index, 1); // Menghapus elemen pada indeks tertentu
+        const updateSorting = [...question.sorting];
+        updateSorting.splice(index, 1); // Menghapus elemen pada indeks tertentu
         this.props.updateQuestion({
           questionIndex: this.questionIndex,
           sectionIndex: this.sectionIndex,
-          data: { sorting: updatedsorting }
+          data: { sorting: updateSorting }
         });
       }
     });
   };
 
   handleOptionChange = (index, e) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     const section = this.props.form.sections[this.sectionIndex];
     const question = section.questions[this.questionIndex];
     const updatedsorting = [...question.sorting]; // Buat salinan objek sorting
-    updatedsorting[index] = { ...updatedsorting[index], [name]: value }; // Perbarui salinan objek
+    updatedsorting[index] = value; // Perbarui salinan objek
     this.props.updateQuestion({
       questionIndex: this.questionIndex,
       sectionIndex: this.sectionIndex,
@@ -71,13 +73,6 @@ class Sorting extends Component {
     });
   };
 
-  handleOthersortingChange = (e) => {
-    this.props.updateQuestion({
-      questionIndex: this.questionIndex,
-      sectionIndex: this.sectionIndex,
-      data: { other_sorting: e.target.checked }
-    });
-  };
 
   render() {
     const { sectionIndex, questionIndex } = this.props;
@@ -93,43 +88,14 @@ class Sorting extends Component {
               type="text"
               name="label"
               placeholder="Option Text"
-              value={option?.label}
+              value={option}
               onChange={(e) => this.handleOptionChange(index, e)}
             />
-            <select
-              name="action"
-              value={option.action}
-              onChange={(e) => this.handleOptionChange(index, e)}
-            >
-              <option value="">Pilih Section</option>
-              {sections.map((section, idx) => {
-                if (sectionIndex >= idx)
-                  return null
-                else if (!section.subsection)
-                  return null
-                else
-                  return <option key={idx} value={idx}>
-                    Section {idx + 1}
-                  </option>
-              }
-              )}
-            </select>
-            <StyledButton onClick={this.addOption}>+</StyledButton>
+            <StyledButton onClick={this.addSorting}>+</StyledButton>
             <StyledButton onClick={() => this.removeOption(index)}
               className='remove-button'>x</StyledButton>
           </div>
         ))}
-        <div className='last-wrapper'>
-          <label className='label-last-sorting'>
-            Set last option as other sorting</label>
-          <input
-            type="number"
-            name="top_to_show"
-            required={true}
-            checked={question.other_sorting}
-            onChange={this.handleOthersortingChange}
-          />
-        </div>
       </Container>
     );
   }
@@ -146,4 +112,4 @@ const mapDispatchToProps = {
   updateQuestion,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Sorting);
+export default connect(mapStateToProps, mapDispatchToProps)(sorting);

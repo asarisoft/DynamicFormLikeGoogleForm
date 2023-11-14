@@ -6,7 +6,9 @@ import { FieldsContainer } from './indexElement';
 import { Input, StyledButton } from '../../general';
 import ReactQuill from 'react-quill'; // Import Quill React Component
 import 'react-quill/dist/quill.snow.css'; // Import styles
+import 'react-quill/dist/quill.bubble.css';
 import { connect } from 'react-redux';
+
 
 import {
   updateQuestion,
@@ -74,34 +76,18 @@ class Question extends Component {
     const question = this.props.form.sections[this.sectionIndex].questions[this.questionIndex];
     const type = question?.type;
     switch (type) {
-      case 'choice' || "multiple":
+      case 'choice':
         return <Options type="choice"
           questionIndex={this.questionIndex}
-          sectionIndex={this.sectionIndex}
-          onUpdateState={(data) => {
-            this.props.updateQuestion({
-              questionIndex: this.questionIndex,
-              sectionIndex: this.sectionIndex,
-              data: {
-                options: data.options,
-                other_options: data.other_options
-              }
-            })
-          }} />;
+          sectionIndex={this.sectionIndex}/>;
       case 'multiple':
         return <Options type="multiple"
           questionIndex={this.questionIndex}
-          sectionIndex={this.sectionIndex}
-          onUpdateState={(data) => {
-            this.props.updateQuestion({
-              questionIndex: this.questionIndex,
-              sectionIndex: this.sectionIndex,
-              data: {
-                options: data.options,
-                other_options: data.other_options
-              }
-            })
-          }} />;
+          sectionIndex={this.sectionIndex}/>
+      case 'sorting':
+        return <Sorting type="sorting"
+          questionIndex={this.questionIndex}
+          sectionIndex={this.sectionIndex} />;
       case 'scale':
         return <Scale
           questionIndex={this.questionIndex}
@@ -109,20 +95,7 @@ class Question extends Component {
           onUpdateState={(data) => {
             this.setState({ scale: { ...data } })
           }} />;
-      case 'sorting':
-        return <Sorting type="sorting"
-          questionIndex={this.questionIndex}
-          sectionIndex={this.sectionIndex}
-          onUpdateState={(data) => {
-            this.props.updateQuestion({
-              questionIndex: this.questionIndex,
-              sectionIndex: this.sectionIndex,
-              data: {
-                options: data.options,
-                other_options: data.other_options
-              }
-            })
-          }} />;
+   ;
       case 'info':
         return <Paragraph />;
       case 'paragraph':
@@ -225,7 +198,7 @@ class Question extends Component {
             />
             <div onClick={() => this.props.setActiveQuestion({ sectionIndex, questionIndex })}>
               <ReactQuill
-                theme="snow"
+                theme={"snow"}
                 value={question?.title}
                 onChange={(v) => this.props.updateQuestion({
                   questionIndex,
@@ -246,7 +219,7 @@ class Question extends Component {
           </div>
 
           <div className='body' style={{ display: question?.isActive ? 'block' : 'none' }}>
-            <div className='question' >
+            <div className='description' >
               <Input
                 type="text"
                 name="descriptions"
@@ -254,7 +227,7 @@ class Question extends Component {
                 value={question.descriptions}
                 onChange={(e) => this.handleInput(e)}
               />
-              <div style={{ width: '30px' }}>&nbsp;</div>
+              <div style={{ width: '30px',  }}>&nbsp;</div>
             </div>
 
             {this.renderAnswerTypeComponent()}
