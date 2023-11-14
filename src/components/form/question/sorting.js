@@ -67,15 +67,17 @@ class Sorting extends Component {
     this.props.updateQuestion({
       questionIndex: this.questionIndex,
       sectionIndex: this.sectionIndex,
-      data: { sorting: updatedsorting }
+      data: { 
+        sorting: updatedsorting,
+      }
     });
   };
 
-  handleOthersortingChange = (e) => {
+  handleTopToShow = (e) => {
     this.props.updateQuestion({
       questionIndex: this.questionIndex,
       sectionIndex: this.sectionIndex,
-      data: { other_sorting: e.target.checked }
+      data: { top_to_show: e.target.value }
     });
   };
 
@@ -84,6 +86,7 @@ class Sorting extends Component {
     const sections = this.props.form.sections;
     const question = this.props.form.sections[sectionIndex].questions[questionIndex];
     const sorting = question.sorting;
+    console.log("question", question)
 
     return (
       <Container>
@@ -120,15 +123,15 @@ class Sorting extends Component {
           </div>
         ))}
         <div className='last-wrapper'>
-          <label className='label-last-sorting'>
-            Set last option as other sorting</label>
-          <input
+          <label className='label-last-sorting'>Show section on top &nbsp; </label>
+          <Input
             type="number"
             name="top_to_show"
             required={true}
-            checked={question.other_sorting}
-            onChange={this.handleOthersortingChange}
+            value={question.top_to_show}
+            onChange={this.handleTopToShow}
           />
+          <label className='label-last-sorting'> &nbsp; of rank</label>
         </div>
       </Container>
     );

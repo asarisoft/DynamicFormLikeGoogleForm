@@ -55,8 +55,8 @@ class Form extends Component {
     window.addEventListener('message', handleMessageFromIframe);
 
     // // sample data untuk transpile form
-    const kkk = this.buildStateFromListQuestion(sampleData);
-    this.props.setInitialData(kkk)
+    // const kkk = this.buildStateFromListQuestion(sampleData);
+    // this.props.setInitialData(kkk)
   }
 
 
@@ -154,6 +154,7 @@ class Form extends Component {
 
   // before submit, change format form to BE format
   buildFormQuestionFromState = (surveyTitle, fieldData, sectionIndex, section, questionNumber) => {
+    console.log("fielData", fieldData)
     const dataQuestion = {
       _id: fieldData._id,
       title: fieldData.title,
@@ -207,8 +208,9 @@ class Form extends Component {
         type: fieldData.type,
         sorting: sorting,
         action: actions,
-        top_to_show: fieldData.top_to_show,
+        top_to_show: fieldData.top_to_show
       }
+      dataQuestion.answer = sorting
     } else if (fieldData.type === "scale") {
       dataQuestion.form = {
         type: fieldData.type,
@@ -277,6 +279,7 @@ class Form extends Component {
           label: option,
           action: item.form.action[idx], // Assuming the first action is correct
         }));
+        question.top_to_show= item.form.top_to_show
       } 
       else if (item.form.type === 'scale') {
         question.scale = {

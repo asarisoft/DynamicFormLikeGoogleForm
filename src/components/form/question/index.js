@@ -231,8 +231,6 @@ class Question extends Component {
             </div>
 
             {this.renderAnswerTypeComponent()}
-
-            <label>Show question if user </label>
           </div>
         </div>
       </FieldsContainer >
