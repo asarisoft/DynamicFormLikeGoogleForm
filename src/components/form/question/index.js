@@ -12,6 +12,7 @@ import {
   updateQuestion,
   setActiveQuestion
 } from '../../../redux/formSlice';
+import Sorting from './sorting';
 
 const modules = {
   toolbar: [
@@ -71,8 +72,7 @@ class Question extends Component {
   // digunakan untuk render setalah type dirubah
   renderAnswerTypeComponent() {
     const question = this.props.form.sections[this.sectionIndex].questions[this.questionIndex];
-    const type = question.type;
-    const options = question.options;
+    const type = question?.type;
     switch (type) {
       case 'choice' || "multiple":
         return <Options type="choice"
@@ -109,6 +109,20 @@ class Question extends Component {
           onUpdateState={(data) => {
             this.setState({ scale: { ...data } })
           }} />;
+      case 'sorting':
+        return <Sorting type="sorting"
+          questionIndex={this.questionIndex}
+          sectionIndex={this.sectionIndex}
+          onUpdateState={(data) => {
+            this.props.updateQuestion({
+              questionIndex: this.questionIndex,
+              sectionIndex: this.sectionIndex,
+              data: {
+                options: data.options,
+                other_options: data.other_options
+              }
+            })
+          }} />;
       case 'info':
         return <Paragraph />;
       case 'paragraph':
@@ -118,12 +132,22 @@ class Question extends Component {
     }
   }
 
+  onToggleQustion = () => {
+    const question = this.props.form.sections[this.sectionIndex].questions[this.questionIndex];
+    this.props.updateQuestion({
+      questionIndex: this.questionIndex,
+      sectionIndex: this.sectionIndex,
+      data: { isActive: !question.isActive }
+    })
+  };
+
 
 
   render() {
     const { sectionIndex, questionIndex, onAddQuestion, onRemoveQuestion } = this.props;
+    const sections = this.props.form.sections;
     const question = this.props.form.sections[sectionIndex].questions[questionIndex];
-
+    console.log("serciontss", sections)
     return (
       <FieldsContainer
         className={question?.isActive && 'active'}>
@@ -150,9 +174,14 @@ class Question extends Component {
                 modules={modules}
               />
             </div>
+            <div>
+            <StyledButton
+              className='toggle-button'
+              onClick={this.onToggleQustion}>{question.isActive ? "-" : "v"}</StyledButton>
             <StyledButton
               className='delete-button'
               onClick={() => onRemoveQuestion(questionIndex)}>x</StyledButton>
+            </div>
           </div>
 
           <div className='body' style={{ display: question?.isActive ? 'block' : 'none' }}>
@@ -190,6 +219,7 @@ class Question extends Component {
                 <option value="multiple">Checkboxes</option>
                 <option value="scale">Linear Scale</option>
                 <option value="paragraph">Paragraph</option>
+                <option value="sorting">Sorting</option>
                 <option value="info">Info</option>
               </select>
               {question.type === 'multiple' &&
@@ -226,7 +256,10 @@ class Question extends Component {
                 </select>
               }
             </div>
+
             {this.renderAnswerTypeComponent()}
+
+            <label>Show question if user </label>
           </div>
         </div>
       </FieldsContainer >

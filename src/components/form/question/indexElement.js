@@ -24,6 +24,10 @@ export const FieldsContainer = styled.div`
             .delete-button {
                 background-color: ${colors.red}
             }
+            .toggle-button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
         }
         .body {
             margin-top: 4px;

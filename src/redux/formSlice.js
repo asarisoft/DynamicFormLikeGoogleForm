@@ -67,7 +67,8 @@ export const formSlice = createSlice({
         max_to_select: 10,
         other_options: false,
         options: [],
-        scale: {}
+        scale: {},
+        sorting: [],
       });
 
       section.isQuestionsVisible = true;

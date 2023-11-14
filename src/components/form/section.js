@@ -73,7 +73,7 @@ class SectionForm extends Component {
             }
             <StyledButton
               className='delete-button'
-              onClick={onDeleteSection}>-</StyledButton>
+              onClick={onDeleteSection}>X</StyledButton>
           </div>
         </div>
         <div>
