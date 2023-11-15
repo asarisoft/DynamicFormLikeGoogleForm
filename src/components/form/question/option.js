@@ -14,10 +14,6 @@ class Options extends Component {
     super(props);
     this.sectionIndex = this.props.sectionIndex;
     this.questionIndex = this.props.questionIndex;
-    this.state = {
-      options: [{ label: '', action: '' }],
-      other_options: false,
-    };
   }
 
   componentDidMount = () => {
@@ -118,9 +114,12 @@ class Options extends Component {
               }
               )}
             </select>
-            <StyledButton onClick={this.addOption}>+</StyledButton>
+
             <StyledButton onClick={() => this.removeOption(index)}
               className='remove-button'>x</StyledButton>
+            {index === options.length - 1 &&
+              <StyledButton onClick={this.addOption}>+</StyledButton>
+            }
           </div>
         ))}
         <div className='last-wrapper'>

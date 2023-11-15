@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Options from './option';
 import Scale from './scale';
 import Paragraph from './paragraph';
+import Group from './group'
 import { FieldsContainer } from './indexElement';
 import { Input, StyledButton } from '../../general';
 import ReactQuill from 'react-quill'; // Import Quill React Component
@@ -79,11 +80,11 @@ class Question extends Component {
       case 'choice':
         return <Options type="choice"
           questionIndex={this.questionIndex}
-          sectionIndex={this.sectionIndex}/>;
+          sectionIndex={this.sectionIndex} />;
       case 'multiple':
         return <Options type="multiple"
           questionIndex={this.questionIndex}
-          sectionIndex={this.sectionIndex}/>
+          sectionIndex={this.sectionIndex} />
       case 'sorting':
         return <Sorting type="sorting"
           questionIndex={this.questionIndex}
@@ -91,11 +92,13 @@ class Question extends Component {
       case 'scale':
         return <Scale
           questionIndex={this.questionIndex}
+          sectionIndex={this.sectionIndex} />;
+      case 'group':
+        return <Group
+          questionIndex={this.questionIndex}
           sectionIndex={this.sectionIndex}
-          onUpdateState={(data) => {
-            this.setState({ scale: { ...data } })
-          }} />;
-   ;
+          />;
+        ;
       case 'info':
         return <Paragraph />;
       case 'paragraph':
@@ -113,7 +116,6 @@ class Question extends Component {
       data: { isActive: !question.isActive }
     })
   };
-
 
 
   render() {
@@ -148,6 +150,7 @@ class Question extends Component {
               <option value="scale">Linear Scale</option>
               <option value="paragraph">Paragraph</option>
               <option value="sorting">Sorting</option>
+              <option value="group">Group</option>
               <option value="info">Info</option>
             </select>
             {question.type === 'multiple' &&
@@ -172,7 +175,7 @@ class Question extends Component {
                 />
               </>
             }
-            {question.type === 'choice' &&
+            {(question.type === 'choice' || question.type === 'group') &&
               <select
                 name="answerType"
                 onChange={this.handleDefaultOptions}
@@ -227,7 +230,7 @@ class Question extends Component {
                 value={question.descriptions}
                 onChange={(e) => this.handleInput(e)}
               />
-              <div style={{ width: '30px',  }}>&nbsp;</div>
+              <div style={{ width: '30px', }}>&nbsp;</div>
             </div>
 
             {this.renderAnswerTypeComponent()}

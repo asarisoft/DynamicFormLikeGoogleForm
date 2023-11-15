@@ -53,7 +53,6 @@ class Form extends Component {
 
     // Menambahkan event listener untuk mendengarkan pesan dari iframe
     window.addEventListener('message', handleMessageFromIframe);
-
     // // sample data untuk transpile form
     // const kkk = this.buildStateFromListQuestion(sampleData);
     // this.props.setInitialData(kkk)
@@ -107,7 +106,6 @@ class Form extends Component {
     const updatedSections = [...sections];
     const result = [];
     let isFormValid = title ? true : false;
-    console.log("aaaa", this.props.form)
 
     updatedSections.forEach((section, sectionIndex) => {
       let questionNumber = 1;
@@ -154,7 +152,6 @@ class Form extends Component {
 
   // before submit, change format form to BE format
   buildFormQuestionFromState = (surveyTitle, fieldData, sectionIndex, section, questionNumber) => {
-    console.log("fielData", fieldData)
     const dataQuestion = {
       _id: fieldData._id,
       title: fieldData.title,
@@ -219,7 +216,27 @@ class Form extends Component {
         label_start: fieldData.scale.label_start,
         label_to: fieldData.scale.label_to,
       }
-    } else { //paragraph, info
+    } 
+    else if (fieldData.type === "group") {
+      const options = []
+      const actions = []
+      fieldData.options?.map(dt => {
+        options.push(dt.label)
+        actions.push(dt.action)
+      })
+      dataQuestion.form = {
+        type: fieldData.type,
+        option: options,
+        action: actions,
+      }
+
+      let childrens = []
+      fieldData.childrens?.map(dt => {
+        childrens.push(dt)
+      })
+      dataQuestion.childrens = childrens
+    }
+    else { //paragraph, info
       dataQuestion.form = {
         type: fieldData.type
       }
@@ -237,7 +254,6 @@ class Form extends Component {
       const sectionId = item.section;
       let sectionData = sectionMap.get(sectionId);
       surveyTitle = item.survey_title
-
 
       if (!sectionData) {
         sectionData = {
@@ -260,7 +276,7 @@ class Form extends Component {
         required: item.required,
         other_options: item.other_options,
         min_to_select: item.min_to_select,
-        max_to_select: item.max_to_select
+        max_to_select: item.max_to_select,
       };
 
       if (item.form.type === 'choice') {
@@ -281,6 +297,13 @@ class Form extends Component {
         }));
         question.top_to_show= item.form.top_to_show
       } 
+      else if (item.form.type === 'group') {
+        question.options = item.form.option.map(option => ({
+          label: option,
+          action: '',
+        }));
+        question.childrens = item.childrens
+      } 
       else if (item.form.type === 'scale') {
         question.scale = {
           start: item.form.start,
@@ -290,6 +313,7 @@ class Form extends Component {
         }
       } 
 
+      // tambahk
       sectionData.questions.push(question);
     });
     return {
@@ -313,6 +337,7 @@ class Form extends Component {
 
   render() {
     const { form } = this.props;
+    console.log("forfffff", form)
     return (
       <FormContainer>
         <Header ref={(ref) => { this.headerRef = ref }}

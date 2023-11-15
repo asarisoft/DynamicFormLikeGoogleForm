@@ -69,6 +69,8 @@ export const formSlice = createSlice({
         options: [],
         scale: {},
         sorting: [],
+        childrens: [],
+        children_answers: []
       });
 
       section.isQuestionsVisible = true;
