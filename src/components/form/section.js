@@ -5,6 +5,16 @@ import { updateSection } from '../../redux/formSlice';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEye, faEyeSlash, faPlus, faAdd } from '@fortawesome/free-solid-svg-icons';
+import ReactQuill from 'react-quill'; // Import Quill React Component
+
+
+const modules = {
+  toolbar: [
+    ['bold', 'italic', 'underline'],
+    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+  ]
+};
+
 
 class SectionForm extends Component {
   render() {
@@ -54,7 +64,7 @@ class SectionForm extends Component {
                         return null
                       else
                         return <option key={idx} value={idx}>
-                          Section {idx + 1}
+                          Section {idx + 1} - {section.section_title}
                         </option>
                     })}
                   </select>
@@ -72,9 +82,9 @@ class SectionForm extends Component {
               <StyledButton
                 className='add-button'
                 onClick={onToggleQustion}>
-                  {section.isQuestionsVisible ? <FontAwesomeIcon icon={faEyeSlash} />  : <FontAwesomeIcon icon={faEye} /> }
-                  {` Section`}
-                </StyledButton>
+                {section.isQuestionsVisible ? <FontAwesomeIcon icon={faEyeSlash} /> : <FontAwesomeIcon icon={faEye} />}
+                {` Section`}
+              </StyledButton>
             }
             <StyledButton
               className='delete-button'
@@ -84,17 +94,16 @@ class SectionForm extends Component {
           </div>
         </div>
         <div>
-          <Input
-            className='inputTitle'
-            name="title"
-            placeholder='Section Title*'
+          <ReactQuill
+            theme={"snow"}
             value={section?.section_title}
-            onChange={(e) => this.props.updateSection({
+            onChange={(v) => this.props.updateSection({
               sectionIndex,
-              data: { section_title: e.target.value }
-            }
-            )}
+              data: { section_title: v }
+            })}
+            modules={modules}
           />
+
         </div>
       </SectionContainer>
     );

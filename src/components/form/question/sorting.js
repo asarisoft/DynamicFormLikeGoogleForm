@@ -112,7 +112,7 @@ class Sorting extends Component {
                   return null
                 else
                   return <option key={idx} value={idx}>
-                    Section {idx + 1}
+                   Section {idx + 1} - {section.section_title}
                   </option>
               }
               )}

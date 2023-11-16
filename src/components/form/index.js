@@ -54,8 +54,8 @@ class Form extends Component {
     // Menambahkan event listener untuk mendengarkan pesan dari iframe
     window.addEventListener('message', handleMessageFromIframe);
     // // sample data untuk transpile form
-    // const kkk = this.buildStateFromListQuestion(sampleData);
-    // this.props.setInitialData(kkk)
+    const kkk = this.buildStateFromListQuestion(sampleData);
+    this.props.setInitialData(kkk)
   }
 
 
@@ -109,9 +109,6 @@ class Form extends Component {
 
     updatedSections.forEach((section, sectionIndex) => {
       let questionNumber = 1;
-      if (!section.section_title) {
-        isFormValid = false;
-      }
       section.questions.forEach((question, questionIndex) => {
         if (!question.title) {
           isFormValid = false;

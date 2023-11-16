@@ -3,6 +3,7 @@ import { screensize, colors } from '../../utils'; // Gantilah 'path-to-your-util
 
 export const SectionContainer = styled.div`
   border: 1px solid #ccc;
+  background-color: #f8f9fa;
   border-left: 4px solid ${colors.blue4};
   border-radius: 4px;
   padding: 8px;

@@ -13,7 +13,7 @@ export const FormContainer = styled.div`
         }
     }
     @media ${screensize.desktopUp} {
-        width: 80%;
+        width: 100%;
         margin: 0 auto;
     }
 `;
