@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import {
   updateQuestion,
 } from '../../../redux/formSlice';
+import {removeHTMlTag} from '../../../utils'
 
 class Options extends Component {
   constructor(props) {
@@ -109,7 +110,7 @@ class Options extends Component {
                   return null
                 else
                   return <option key={idx} value={idx}>
-                    Section {idx + 1} - {section.section_title}
+                    Section {idx + 1} - {removeHTMlTag(section.section_title)}
                   </option>
               }
               )}

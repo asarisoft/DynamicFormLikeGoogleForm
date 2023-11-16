@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEye, faEyeSlash, faPlus, faAdd } from '@fortawesome/free-solid-svg-icons';
 import ReactQuill from 'react-quill'; // Import Quill React Component
+import {removeHTMlTag} from '../../utils'
 
 
 const modules = {
@@ -64,7 +65,7 @@ class SectionForm extends Component {
                         return null
                       else
                         return <option key={idx} value={idx}>
-                          Section {idx + 1} - {section.section_title}
+                          Section {idx + 1} - {removeHTMlTag(section.section_title)}
                         </option>
                     })}
                   </select>

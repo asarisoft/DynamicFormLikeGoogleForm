@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import {
   updateQuestion,
 } from '../../../redux/formSlice';
+import {removeHTMlTag} from '../../../utils'
 
 class Sorting extends Component {
   constructor(props) {
@@ -112,7 +113,7 @@ class Sorting extends Component {
                   return null
                 else
                   return <option key={idx} value={idx}>
-                   Section {idx + 1} - {section.section_title}
+                   Section {idx + 1} - {removeHTMlTag(section.section_title)}
                   </option>
               }
               )}
