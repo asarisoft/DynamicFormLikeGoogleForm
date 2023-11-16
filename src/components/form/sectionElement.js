@@ -30,10 +30,8 @@ export const SectionContainer = styled.div`
         select {
           // padding: 9px 0px;
           border-radius: 4px;
-          // border: 1px solid #ccc;
+          border: 1px solid grey;
           width: 120px;
-          border: none;
-          color: ${colors.blue4}; 
         }
       }
     }

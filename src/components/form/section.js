@@ -3,6 +3,8 @@ import { SectionContainer } from './sectionElement';
 import { StyledButton, Input } from '../general';
 import { updateSection } from '../../redux/formSlice';
 import { connect } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faEye, faEyeSlash, faPlus, faAdd } from '@fortawesome/free-solid-svg-icons';
 
 class SectionForm extends Component {
   render() {
@@ -64,16 +66,21 @@ class SectionForm extends Component {
             {section.questions.length === 0 &&
               <StyledButton
                 className='add-button'
-                onClick={onAddField}>+ Question</StyledButton>
+                onClick={onAddField}><FontAwesomeIcon icon={faAdd} /> Question</StyledButton>
             }
             {section.questions.length > 0 &&
               <StyledButton
                 className='add-button'
-                onClick={onToggleQustion}>{section.isQuestionsVisible ? "Hide" : "Show"}</StyledButton>
+                onClick={onToggleQustion}>
+                  {section.isQuestionsVisible ? <FontAwesomeIcon icon={faEyeSlash} />  : <FontAwesomeIcon icon={faEye} /> }
+                  {` Section`}
+                </StyledButton>
             }
             <StyledButton
               className='delete-button'
-              onClick={onDeleteSection}>X</StyledButton>
+              onClick={onDeleteSection}>
+              <FontAwesomeIcon icon={faTrash} />
+            </StyledButton>
           </div>
         </div>
         <div>

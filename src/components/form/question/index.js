@@ -9,6 +9,9 @@ import ReactQuill from 'react-quill'; // Import Quill React Component
 import 'react-quill/dist/quill.snow.css'; // Import styles
 import 'react-quill/dist/quill.bubble.css';
 import { connect } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faEye, faEyeSlash, faPlus, faAdd } from '@fortawesome/free-solid-svg-icons';
+
 
 
 import {
@@ -186,9 +189,20 @@ class Question extends Component {
                 <option value="setuju">Setuju - Tidak Setuju</option>
               </select>
             }
+            <div className='toggle-button-wrapper'>
             <StyledButton
-              className='toggle-button'
-              onClick={this.onToggleQustion}>{question.isActive ? "Hide" : "Show"}</StyledButton>
+              className=''
+              onClick={this.onToggleQustion}>
+                {question.isActive ? <FontAwesomeIcon icon={faEyeSlash} />  : <FontAwesomeIcon icon={faEye} /> }
+                  {` `}
+              </StyledButton>
+               <StyledButton
+                className='add-button'
+                onClick={() => onAddQuestion()}><FontAwesomeIcon icon={faPlus} /></StyledButton>
+              <StyledButton
+                className='delete-button'
+                onClick={() => onRemoveQuestion(questionIndex)}><FontAwesomeIcon icon={faTrash} /></StyledButton>
+            </div>
           </div>
 
 
@@ -212,12 +226,7 @@ class Question extends Component {
               />
             </div>
             <div>
-              <StyledButton
-                className='toggle-button'
-                onClick={() => onAddQuestion()}>+</StyledButton>
-              <StyledButton
-                className='delete-button'
-                onClick={() => onRemoveQuestion(questionIndex)}>x</StyledButton>
+             
             </div>
           </div>
 

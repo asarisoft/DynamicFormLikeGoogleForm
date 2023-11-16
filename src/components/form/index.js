@@ -219,22 +219,24 @@ class Form extends Component {
     } 
     else if (fieldData.type === "group") {
       const options = []
+      const childrens_answer = []
       const actions = []
       fieldData.options?.map(dt => {
         options.push(dt.label)
         actions.push(dt.action)
+        childrens_answer.push("")
       })
       dataQuestion.form = {
         type: fieldData.type,
         option: options,
         action: actions,
       }
-
       let childrens = []
       fieldData.childrens?.map(dt => {
         childrens.push(dt)
       })
       dataQuestion.childrens = childrens
+      dataQuestion.childrens_answer = childrens_answer
     }
     else { //paragraph, info
       dataQuestion.form = {

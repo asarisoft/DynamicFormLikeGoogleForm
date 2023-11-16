@@ -24,19 +24,19 @@ export const FieldsContainer = styled.div`
         position: relative;
         select {
             padding: 4px;
-            background-color: ${colors.blue4};
-            color: white;
+            // background-color: ${colors.blue4};
+            // color: white;
             border-radius: 4px;
         }
         .label {
             font-size: 14px;
         }
         .required-wrapper {
-            background-color: ${colors.blue4};
+            // background-color: ${colors.blue4};
             width: 100px;
             max-width: 100px;
             border-radius: 4px;
-            color: white;
+            // color: white;
             display: flex;
             height: 25px;
             margin-right: 10px;
@@ -45,10 +45,16 @@ export const FieldsContainer = styled.div`
             justify-content: center;
             align-items: center;
         }
-        .toggle-button {
+        .toggle-button-wrapper {
             position: absolute;
             right: 0;
-            background:  ${colors.blue3};
+            .add-button {
+                margin-left: 8px;
+            }
+            .delete-button {
+                background-color: ${colors.red};
+                margin-left: 8px;
+            }
         }
     }
 
