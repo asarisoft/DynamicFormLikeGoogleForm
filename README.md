@@ -3,6 +3,5 @@
 - npm start
 
 ### PUBLISH
-- npm run publish:npm
-- npm login
-- npm publish
+- Deploy ke netlify
+- Liknya di pake iframe utuk di BE, 
