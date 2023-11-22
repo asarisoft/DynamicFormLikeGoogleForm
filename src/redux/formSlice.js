@@ -70,7 +70,7 @@ export const formSlice = createSlice({
         scale: {},
         sorting: [],
         childrens: [],
-        children_answers: []
+        childrens_answer: []
       });
 
       section.isQuestionsVisible = true;

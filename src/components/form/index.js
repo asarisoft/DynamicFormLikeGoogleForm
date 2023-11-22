@@ -124,17 +124,17 @@ class Form extends Component {
         result.push(dataQuestion)
       });
     });
-    console.log("resulst", result);
+
 
     if (isFormValid) {
       // send to iframe
       this.sendDataToParent({
-        title: "OK",
+        title: title,
         json_form: result
       });
       // 
       return {
-        title: "OK",
+        title: title,
         jsonForm: result
       }
     } else {
@@ -145,6 +145,13 @@ class Form extends Component {
       });
       return null; // Atau kembalikan null jika ada kesalahan validasi
     }
+  }
+
+  preview  = () => { 
+    this.sendDataToParent({
+      title: "title",
+      message: "show preview"
+    });
   }
 
   // before submit, change format form to BE format
@@ -205,6 +212,11 @@ class Form extends Component {
         top_to_show: fieldData.top_to_show
       }
       dataQuestion.answer = sorting
+
+      if (fieldData.top_to_show > 0) {
+        dataQuestion.answer_action = actions.slice(0, fieldData.top_to_show)
+      }
+
     } else if (fieldData.type === "scale") {
       dataQuestion.form = {
         type: fieldData.type,
@@ -221,7 +233,6 @@ class Form extends Component {
       fieldData.options?.map(dt => {
         options.push(dt.label)
         actions.push(dt.action)
-        childrens_answer.push("")
       })
       dataQuestion.form = {
         type: fieldData.type,
@@ -231,6 +242,7 @@ class Form extends Component {
       let childrens = []
       fieldData.childrens?.map(dt => {
         childrens.push(dt)
+        childrens_answer.push("")
       })
       dataQuestion.childrens = childrens
       dataQuestion.childrens_answer = childrens_answer
@@ -336,7 +348,6 @@ class Form extends Component {
 
   render() {
     const { form } = this.props;
-    console.log("forfffff", form)
     return (
       <FormContainer>
         <Header ref={(ref) => { this.headerRef = ref }}
@@ -395,7 +406,8 @@ class Form extends Component {
         </DragDropContext>
         <div className='form-footer'>
           <StyledButton onClick={() => this.props.addSection()}>Add Section</StyledButton>
-          <StyledButton onClick={this.populateData}>Generate & Submit</StyledButton>
+          <StyledButton onClick={this.preview}>Preview</StyledButton>
+          <StyledButton onClick={this.populateData}>Submit</StyledButton>
         </div>
       </FormContainer>
     );
