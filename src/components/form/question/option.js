@@ -8,7 +8,16 @@ import { connect } from 'react-redux';
 import {
   updateQuestion,
 } from '../../../redux/formSlice';
-import {removeHTMlTag} from '../../../utils'
+import { removeHTMlTag } from '../../../utils';
+import ReactQuill from 'react-quill'; // Import Quill React Component
+
+
+const modules = {
+  toolbar: [
+    ['bold', 'italic', 'underline'],
+  ]
+};
+
 
 class Options extends Component {
   constructor(props) {
@@ -72,6 +81,18 @@ class Options extends Component {
     });
   };
 
+  handleOptionChangeValue = (index, value) => {
+    const section = this.props.form.sections[this.sectionIndex];
+    const question = section.questions[this.questionIndex];
+    const updatedOptions = [...question.options]; // Buat salinan objek options
+    updatedOptions[index] = { ...updatedOptions[index], ['label']: value }; // Perbarui salinan objek
+    this.props.updateQuestion({
+      questionIndex: this.questionIndex,
+      sectionIndex: this.sectionIndex,
+      data: { options: updatedOptions }
+    });
+  };
+
   handleOtherOptionsChange = (e) => {
     this.props.updateQuestion({
       questionIndex: this.questionIndex,
@@ -90,12 +111,18 @@ class Options extends Component {
       <Container>
         {options?.map((option, index) => (
           <div key={index} className='input-wrapper'>
-            <Input
-              type="text"
-              name="label"
-              placeholder="Option Text"
+            
+            <ReactQuill
+              theme={"snow"}
               value={option?.label}
-              onChange={(e) => this.handleOptionChange(index, e)}
+              style={{width: '50%'}}
+              onChange={(v) => this.handleOptionChange(index, {
+                target: {
+                  name: 'label',
+                  value: v
+                }
+              })}
+              modules={modules}
             />
             <select
               name="action"

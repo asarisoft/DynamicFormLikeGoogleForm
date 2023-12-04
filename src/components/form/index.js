@@ -101,7 +101,7 @@ class Form extends Component {
     });
   }
 
-  populateData = (type) => {
+  populateData = (state) => {
     const { title, sections } = this.props.form;
     const updatedSections = [...sections];
     const result = [];
@@ -131,7 +131,7 @@ class Form extends Component {
       this.sendDataToParent({
         title: title,
         json_form: result,
-        type: type
+        state: state
       });
       // 
       return {
@@ -151,7 +151,7 @@ class Form extends Component {
   preview  = () => { 
     this.sendDataToParent({
       title: "title",
-      message: "show preview"
+      state: "preview"
     });
   }
 
@@ -407,9 +407,9 @@ class Form extends Component {
         </DragDropContext>
         <div className='form-footer'>
           <StyledButton onClick={() => this.props.addSection()}>Add Section</StyledButton>
-          <StyledButton onClick={()=>this.populateData('draft')}>Save as draft</StyledButton>
-          <StyledButton onClick={this.preview}>Preview</StyledButton>
-          <StyledButton onClick={()=>this.populateData('submit')}>Submit</StyledButton>
+          <StyledButton onClick={()=>this.populateData('Draft')}>Save as draft</StyledButton>
+          {/* <StyledButton onClick={this.preview}>Preview</StyledButton> */}
+          <StyledButton onClick={()=>this.populateData('Published')}>Submit</StyledButton>
         </div>
       </FormContainer>
     );

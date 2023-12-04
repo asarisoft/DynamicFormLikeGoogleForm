@@ -9,6 +9,17 @@ import {
   updateQuestion,
 } from '../../../redux/formSlice';
 
+import { removeHTMlTag } from '../../../utils';
+import ReactQuill from 'react-quill'; // Import Quill React Component
+
+
+const modules = {
+  toolbar: [
+    ['bold', 'italic', 'underline'],
+  ]
+};
+
+
 class Options extends Component {
   constructor(props) {
     super(props);
@@ -107,13 +118,26 @@ class Options extends Component {
         <label>Rows</label>
         {childrens?.map((option, index) => (
           <div key={index} className='input-wrapper'>
-            <Input
+            {/* <Input
               type="text"
               name="label"
               placeholder="Option Text"
               value={option?.label}
               onChange={(e) => this.handleChange(index, 'childrens', e)}
+            /> */}
+            <ReactQuill
+              theme={"snow"}
+              value={option?.label}
+              style={{width: '50%'}}
+              onChange={(v) => this.handleChange(index, 'childrens', {
+                target: {
+                  name: 'label',
+                  value: v
+                }
+              })}
+              modules={modules}
             />
+
             <StyledButton onClick={() => this.removeItem(index, 'childrens')}
               className='remove-button'>x</StyledButton>
             {index === childrens.length - 1 &&

@@ -8,7 +8,16 @@ import { connect } from 'react-redux';
 import {
   updateQuestion,
 } from '../../../redux/formSlice';
-import {removeHTMlTag} from '../../../utils'
+import {removeHTMlTag} from '../../../utils';
+import ReactQuill from 'react-quill'; // Import Quill React Component
+
+
+const modules = {
+  toolbar: [
+    ['bold', 'italic', 'underline'],
+  ]
+};
+
 
 class Sorting extends Component {
   constructor(props) {
@@ -93,12 +102,17 @@ class Sorting extends Component {
       <Container>
         {sorting?.map((option, index) => (
           <div key={index} className='input-wrapper'>
-            <Input
-              type="text"
-              name="label"
-              placeholder="Option Text"
+            <ReactQuill
+              theme={"snow"}
               value={option?.label}
-              onChange={(e) => this.handleOptionChange(index, e)}
+              style={{width: '50%'}}
+              onChange={(v) => this.handleOptionChange(index, {
+                target: {
+                  name: 'label',
+                  value: v
+                }
+              })}
+              modules={modules}
             />
             <select
               name="action"
